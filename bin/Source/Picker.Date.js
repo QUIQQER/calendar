@@ -220,12 +220,6 @@ define('package/quiqqer/calendar/bin/Source/Picker.Date', [
 
     };
 
-
-    Picker.Date.defineRenderer = function(name, fn){
-    	renderers[name] = fn;
-    	return this;
-    };
-
     var limitDate = function(date, min, max){
     	if (min && date < min) return min;
     	if (max && date > max) return max;
@@ -661,6 +655,11 @@ define('package/quiqqer/calendar/bin/Source/Picker.Date', [
 
             this.fireEvent('select', [date].concat(inputs));
             this.close();
+            return this;
+        },
+
+        defineRenderer : function(name, fn){
+            renderers[name] = fn;
             return this;
         }
 

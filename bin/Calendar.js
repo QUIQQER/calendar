@@ -9,11 +9,11 @@
 
 define('package/quiqqer/calendar/bin/Calendar', [
 
-    'package/quiqqer/calendar/bin/Source/Picker.js',
-    'package/quiqqer/calendar/bin/Source/Picker.Attach.js',
-    'package/quiqqer/calendar/bin/Source/Picker.Date.js',
+    'package/quiqqer/calendar/bin/Source/Picker',
+    'package/quiqqer/calendar/bin/Source/Picker.Attach',
+    'package/quiqqer/calendar/bin/Source/Picker.Date',
 
-    'css!package/quiqqer/calendar/bin/Source/datapicker.css'
+    'css!package/quiqqer/calendar/bin/Source/datepicker.css'
 
 ], function(Picker, Attach, DatePicker)
 {
