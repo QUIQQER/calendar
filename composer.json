@@ -1,0 +1,29 @@
+{
+	"name" : "quiqqer/calendar",
+	"description" : "Mootools Calendar Widget for QUIQQER",
+	"tags" : ["calendar", "quiqqer"],
+	"version" : "2.1.1",
+	"author" : [{
+        "name": "Arian Stolwijk",
+        "homepage": "http://github.com/arian/mootools-datepicker/",
+        "role": "Developer"
+    }, {
+        "name": "Henning Leutz",
+        "email": "leutz@pcsg.de",
+        "homepage": "http://www.pcsg.de",
+        "role": "Developer"
+    }],
+
+	"repositories" : {
+        "type" : "git",
+      	"url"  : "ssh://git@rico/~/repositories/packages/ckeditor3.git"
+    },
+
+    "bugs" : {
+        "url" : "http://bugs.quiqqer.com/smarty3"
+    },
+
+    "require": {
+        "quiqqer/quiqqer" : "1.*"
+    }
+}
