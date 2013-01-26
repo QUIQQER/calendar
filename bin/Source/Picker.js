@@ -52,11 +52,14 @@ define('package/quiqqer/calendar/bin/Source/Picker', function()
             }).inject(options.inject || document.body);
             picker.addClass('column_' + options.columns);
 
-            if (options.useFadeInOut){
+            if (options.useFadeInOut)
+            {
+                /*
                 picker.set('tween', {
                     duration: options.animationDuration,
                     link: 'cancel'
                 });
+                */
             }
 
             // Build the header
@@ -91,9 +94,6 @@ define('package/quiqqer/calendar/bin/Source/Picker', function()
                     top: 0,
                     left: 0
                 }
-            }).set('tween', {
-                duration: options.animationDuration,
-                transition: Fx.Transitions.Quad.easeInOut
             }).inject(body);
 
             this.newContents = new Element('div', {
@@ -126,14 +126,23 @@ define('package/quiqqer/calendar/bin/Source/Picker', function()
             }
         },
 
-        open: function(noFx){
+        open: function(noFx)
+        {
             if (this.opened == true) return this;
             this.opened = true;
             var picker = this.picker.setStyle('display', 'block').set('aria-hidden', 'false')
             if (this.shim) this.shim.show();
             this.fireEvent('open');
-            if (this.options.useFadeInOut && !noFx){
-                picker.fade('in').get('tween').chain(this.fireEvent.pass('show', this));
+
+            if (this.options.useFadeInOut && !noFx)
+            {
+                moofx( picker ).animate({
+                    opacity : 1
+                }, {
+                    callback : this.fireEvent.pass('show', this)
+                });
+
+                //picker.fade('in').get('tween').chain(this.fireEvent.pass('show', this));
             } else {
                 picker.setStyle('opacity', 1);
                 this.fireEvent('show');
@@ -149,13 +158,22 @@ define('package/quiqqer/calendar/bin/Source/Picker', function()
             if (this.opened == false) return this;
             this.opened = false;
             this.fireEvent('close');
+
             var self = this, picker = this.picker, hide = function(){
                 picker.setStyle('display', 'none').set('aria-hidden', 'true');
                 if (self.shim) self.shim.hide();
                 self.fireEvent('hide');
             };
-            if (this.options.useFadeInOut && !noFx){
-                picker.fade('out').get('tween').chain(hide);
+
+            if (this.options.useFadeInOut && !noFx)
+            {
+                moofx( picker ).animate({
+                    opacity : 0
+                }, {
+                    callback : hide
+                });
+
+                //picker.fade('out').get('tween').chain(hide);
             } else {
                 picker.setStyle('opacity', 0);
                 hide();
@@ -289,29 +307,68 @@ define('package/quiqqer/calendar/bin/Source/Picker', function()
             return this;
         },
 
-        fx: function(fx){
+        fx: function(fx)
+        {
             var oldContents = this.oldContents,
                 newContents = this.newContents,
-                slider = this.slider,
-                bodysize = this.bodysize;
-            if (fx == 'right'){
-                oldContents.setStyles({left: 0, opacity: 1});
-                newContents.setStyles({left: bodysize.x, opacity: 1});
-                slider.setStyle('left', 0).tween('left', 0, -bodysize.x);
-            } else if (fx == 'left'){
-                oldContents.setStyles({left: bodysize.x, opacity: 1});
-                newContents.setStyles({left: 0, opacity: 1});
-                slider.setStyle('left', -bodysize.x).tween('left', -bodysize.x, 0);
-            } else if (fx == 'fade'){
-                slider.setStyle('left', 0);
-                oldContents.setStyle('left', 0).set('tween', {
+                slider      = this.slider,
+                bodysize    = this.bodysize;
+
+            if (fx == 'right')
+            {
+                oldContents.setStyles({
+                    left    : 0,
+                    opacity : 1
+                });
+
+                newContents.setStyles({
+                    left    : bodysize.x,
+                    opacity : 1
+                });
+
+                slider.setStyle('left', 0); // tween('left', 0, -bodysize.x);
+
+                moofx( slider ).animate({
+                    'left' : -bodysize.x
+                });
+            } else if (fx == 'left')
+            {
+                oldContents.setStyles({
+                    left    : bodysize.x,
+                    opacity : 1
+                });
+
+                newContents.setStyles({
+                    left    : 0,
+                    opacity : 1
+                });
+
+                slider.setStyle('left', 0); //.tween('left', -bodysize.x, 0);
+
+                moofx( slider ).animate({
+                    'left' : 0
+                });
+            } else if (fx == 'fade')
+            {
+                slider.setStyle( 'left', 0 );
+                oldContents.setStyle( 'left', 0 );  /*.set('tween', {
                     duration: this.options.animationDuration / 2
                 }).tween('opacity', 1, 0).get('tween').chain(function(){
                     oldContents.setStyle('left', bodysize.x);
                 });
-                newContents.setStyles({opacity: 0, left: 0}).set('tween', {
+                */
+
+                moofx( oldContents ).animate({
+                    opacity : 0,
+                    left    : bodysize.x
+                });
+
+                newContents.setStyles({
+                    opacity : 1,
+                    left    : 0
+                }); /*.set('tween', {
                     duration: this.options.animationDuration
-                }).tween('opacity', 0, 1);
+                }).tween('opacity', 0, 1);*/
             }
         },
 
