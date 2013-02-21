@@ -1,5 +1,6 @@
 {
 	"name" : "quiqqer/calendar",
+	"type" : "quiqqer-library",
 	"description" : "Mootools Calendar Widget for QUIQQER",
 	"tags" : ["calendar", "quiqqer"],
 	"version" : "2.1.1",
