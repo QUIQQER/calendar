@@ -1,12 +1,12 @@
 {
-	"name" : "quiqqer/calendar",
-	"type" : "quiqqer-library",
+    "name" : "quiqqer/calendar",
+    "type" : "quiqqer-library",
 
     "description" : "Mootools Calendar Widget for QUIQQER",
-	"version" : "2.1.1",
+    "version" : "2.1.1",
     "license" : "MIT",
 
-	"authors" : [{
+    "authors" : [{
         "name": "Arian Stolwijk",
         "homepage": "http://github.com/arian/mootools-datepicker/",
         "role": "Developer"
@@ -17,11 +17,11 @@
         "role": "Developer"
     }],
 
-	"support" : {
+    "support" : {
         "mail" : "support@pcsg.de"
     },
 
     "require": {
-        "quiqqer/quiqqer" : "1.*"
+        "quiqqer/quiqqer" : "dev-master"
     }
 }
