@@ -22,6 +22,14 @@
     },
 
     "require": {
-        "quiqqer/quiqqer" : "*"
+        "quiqqer/quiqqer" : "*",
+        "mtdowling/cron-expression": "1.0.*"
+    },
+
+    "extra": {
+        "component": {
+            "files": ["bin/**"],
+            "name": "quiqqer/calendar"
+        }
     }
 }
