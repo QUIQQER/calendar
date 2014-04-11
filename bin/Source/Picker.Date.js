@@ -6,6 +6,8 @@ authors: Arian Stolwijk
 requires: [Picker, Picker.Attach, Locale.en-US.DatePicker, More/Locale, More/Date]
 provides: Picker.Date
 ...
+
+@events onSelect [ {Date}, {DOMNode}, {self} ]
 */
 
 define('package/quiqqer/calendar/bin/Source/Picker.Date', [
@@ -17,275 +19,275 @@ define('package/quiqqer/calendar/bin/Source/Picker.Date', [
     // Renderers only output elements and calculate the limits!
     var timesSelectors = {
 
-    	years: function(options, date){
-    		var times = [];
-    		for (var i = 0; i < options.yearsPerPage; i++){
-    			times.push(+date);
-    			date.increment('year', 1);
-    		}
-    		return times;
-    	},
+        years: function(options, date){
+            var times = [];
+            for (var i = 0; i < options.yearsPerPage; i++){
+                times.push(+date);
+                date.increment('year', 1);
+            }
+            return times;
+        },
 
-    	months: function(options, date){
-    		var times = [];
-    		date.set('month', 0);
-    		for (var i = 0; i <= 11; i++){
-    			times.push(+date);
-    			date.increment('month', 1);
-    		}
-    		return times;
-    	},
+        months: function(options, date){
+            var times = [];
+            date.set('month', 0);
+            for (var i = 0; i <= 11; i++){
+                times.push(+date);
+                date.increment('month', 1);
+            }
+            return times;
+        },
 
-    	days: function(options, date){
-    		var times = [];
-    		date.set('date', 1);
-    		while (date.get('day') != options.startDay) date.set('date', date.get('date') - 1);
-    		for (var i = 0; i < 42; i++){
-    			times.push(+date);
-    			date.increment('day',  1);
-    		}
-    		return times;
-    	}
+        days: function(options, date){
+            var times = [];
+            date.set('date', 1);
+            while (date.get('day') != options.startDay) date.set('date', date.get('date') - 1);
+            for (var i = 0; i < 42; i++){
+                times.push(+date);
+                date.increment('day',  1);
+            }
+            return times;
+        }
 
     };
 
     var renderers = {
 
-    	years: function(years, options, currentDate, dateElements, fn){
-    		var container = new Element('div.years'),
-    			today = new Date(), element, classes;
+        years: function(years, options, currentDate, dateElements, fn){
+            var container = new Element('div.years'),
+                today = new Date(), element, classes;
 
-    		years.each(function(_year, i){
-    			var date = new Date(_year), year = date.get('year');
+            years.each(function(_year, i){
+                var date = new Date(_year), year = date.get('year');
 
-    			classes = '.year.year' + i;
-    			if (year == today.get('year')) classes += '.today';
-    			if (year == currentDate.get('year')) classes += '.selected';
-    			element = new Element('div' + classes, {text: year}).inject(container);
+                classes = '.year.year' + i;
+                if (year == today.get('year')) classes += '.today';
+                if (year == currentDate.get('year')) classes += '.selected';
+                element = new Element('div' + classes, {text: year}).inject(container);
 
-    			dateElements.push({element: element, time: _year});
+                dateElements.push({element: element, time: _year});
 
-    			if (isUnavailable('year', date, options)) element.addClass('unavailable');
-    			else element.addEvent('click', fn.pass(date));
-    		});
+                if (isUnavailable('year', date, options)) element.addClass('unavailable');
+                else element.addEvent('click', fn.pass(date));
+            });
 
-    		return container;
-    	},
+            return container;
+        },
 
-    	months: function(months, options, currentDate, dateElements, fn){
-    		var today = new Date(),
-    			month = today.get('month'),
-    			thisyear = today.get('year'),
-    			selectedyear = currentDate.get('year'),
-    			container = new Element('div.months'),
-    			monthsAbbr = options.months_abbr || Locale.get('Date.months_abbr'),
-    			element, classes;
+        months: function(months, options, currentDate, dateElements, fn){
+            var today = new Date(),
+                month = today.get('month'),
+                thisyear = today.get('year'),
+                selectedyear = currentDate.get('year'),
+                container = new Element('div.months'),
+                monthsAbbr = options.months_abbr || Locale.get('Date.months_abbr'),
+                element, classes;
 
-    		months.each(function(_month, i){
-    			var date = new Date(_month), year = date.get('year');
+            months.each(function(_month, i){
+                var date = new Date(_month), year = date.get('year');
 
-    			classes = '.month.month' + (i + 1);
-    			if (i == month && year == thisyear) classes += '.today';
-    			if (i == currentDate.get('month') && year == selectedyear) classes += '.selected';
-    			element = new Element('div' + classes, {text: monthsAbbr[i]}).inject(container);
+                classes = '.month.month' + (i + 1);
+                if (i == month && year == thisyear) classes += '.today';
+                if (i == currentDate.get('month') && year == selectedyear) classes += '.selected';
+                element = new Element('div' + classes, {text: monthsAbbr[i]}).inject(container);
 
-    			dateElements.push({element: element, time: _month});
+                dateElements.push({element: element, time: _month});
 
-    			if (isUnavailable('month', date, options)) element.addClass('unavailable');
-    			else element.addEvent('click', fn.pass(date));
-    		});
+                if (isUnavailable('month', date, options)) element.addClass('unavailable');
+                else element.addEvent('click', fn.pass(date));
+            });
 
-    		return container;
-    	},
+            return container;
+        },
 
-    	days: function(days, options, currentDate, dateElements, fn){
-    		var month = new Date(days[14]).get('month'),
-    			todayString = new Date().toDateString(),
-    			currentString = currentDate.toDateString(),
-    			weeknumbers = options.weeknumbers,
-    			container = new Element('table.days' + (weeknumbers ? '.weeknumbers' : ''), {
-    				role: 'grid', 'aria-labelledby': this.titleID
-    			}),
-    			header = new Element('thead').inject(container),
-    			body = new Element('tbody').inject(container),
-    			titles = new Element('tr.titles').inject(header),
-    			localeDaysShort = options.days_abbr || Locale.get('Date.days_abbr'),
-    			day, classes, element, weekcontainer, dateString,
-    			where = options.rtl ? 'top' : 'bottom';
+        days: function(days, options, currentDate, dateElements, fn){
+            var month = new Date(days[14]).get('month'),
+                todayString = new Date().toDateString(),
+                currentString = currentDate.toDateString(),
+                weeknumbers = options.weeknumbers,
+                container = new Element('table.days' + (weeknumbers ? '.weeknumbers' : ''), {
+                    role: 'grid', 'aria-labelledby': this.titleID
+                }),
+                header = new Element('thead').inject(container),
+                body = new Element('tbody').inject(container),
+                titles = new Element('tr.titles').inject(header),
+                localeDaysShort = options.days_abbr || Locale.get('Date.days_abbr'),
+                day, classes, element, weekcontainer, dateString,
+                where = options.rtl ? 'top' : 'bottom';
 
-    		if (weeknumbers) new Element('th.title.day.weeknumber', {
-    			text: Locale.get('DatePicker.week')
-    		}).inject(titles);
+            if (weeknumbers) new Element('th.title.day.weeknumber', {
+                text: Locale.get('DatePicker.week')
+            }).inject(titles);
 
-    		for (day = options.startDay; day < (options.startDay + 7); day++){
-    			new Element('th.title.day.day' + (day % 7), {
-    				text: localeDaysShort[(day % 7)],
-    				role: 'columnheader'
-    			}).inject(titles, where);
-    		}
+            for (day = options.startDay; day < (options.startDay + 7); day++){
+                new Element('th.title.day.day' + (day % 7), {
+                    text: localeDaysShort[(day % 7)],
+                    role: 'columnheader'
+                }).inject(titles, where);
+            }
 
-    		days.each(function(_date, i){
-    			var date = new Date(_date);
+            days.each(function(_date, i){
+                var date = new Date(_date);
 
-    			if (i % 7 == 0){
-    				weekcontainer = new Element('tr.week.week' + (Math.floor(i / 7))).set('role', 'row').inject(body);
-    				if (weeknumbers) new Element('th.day.weeknumber', {text: date.get('week'), scope: 'row', role: 'rowheader'}).inject(weekcontainer);
-    			}
+                if (i % 7 == 0){
+                    weekcontainer = new Element('tr.week.week' + (Math.floor(i / 7))).set('role', 'row').inject(body);
+                    if (weeknumbers) new Element('th.day.weeknumber', {text: date.get('week'), scope: 'row', role: 'rowheader'}).inject(weekcontainer);
+                }
 
-    			dateString = date.toDateString();
-    			classes = '.day.day' + date.get('day');
-    			if (dateString == todayString) classes += '.today';
-    			if (date.get('month') != month) classes += '.otherMonth';
-    			element = new Element('td' + classes, {text: date.getDate(), role: 'gridcell'}).inject(weekcontainer, where);
+                dateString = date.toDateString();
+                classes = '.day.day' + date.get('day');
+                if (dateString == todayString) classes += '.today';
+                if (date.get('month') != month) classes += '.otherMonth';
+                element = new Element('td' + classes, {text: date.getDate(), role: 'gridcell'}).inject(weekcontainer, where);
 
-    			if (dateString == currentString) element.addClass('selected').set('aria-selected', 'true');
-    			else element.set('aria-selected', 'false');
+                if (dateString == currentString) element.addClass('selected').set('aria-selected', 'true');
+                else element.set('aria-selected', 'false');
 
-    			dateElements.push({element: element, time: _date});
+                dateElements.push({element: element, time: _date});
 
-    			if (isUnavailable('date', date, options)) element.addClass('unavailable');
-    			else element.addEvent('click', fn.pass(date.clone()));
-    		});
+                if (isUnavailable('date', date, options)) element.addClass('unavailable');
+                else element.addEvent('click', fn.pass(date.clone()));
+            });
 
-    		return container;
-    	},
+            return container;
+        },
 
-    	time: function(options, date, fn){
-    		var container = new Element('div.time'),
-    			// make sure that the minutes are timeWheelStep * k
-    			initMinutes = (date.get('minutes') / options.timeWheelStep).round() * options.timeWheelStep
+        time: function(options, date, fn){
+            var container = new Element('div.time'),
+                // make sure that the minutes are timeWheelStep * k
+                initMinutes = (date.get('minutes') / options.timeWheelStep).round() * options.timeWheelStep
 
-    		if (initMinutes >= 60) initMinutes = 0;
-    		date.set('minutes', initMinutes);
+            if (initMinutes >= 60) initMinutes = 0;
+            date.set('minutes', initMinutes);
 
-    		var hoursInput = new Element('input.hour[type=text]', {
-    			title: Locale.get('DatePicker.use_mouse_wheel'),
-    			value: date.format('%H'),
-    			events: {
-    				click: function(event){
-    					event.target.focus();
-    					event.stop();
-    				},
-    				mousewheel: function(event){
-    					event.stop();
-    					hoursInput.focus();
-    					var value = hoursInput.get('value').toInt();
-    					value = (event.wheel > 0) ? ((value < 23) ? value + 1 : 0)
-    						: ((value > 0) ? value - 1 : 23)
-    					date.set('hours', value);
-    					hoursInput.set('value', date.format('%H'));
-    				}.bind(this)
-    			},
-    			maxlength: 2
-    		}).inject(container);
+            var hoursInput = new Element('input.hour[type=text]', {
+                title: Locale.get('DatePicker.use_mouse_wheel'),
+                value: date.format('%H'),
+                events: {
+                    click: function(event){
+                        event.target.focus();
+                        event.stop();
+                    },
+                    mousewheel: function(event){
+                        event.stop();
+                        hoursInput.focus();
+                        var value = hoursInput.get('value').toInt();
+                        value = (event.wheel > 0) ? ((value < 23) ? value + 1 : 0)
+                            : ((value > 0) ? value - 1 : 23)
+                        date.set('hours', value);
+                        hoursInput.set('value', date.format('%H'));
+                    }.bind(this)
+                },
+                maxlength: 2
+            }).inject(container);
 
-    		var minutesInput = new Element('input.minutes[type=text]', {
-    			title: Locale.get('DatePicker.use_mouse_wheel'),
-    			value: date.format('%M'),
-    			events: {
-    				click: function(event){
-    					event.target.focus();
-    					event.stop();
-    				},
-    				mousewheel: function(event){
-    					event.stop();
-    					minutesInput.focus();
-    					var value = minutesInput.get('value').toInt();
-    					value = (event.wheel > 0) ? ((value < 59) ? (value + options.timeWheelStep) : 0)
-    						: ((value > 0) ? (value - options.timeWheelStep) : (60 - options.timeWheelStep));
-    					if (value >= 60) value = 0;
-    					date.set('minutes', value);
-    					minutesInput.set('value', date.format('%M'));
-    				}.bind(this)
-    			},
-    			maxlength: 2
-    		}).inject(container);
+            var minutesInput = new Element('input.minutes[type=text]', {
+                title: Locale.get('DatePicker.use_mouse_wheel'),
+                value: date.format('%M'),
+                events: {
+                    click: function(event){
+                        event.target.focus();
+                        event.stop();
+                    },
+                    mousewheel: function(event){
+                        event.stop();
+                        minutesInput.focus();
+                        var value = minutesInput.get('value').toInt();
+                        value = (event.wheel > 0) ? ((value < 59) ? (value + options.timeWheelStep) : 0)
+                            : ((value > 0) ? (value - options.timeWheelStep) : (60 - options.timeWheelStep));
+                        if (value >= 60) value = 0;
+                        date.set('minutes', value);
+                        minutesInput.set('value', date.format('%M'));
+                    }.bind(this)
+                },
+                maxlength: 2
+            }).inject(container);
 
-    		new Element('div.separator[text=:]').inject(container);
+            new Element('div.separator[text=:]').inject(container);
 
-    		new Element('input.ok[type=submit]', {
-    			value: Locale.get('DatePicker.time_confirm_button'),
-    			events: {click: function(event){
-    				event.stop();
-    				date.set({
-    					hours: hoursInput.get('value').toInt(),
-    					minutes: minutesInput.get('value').toInt()
-    				});
-    				fn(date.clone());
-    			}}
-    		}).inject(container);
+            new Element('input.ok[type=submit]', {
+                value: Locale.get('DatePicker.time_confirm_button'),
+                events: {click: function(event){
+                    event.stop();
+                    date.set({
+                        hours: hoursInput.get('value').toInt(),
+                        minutes: minutesInput.get('value').toInt()
+                    });
+                    fn(date.clone());
+                }}
+            }).inject(container);
 
-    		return container;
-    	}
+            return container;
+        }
 
     };
 
     var limitDate = function(date, min, max){
-    	if (min && date < min) return min;
-    	if (max && date > max) return max;
-    	return date;
+        if (min && date < min) return min;
+        if (max && date > max) return max;
+        return date;
     };
 
     var isUnavailable = function(type, date, options){
-    	var minDate = options.minDate,
-    		maxDate = options.maxDate,
-    		availableDates = options.availableDates,
-    		year, month, day, ms;
+        var minDate = options.minDate,
+            maxDate = options.maxDate,
+            availableDates = options.availableDates,
+            year, month, day, ms;
 
-    	if (!minDate && !maxDate && !availableDates) return false;
-    	date.clearTime();
+        if (!minDate && !maxDate && !availableDates) return false;
+        date.clearTime();
 
-    	if (type == 'year'){
-    		year = date.get('year');
-    		return (
-    			(minDate && year < minDate.get('year')) ||
-    			(maxDate && year > maxDate.get('year')) ||
-    			(
-    				(availableDates != null &&  !options.invertAvailable) && (
-    					availableDates[year] == null ||
-    					Object.getLength(availableDates[year]) == 0 ||
-    					Object.getLength(
-    						Object.filter(availableDates[year], function(days){
-    							return (days.length > 0);
-    						})
-    					) == 0
-    				)
-    			)
-    		);
-    	}
+        if (type == 'year'){
+            year = date.get('year');
+            return (
+                (minDate && year < minDate.get('year')) ||
+                (maxDate && year > maxDate.get('year')) ||
+                (
+                    (availableDates != null &&  !options.invertAvailable) && (
+                        availableDates[year] == null ||
+                        Object.getLength(availableDates[year]) == 0 ||
+                        Object.getLength(
+                            Object.filter(availableDates[year], function(days){
+                                return (days.length > 0);
+                            })
+                        ) == 0
+                    )
+                )
+            );
+        }
 
-    	if (type == 'month'){
-    		year = date.get('year');
-    		month = date.get('month') + 1;
-    		ms = date.format('%Y%m').toInt();
-    		return (
-    			(minDate && ms < minDate.format('%Y%m').toInt()) ||
-    			(maxDate && ms > maxDate.format('%Y%m').toInt()) ||
-    			(
-    				(availableDates != null && !options.invertAvailable) && (
-    					availableDates[year] == null ||
-    					availableDates[year][month] == null ||
-    					availableDates[year][month].length == 0
-    				)
-    			)
-    		);
-    	}
+        if (type == 'month'){
+            year = date.get('year');
+            month = date.get('month') + 1;
+            ms = date.format('%Y%m').toInt();
+            return (
+                (minDate && ms < minDate.format('%Y%m').toInt()) ||
+                (maxDate && ms > maxDate.format('%Y%m').toInt()) ||
+                (
+                    (availableDates != null && !options.invertAvailable) && (
+                        availableDates[year] == null ||
+                        availableDates[year][month] == null ||
+                        availableDates[year][month].length == 0
+                    )
+                )
+            );
+        }
 
-    	// type == 'date'
-    	year = date.get('year');
-    	month = date.get('month') + 1;
-    	day = date.get('date');
+        // type == 'date'
+        year = date.get('year');
+        month = date.get('month') + 1;
+        day = date.get('date');
 
-    	var dateAllow = (minDate && date < minDate) || (minDate && date > maxDate);
-    	if (availableDates != null){
-    		dateAllow = dateAllow
-    			|| availableDates[year] == null
-    			|| availableDates[year][month] == null
-    			|| !availableDates[year][month].contains(day);
-    		if (options.invertAvailable) dateAllow = !dateAllow;
-    	}
+        var dateAllow = (minDate && date < minDate) || (minDate && date > maxDate);
+        if (availableDates != null){
+            dateAllow = dateAllow
+                || availableDates[year] == null
+                || availableDates[year][month] == null
+                || !availableDates[year][month].contains(day);
+            if (options.invertAvailable) dateAllow = !dateAllow;
+        }
 
-    	return dateAllow;
+        return dateAllow;
     };
 
     return new Class({
@@ -653,7 +655,7 @@ define('package/quiqqer/calendar/bin/Source/Picker.Date', [
                 input.set('value', formatted).store('datepicker:value', time).fireEvent('change');
             }, this);
 
-            this.fireEvent('select', [date].concat(inputs));
+            this.fireEvent('select', [ date, inputs, this ] );
             this.close();
             return this;
         },
