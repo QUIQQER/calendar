@@ -6,13 +6,13 @@ authors: Arian Stolwijk
 requires: [Picker, Picker.Attach, Locale.en-US.DatePicker, More/Locale, More/Date]
 provides: Picker.Date
 ...
-
-@events onSelect [ {Date}, {DOMNode}, {self} ]
 */
 
 define('package/quiqqer/calendar/bin/Source/Picker.Date', [
 
-    'package/quiqqer/calendar/bin/Source/Picker.Attach'
+    'package/quiqqer/calendar/bin/Source/Picker.Attach',
+    'package/quiqqer/calendar/bin/Source/Locale.de-DE.DatePicker',
+    'package/quiqqer/calendar/bin/Source/Locale.en-US.DatePicker'
 
 ], function(Attach)
 {
@@ -205,16 +205,20 @@ define('package/quiqqer/calendar/bin/Source/Picker.Date', [
 
             new Element('div.separator[text=:]').inject(container);
 
-            new Element('input.ok[type=submit]', {
+            new Element('input[type=submit]', {
                 value: Locale.get('DatePicker.time_confirm_button'),
-                events: {click: function(event){
-                    event.stop();
-                    date.set({
-                        hours: hoursInput.get('value').toInt(),
-                        minutes: minutesInput.get('value').toInt()
-                    });
-                    fn(date.clone());
-                }}
+                'class' : 'qui-button ok',
+                events:
+                {
+                    click: function(event){
+                        event.stop();
+                        date.set({
+                            hours: hoursInput.get('value').toInt(),
+                            minutes: minutesInput.get('value').toInt()
+                        });
+                        fn(date.clone());
+                    }
+                }
             }).inject(container);
 
             return container;
@@ -655,7 +659,7 @@ define('package/quiqqer/calendar/bin/Source/Picker.Date', [
                 input.set('value', formatted).store('datepicker:value', time).fireEvent('change');
             }, this);
 
-            this.fireEvent('select', [ date, inputs, this ] );
+            this.fireEvent('select', [date].concat(inputs));
             this.close();
             return this;
         },
