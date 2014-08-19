@@ -11,10 +11,10 @@ provides: Picker.Date
 define('package/quiqqer/calendar/bin/Source/Picker.Date', [
 
     'package/quiqqer/calendar/bin/Source/Picker.Attach',
-    'package/quiqqer/calendar/bin/Source/Locale.de-DE.DatePicker',
-    'package/quiqqer/calendar/bin/Source/Locale.en-US.DatePicker'
+    'package/quiqqer/calendar/bin/utils/Helper',
+    'Locale'
 
-], function(Attach)
+], function(Attach, DateHelper, QUILocale)
 {
     // Renderers only output elements and calculate the limits!
     var timesSelectors = {
@@ -80,7 +80,7 @@ define('package/quiqqer/calendar/bin/Source/Picker.Date', [
                 thisyear = today.get('year'),
                 selectedyear = currentDate.get('year'),
                 container = new Element('div.months'),
-                monthsAbbr = options.months_abbr || Locale.get('Date.months_abbr'),
+                monthsAbbr = options.months_abbr || DateHelper.getMonthListShort(),
                 element, classes;
 
             months.each(function(_month, i){
@@ -100,26 +100,36 @@ define('package/quiqqer/calendar/bin/Source/Picker.Date', [
             return container;
         },
 
-        days: function(days, options, currentDate, dateElements, fn){
-            var month = new Date(days[14]).get('month'),
-                todayString = new Date().toDateString(),
+        days: function(days, options, currentDate, dateElements, fn)
+        {
+            var day, classes, element, weekcontainer, dateString,
+
+                month         = new Date(days[14]).get('month'),
+                todayString   = new Date().toDateString(),
                 currentString = currentDate.toDateString(),
-                weeknumbers = options.weeknumbers,
+                weeknumbers   = options.weeknumbers,
+
                 container = new Element('table.days' + (weeknumbers ? '.weeknumbers' : ''), {
-                    role: 'grid', 'aria-labelledby': this.titleID
+                    role: 'grid',
+                    'aria-labelledby': this.titleID
                 }),
+
                 header = new Element('thead').inject(container),
-                body = new Element('tbody').inject(container),
+                body   = new Element('tbody').inject(container),
                 titles = new Element('tr.titles').inject(header),
-                localeDaysShort = options.days_abbr || Locale.get('Date.days_abbr'),
-                day, classes, element, weekcontainer, dateString,
+
+                localeDaysShort = options.days_abbr || DateHelper.getDayListShort(),
                 where = options.rtl ? 'top' : 'bottom';
 
-            if (weeknumbers) new Element('th.title.day.weeknumber', {
-                text: Locale.get('DatePicker.week')
-            }).inject(titles);
+            if ( weeknumbers )
+            {
+                new Element('th.title.day.weeknumber', {
+                    text: Locale.get('DatePicker.week')
+                }).inject(titles);
+            }
 
-            for (day = options.startDay; day < (options.startDay + 7); day++){
+            for (day = options.startDay; day < (options.startDay + 7); day++)
+            {
                 new Element('th.title.day.day' + (day % 7), {
                     text: localeDaysShort[(day % 7)],
                     role: 'columnheader'
@@ -161,7 +171,7 @@ define('package/quiqqer/calendar/bin/Source/Picker.Date', [
             date.set('minutes', initMinutes);
 
             var hoursInput = new Element('input.hour[type=text]', {
-                title: Locale.get('DatePicker.use_mouse_wheel'),
+                title: QUILocale.get('quiqqer/calendar', 'use_mouse_wheel'),
                 value: date.format('%H'),
                 events: {
                     click: function(event){
@@ -182,7 +192,7 @@ define('package/quiqqer/calendar/bin/Source/Picker.Date', [
             }).inject(container);
 
             var minutesInput = new Element('input.minutes[type=text]', {
-                title: Locale.get('DatePicker.use_mouse_wheel'),
+                title: QUILocale.get('quiqqer/calendar', 'use_mouse_wheel'),
                 value: date.format('%M'),
                 events: {
                     click: function(event){
@@ -206,7 +216,7 @@ define('package/quiqqer/calendar/bin/Source/Picker.Date', [
             new Element('div.separator[text=:]').inject(container);
 
             new Element('input[type=submit]', {
-                value: Locale.get('DatePicker.time_confirm_button'),
+                value: QUILocale.get('quiqqer/calendar', 'time_confirm_button'),
                 'class' : 'qui-button ok',
                 events:
                 {
@@ -337,10 +347,17 @@ define('package/quiqqer/calendar/bin/Source/Picker.Date', [
                 return date.get('year');
             },
             days_title: function(date, options){
-                return date.format('%b %Y');
+                return DateHelper.getMonthShort( date.getMonth() ) +' '+ date.format('%Y');
             },
-            time_title: function(date, options){
-                return (options.pickOnly == 'time') ? Locale.get('DatePicker.select_a_time') : date.format('%d %B, %Y');
+            time_title: function(date, options)
+            {
+                if ( options.pickOnly == 'time' ) {
+                    return QUILocale.get('quiqqer/calendar', 'select_a_time');
+                }
+
+                return date.format('%d ') +
+                       DateHelper.getMonth( date.getMonth() ) +
+                       date.format(' %Y');
             }
         },
 

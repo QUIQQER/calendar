@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locales>
+
+    <groups name="quiqqer/calendar" datatype="js">
+        <locale name="use_mouse_wheel">
+            <de><![CDATA[Mit dem Mausrad können Sie schneller die Werte ändern.]]></de>
+            <en><![CDATA[Use the mouse wheel to quickly change value.]]></en>
+        </locale>
+        <locale name="time_confirm_button">
+            <de><![CDATA[OK]]></de>
+            <en><![CDATA[OK]]></en>
+        </locale>
+        <locale name="select_a_time">
+            <de><![CDATA[Wählen Sie eine Zeit]]></de>
+            <en><![CDATA[Select a time]]></en>
+        </locale>
+
+    </groups>
+
+
+    <groups name="quiqqer/calendar" datatype="js,php">
+        <locale name="month">
+            <de><![CDATA[Monat]]></de>
+            <en><![CDATA[Month]]></en>
+        </locale>
+        <locale name="day">
+            <de><![CDATA[Tag]]></de>
+            <en><![CDATA[Tag]]></en>
+        </locale>
+        <locale name="year">
+            <de><![CDATA[Jahr]]></de>
+            <en><![CDATA[Year]]></en>
+        </locale>
+
+    <!-- week days -->
+        <locale name="monday">
+            <de><![CDATA[Montag]]></de>
+            <en><![CDATA[Monday]]></en>
+        </locale>
+        <locale name="tuesday">
+            <de><![CDATA[Dienstag]]></de>
+            <en><![CDATA[Tuesday]]></en>
+        </locale>
+        <locale name="wednesday">
+            <de><![CDATA[Mittwoch]]></de>
+            <en><![CDATA[Wednesday]]></en>
+        </locale>
+        <locale name="thursday">
+            <de><![CDATA[Donerstag]]></de>
+            <en><![CDATA[Thursday]]></en>
+        </locale>
+        <locale name="friday">
+            <de><![CDATA[Freitag]]></de>
+            <en><![CDATA[Friday]]></en>
+        </locale>
+        <locale name="saturday">
+            <de><![CDATA[Samstag]]></de>
+            <en><![CDATA[Saturday]]></en>
+        </locale>
+        <locale name="sunday">
+            <de><![CDATA[Sonntag]]></de>
+            <en><![CDATA[Sunday]]></en>
+        </locale>
+
+        <locale name="monday.short">
+            <de><![CDATA[Mon]]></de>
+            <en><![CDATA[Mon]]></en>
+        </locale>
+        <locale name="tuesday.short">
+            <de><![CDATA[Die]]></de>
+            <en><![CDATA[Tue]]></en>
+        </locale>
+        <locale name="wednesday.short">
+            <de><![CDATA[Mit]]></de>
+            <en><![CDATA[Wed]]></en>
+        </locale>
+        <locale name="thursday.short">
+            <de><![CDATA[Don]]></de>
+            <en><![CDATA[Thu]]></en>
+        </locale>
+        <locale name="friday.short">
+            <de><![CDATA[Fre]]></de>
+            <en><![CDATA[Fri]]></en>
+        </locale>
+        <locale name="saturday.short">
+            <de><![CDATA[Sam]]></de>
+            <en><![CDATA[Sat]]></en>
+        </locale>
+        <locale name="sunday.short">
+            <de><![CDATA[Son]]></de>
+            <en><![CDATA[Sun]]></en>
+        </locale>
+
+    <!-- month -->
+        <locale name="month.01">
+            <de><![CDATA[Januar]]></de>
+            <en><![CDATA[January]]></en>
+        </locale>
+        <locale name="month.02">
+            <de><![CDATA[Februar]]></de>
+            <en><![CDATA[February]]></en>
+        </locale>
+        <locale name="month.03">
+            <de><![CDATA[März]]></de>
+            <en><![CDATA[March]]></en>
+        </locale>
+        <locale name="month.04">
+            <de><![CDATA[April]]></de>
+            <en><![CDATA[April]]></en>
+        </locale>
+        <locale name="month.05">
+            <de><![CDATA[Mai]]></de>
+            <en><![CDATA[Mai]]></en>
+        </locale>
+        <locale name="month.06">
+            <de><![CDATA[Juni]]></de>
+            <en><![CDATA[June]]></en>
+        </locale>
+        <locale name="month.07">
+            <de><![CDATA[Juli]]></de>
+            <en><![CDATA[July]]></en>
+        </locale>
+        <locale name="month.08">
+            <de><![CDATA[August]]></de>
+            <en><![CDATA[August]]></en>
+        </locale>
+        <locale name="month.09">
+            <de><![CDATA[September]]></de>
+            <en><![CDATA[September]]></en>
+        </locale>
+        <locale name="month.10">
+            <de><![CDATA[Oktober]]></de>
+            <en><![CDATA[October]]></en>
+        </locale>
+        <locale name="month.11">
+            <de><![CDATA[November]]></de>
+            <en><![CDATA[November]]></en>
+        </locale>
+        <locale name="month.12">
+            <de><![CDATA[Dezember]]></de>
+            <en><![CDATA[December]]></en>
+        </locale>
+
+        <locale name="month.01.short">
+            <de><![CDATA[Jan]]></de>
+            <en><![CDATA[Jan]]></en>
+        </locale>
+        <locale name="month.02.short">
+            <de><![CDATA[Feb]]></de>
+            <en><![CDATA[Febr]]></en>
+        </locale>
+        <locale name="month.03.short">
+            <de><![CDATA[Mär]]></de>
+            <en><![CDATA[Mar]]></en>
+        </locale>
+        <locale name="month.04.short">
+            <de><![CDATA[Apr]]></de>
+            <en><![CDATA[Apr]]></en>
+        </locale>
+        <locale name="month.05.short">
+            <de><![CDATA[Mai]]></de>
+            <en><![CDATA[Mai]]></en>
+        </locale>
+        <locale name="month.06.short">
+            <de><![CDATA[Jun]]></de>
+            <en><![CDATA[Jun]]></en>
+        </locale>
+        <locale name="month.07.short">
+            <de><![CDATA[Jul]]></de>
+            <en><![CDATA[Jul]]></en>
+        </locale>
+        <locale name="month.08.short">
+            <de><![CDATA[Aug]]></de>
+            <en><![CDATA[Aug]]></en>
+        </locale>
+        <locale name="month.09.short">
+            <de><![CDATA[Sept]]></de>
+            <en><![CDATA[Sept]]></en>
+        </locale>
+        <locale name="month.10.short">
+            <de><![CDATA[Okt]]></de>
+            <en><![CDATA[Oct]]></en>
+        </locale>
+        <locale name="month.11.short">
+            <de><![CDATA[Nov]]></de>
+            <en><![CDATA[Nov]]></en>
+        </locale>
+        <locale name="month.12.short">
+            <de><![CDATA[Dez]]></de>
+            <en><![CDATA[Dec]]></en>
+        </locale>
+    </groups>
+
+</locales>
