@@ -8,10 +8,10 @@ provides: Picker.Date
 ...
 */
 
-define('package/quiqqer/calendar/bin/Source/Picker.Date', [
+define([
 
-    'package/quiqqer/calendar/bin/Source/Picker.Attach',
-    'package/quiqqer/calendar/bin/utils/Helper',
+    'URL_OPT_DIR/quiqqer/calendar/bin/Source/Picker.Attach',
+    'URL_OPT_DIR/quiqqer/calendar/bin/utils/Helper',
     'Locale'
 
 ], function(Attach, DateHelper, QUILocale)

@@ -8,7 +8,7 @@ provides: Picker
 ...
 */
 
-define('package/quiqqer/calendar/bin/Source/Picker', function()
+define(function()
 {
     return new Class({
 

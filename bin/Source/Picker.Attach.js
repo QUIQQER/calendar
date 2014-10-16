@@ -8,11 +8,7 @@ provides: Picker.Attach
 ...
 */
 
-define('package/quiqqer/calendar/bin/Source/Picker.Attach', [
-
-    'package/quiqqer/calendar/bin/Source/Picker'
-
-], function(Picker)
+define(['URL_OPT_DIR/quiqqer/calendar/bin/Source/Picker'], function(Picker)
 {
     return new Class({
 
