@@ -3,7 +3,7 @@
     "type" : "quiqqer-library",
 
     "description" : "Mootools Calendar Widget for QUIQQER",
-    "version" : "dev-dev",
+    "version" : "dev-master",
     "license" : "MIT",
 
     "authors" : [{
