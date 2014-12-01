@@ -8,8 +8,10 @@ provides: Picker.Attach
 ...
 */
 
-define(['URL_OPT_DIR/quiqqer/calendar/bin/Source/Picker'], function(Picker)
+define(['package/quiqqer/calendar/bin/Source/Picker'], function(Picker)
 {
+    "use strict";
+
     return new Class({
 
         Extends: Picker,
@@ -24,7 +26,8 @@ define(['URL_OPT_DIR/quiqqer/calendar/bin/Source/Picker'], function(Picker)
             blockKeydown: true
         },
 
-        initialize: function(attachTo, options){
+        initialize: function(attachTo, options)
+        {
             this.parent(options);
 
             this.attachedEvents = [];
@@ -50,29 +53,30 @@ define(['URL_OPT_DIR/quiqqer/calendar/bin/Source/Picker'], function(Picker)
             this.attach(attachTo, this.options.toggle);
         },
 
-        attach: function(attachTo, toggle){
+        attach: function(attachTo, toggle)
+        {
             if (typeOf(attachTo) == 'string') attachTo = document.id(attachTo);
             if (typeOf(toggle) == 'string') toggle = document.id(toggle);
 
-            var elements = Array.from(attachTo),
-                toggles = Array.from(toggle),
+            var elements    = Array.from(attachTo),
+                toggles     = Array.from(toggle),
                 allElements = [].append(elements).combine(toggles),
                 self = this;
 
-            var closeEvent = function(event){
-                var stopInput = self.options.blockKeydown
-                        && event.type == 'keydown'
-                        && !(['tab', 'esc'].contains(event.key)),
-                    isCloseKey = event.type == 'keydown'
-                        && (['tab', 'esc'].contains(event.key)),
+            var closeEvent = function(event)
+            {
+                var stopInput  = self.options.blockKeydown && event.type == 'keydown' && !(['tab', 'esc'].contains(event.key)),
+                    isCloseKey = event.type == 'keydown' && (['tab', 'esc'].contains(event.key)),
                     isA = event.target.get('tag') == 'a';
 
                 if (stopInput || isA) event.preventDefault();
                 if (isCloseKey || isA) self.close();
             };
 
-            var getOpenEvent = function(element){
-                return function(event){
+            var getOpenEvent = function(element)
+            {
+                return function(event)
+                {
                     var tag = event.target.get('tag');
                     if (tag == 'input' && event.type == 'click' && !element.match(':focus') || (self.opened && self.input == element)) return;
                     if (tag == 'a') event.stop();
@@ -82,42 +86,57 @@ define(['URL_OPT_DIR/quiqqer/calendar/bin/Source/Picker'], function(Picker)
                 };
             };
 
-            var getToggleEvent = function(open, close){
-                return function(event){
-                    if (self.opened) close(event);
-                    else open(event);
+            var getToggleEvent = function(open, close)
+            {
+                return function(event)
+                {
+                    if (self.opened)
+                    {
+                        close(event);
+                    } else
+                    {
+                        open(event);
+                    }
                 };
             };
 
-            allElements.each(function(element){
-
+            allElements.each(function(element)
+            {
                 // The events are already attached!
                 if (self.attachedElements.contains(element)) return;
 
-                var events = {},
-                    tag = element.get('tag'),
+                var events    = {},
+                    tag       = element.get('tag'),
                     openEvent = getOpenEvent(element),
                     // closeEvent does not have a depency on element
                     toggleEvent = getToggleEvent(openEvent, closeEvent);
 
-                if (tag == 'input'){
+                if (tag == 'input')
+                {
                     // Fix in order to use togglers only
-                    if (!self.options.togglesOnly || !toggles.length){
+                    if (!self.options.togglesOnly || !toggles.length)
+                    {
                         events = {
                             focus: openEvent,
                             click: openEvent,
                             keydown: closeEvent
                         };
                     }
+
                     self.inputs.push(element);
-                } else {
-                    if (toggles.contains(element)){
+
+                } else
+                {
+                    if (toggles.contains(element))
+                    {
                         self.toggles.push(element);
-                        events.click = toggleEvent
-                    } else {
+                        events.click = toggleEvent;
+                    } else
+                    {
                         events.click = openEvent;
                     }
                 }
+
                 element.addEvents(events);
                 self.attachedElements.push(element);
                 self.attachedEvents.push(events);
@@ -125,18 +144,22 @@ define(['URL_OPT_DIR/quiqqer/calendar/bin/Source/Picker'], function(Picker)
             return this;
         },
 
-        detach: function(attachTo, toggle){
+        detach: function(attachTo, toggle)
+        {
             if (typeOf(attachTo) == 'string') attachTo = document.id(attachTo);
             if (typeOf(toggle) == 'string') toggle = document.id(toggle);
 
-            var elements = Array.from(attachTo),
-                toggles = Array.from(toggle),
+            var elements    = Array.from(attachTo),
+                toggles     = Array.from(toggle),
                 allElements = [].append(elements).combine(toggles),
                 self = this;
 
-            if (!allElements.length) allElements = self.attachedElements;
+            if (!allElements.length) {
+                allElements = self.attachedElements;
+            }
 
-            allElements.each(function(element){
+            allElements.each(function(element)
+            {
                 var i = self.attachedElements.indexOf(element);
                 if (i < 0) return;
 
@@ -154,7 +177,8 @@ define(['URL_OPT_DIR/quiqqer/calendar/bin/Source/Picker'], function(Picker)
             return this;
         },
 
-        destroy: function(){
+        destroy: function()
+        {
             this.detach();
             return this.parent();
         }

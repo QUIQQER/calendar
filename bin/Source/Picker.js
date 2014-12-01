@@ -10,6 +10,8 @@ provides: Picker
 
 define(function()
 {
+    "use strict";
+
     return new Class({
 
         Implements: [ Options, Events ],
@@ -128,9 +130,9 @@ define(function()
 
         open: function(noFx)
         {
-            if (this.opened == true) return this;
+            if (this.opened === true) return this;
             this.opened = true;
-            var picker = this.picker.setStyle('display', 'block').set('aria-hidden', 'false')
+            var picker = this.picker.setStyle('display', 'block').set('aria-hidden', 'false');
             if (this.shim) this.shim.show();
             this.fireEvent('open');
 
@@ -155,7 +157,7 @@ define(function()
         },
 
         close: function(noFx){
-            if (this.opened == false) return this;
+            if (this.opened === false) return this;
             this.opened = false;
             this.fireEvent('close');
 
@@ -186,7 +188,7 @@ define(function()
         },
 
         toggle: function(){
-            return this[this.opened == true ? 'close' : 'open']();
+            return this[this.opened === true ? 'close' : 'open']();
         },
 
         destroy: function(){
@@ -200,22 +202,23 @@ define(function()
                 size = document.getSize(),
                 pickersize = this.picker.getSize();
 
-            if (typeOf(x) == 'element'){
-                var element = x,
-                    where = y || this.options.pickerPosition;
+            if (typeOf(x) == 'element')
+            {
+                var where = y || this.options.pickerPosition;
 
-                var elementCoords = element.getCoordinates();
+                var elementCoords = x.getCoordinates( document.body );
 
                 x = (where == 'left') ? elementCoords.left - pickersize.x
                     : (where == 'bottom' || where == 'top') ? elementCoords.left
-                    : elementCoords.right
+                    : elementCoords.right;
                 y = (where == 'bottom') ? elementCoords.bottom
                     : (where == 'top') ? elementCoords.top - pickersize.y
                     : elementCoords.top;
+
+                x += offset.x * ((where && where == 'left') ? -1 : 1);
+                y += offset.y * ((where && where == 'top') ? -1: 1);
             }
 
-            x += offset.x * ((where && where == 'left') ? -1 : 1);
-            y += offset.y * ((where && where == 'top') ? -1: 1);
 
             if ((x + pickersize.x) > (size.x + scroll.x)) x = (size.x + scroll.x) - pickersize.x;
             if ((y + pickersize.y) > (size.y + scroll.y)) y = (size.y + scroll.y) - pickersize.y;
@@ -271,7 +274,7 @@ define(function()
         },
 
         setColumns: function(columns){
-            var _columns = this.columns = new Elements, _newColumns = this.newColumns = new Elements;
+            var _columns = this.columns = new Elements(), _newColumns = this.newColumns = new Elements();
             for (var i = columns; i--;){
                 _columns.push(new Element('div.column').addClass('column_' + (columns - i)));
                 _newColumns.push(new Element('div.column').addClass('column_' + (columns - i)));
@@ -380,9 +383,7 @@ define(function()
             if (!fn) fn = Function.from;
             this.titleText.empty().adopt(
                 Array.from(content).map(function(item, i){
-                    return typeOf(item) == 'element'
-                        ? item
-                        : new Element('div.column', {text: fn(item, this.options)}).addClass('column_' + (i + 1));
+                    return typeOf(item) == 'element' ? item : new Element('div.column', {text: fn(item, this.options)}).addClass('column_' + (i + 1));
                 }, this)
             );
             return this;

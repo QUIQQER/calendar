@@ -96,7 +96,7 @@ define(['Locale'], function(Locale)
         /**
          * Return the short month name
          *
-         * @param {Integer} month - number of the month
+         * @param {Number} month - number of the month
          * @return {String}
          */
         getMonthShort : function(month)
@@ -109,7 +109,7 @@ define(['Locale'], function(Locale)
         /**
          * Return the short month name
          *
-         * @param {Integer} month - number of the month
+         * @param {Number} month - number of the month
          * @return {String}
          */
         getMonth : function(month)
@@ -118,5 +118,5 @@ define(['Locale'], function(Locale)
 
             return typeof list[ month ] !== 'undefined' ? list[ month ] : '';
         }
-    }
+    };
 });

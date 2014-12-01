@@ -10,16 +10,19 @@ provides: Picker.Date
 
 define([
 
-    'URL_OPT_DIR/quiqqer/calendar/bin/Source/Picker.Attach',
-    'URL_OPT_DIR/quiqqer/calendar/bin/utils/Helper',
+    'package/quiqqer/calendar/bin/Source/Picker.Attach',
+    'package/quiqqer/calendar/bin/utils/Helper',
     'Locale'
 
 ], function(Attach, DateHelper, QUILocale)
 {
+    "use strict";
+
     // Renderers only output elements and calculate the limits!
     var timesSelectors = {
 
-        years: function(options, date){
+        years: function(options, date)
+        {
             var times = [];
             for (var i = 0; i < options.yearsPerPage; i++){
                 times.push(+date);
@@ -28,7 +31,8 @@ define([
             return times;
         },
 
-        months: function(options, date){
+        months: function(options, date)
+        {
             var times = [];
             date.set('month', 0);
             for (var i = 0; i <= 11; i++){
@@ -38,7 +42,8 @@ define([
             return times;
         },
 
-        days: function(options, date){
+        days: function(options, date)
+        {
             var times = [];
             date.set('date', 1);
             while (date.get('day') != options.startDay) date.set('date', date.get('date') - 1);
@@ -139,9 +144,18 @@ define([
             days.each(function(_date, i){
                 var date = new Date(_date);
 
-                if (i % 7 == 0){
+                if (i % 7 === 0)
+                {
                     weekcontainer = new Element('tr.week.week' + (Math.floor(i / 7))).set('role', 'row').inject(body);
-                    if (weeknumbers) new Element('th.day.weeknumber', {text: date.get('week'), scope: 'row', role: 'rowheader'}).inject(weekcontainer);
+
+                    if (weeknumbers)
+                    {
+                        new Element('th.day.weeknumber', {
+                            text: date.get('week'),
+                            scope: 'row',
+                            role: 'rowheader'
+                        }).inject(weekcontainer);
+                    }
                 }
 
                 dateString = date.toDateString();
@@ -162,10 +176,11 @@ define([
             return container;
         },
 
-        time: function(options, date, fn){
+        time: function(options, date, fn)
+        {
             var container = new Element('div.time'),
                 // make sure that the minutes are timeWheelStep * k
-                initMinutes = (date.get('minutes') / options.timeWheelStep).round() * options.timeWheelStep
+                initMinutes = (date.get('minutes') / options.timeWheelStep).round() * options.timeWheelStep;
 
             if (initMinutes >= 60) initMinutes = 0;
             date.set('minutes', initMinutes);
@@ -183,7 +198,7 @@ define([
                         hoursInput.focus();
                         var value = hoursInput.get('value').toInt();
                         value = (event.wheel > 0) ? ((value < 23) ? value + 1 : 0)
-                            : ((value > 0) ? value - 1 : 23)
+                            : ((value > 0) ? value - 1 : 23);
                         date.set('hours', value);
                         hoursInput.set('value', date.format('%H'));
                     }.bind(this)
@@ -257,14 +272,14 @@ define([
                 (minDate && year < minDate.get('year')) ||
                 (maxDate && year > maxDate.get('year')) ||
                 (
-                    (availableDates != null &&  !options.invertAvailable) && (
-                        availableDates[year] == null ||
-                        Object.getLength(availableDates[year]) == 0 ||
+                    (availableDates !== null &&  !options.invertAvailable) && (
+                        availableDates[year] === null ||
+                        Object.getLength(availableDates[year]) === 0 ||
                         Object.getLength(
                             Object.filter(availableDates[year], function(days){
                                 return (days.length > 0);
                             })
-                        ) == 0
+                        ) === 0
                     )
                 )
             );
@@ -278,31 +293,35 @@ define([
                 (minDate && ms < minDate.format('%Y%m').toInt()) ||
                 (maxDate && ms > maxDate.format('%Y%m').toInt()) ||
                 (
-                    (availableDates != null && !options.invertAvailable) && (
-                        availableDates[year] == null ||
-                        availableDates[year][month] == null ||
-                        availableDates[year][month].length == 0
+                    (availableDates !== null && !options.invertAvailable) && (
+                        availableDates[year] === null ||
+                        availableDates[year][month] === null ||
+                        availableDates[year][month].length === 0
                     )
                 )
             );
         }
 
         // type == 'date'
-        year = date.get('year');
+        year  = date.get('year');
         month = date.get('month') + 1;
-        day = date.get('date');
+        day   = date.get('date');
 
         var dateAllow = (minDate && date < minDate) || (minDate && date > maxDate);
-        if (availableDates != null){
-            dateAllow = dateAllow
-                || availableDates[year] == null
-                || availableDates[year][month] == null
-                || !availableDates[year][month].contains(day);
+
+        if (availableDates !== null)
+        {
+            dateAllow = dateAllow ||
+                        availableDates[year] === null ||
+                        availableDates[year][month] === null ||
+                        !availableDates[year][month].contains(day);
+
             if (options.invertAvailable) dateAllow = !dateAllow;
         }
 
         return dateAllow;
     };
+
 
     return new Class({
 
@@ -343,10 +362,10 @@ define([
                 var year = date.get('year');
                 return year + '-' + (year + options.yearsPerPage - 1);
             },
-            months_title: function(date, options){
+            months_title: function(date){
                 return date.get('year');
             },
-            days_title: function(date, options){
+            days_title: function(date){
                 return DateHelper.getMonthShort( date.getMonth() ) +' '+ date.format('%Y');
             },
             time_title: function(date, options)
@@ -427,11 +446,11 @@ define([
             this.date = new Date();
             if (!input) return;
             var date = Date.parse(input.get('value'));
-            if (date == null || !date.isValid()){
+            if (date === null || !date.isValid()){
                 var storeDate = input.retrieve('datepicker:value');
                 if (storeDate) date = Date.parse(storeDate);
             }
-            if (date != null && date.isValid()) this.date = date;
+            if (date !== null && date.isValid()) this.date = date;
         },
 
         // Control the previous and next elements
@@ -475,13 +494,16 @@ define([
             return this.setPreviousEvent(fn, true);
         },
 
-        setColumns: function(columns, view, date, viewFx){
+        setColumns: function(columns, view, date, viewFx)
+        {
             var ret = this.parent(columns), method;
 
-            if ((view || this.currentView)
-                && (method = 'render' + (view || this.currentView).capitalize())
-                && this[method]
-            ) this[method](date || this.date.clone(), viewFx);
+            if ((view || this.currentView) &&
+                (method = 'render' + (view || this.currentView).capitalize()) &&
+                this[method] )
+            {
+                this[method](date || this.date.clone(), viewFx);
+            }
 
             return ret;
         },
@@ -587,12 +609,17 @@ define([
             this.currentView = 'months';
         },
 
-        renderDays: function(date, fx){
-            var options = this.options, months = options.columns, _columns = [], _dates = [],
+        renderDays: function(date, fx)
+        {
+            var _date, _columns = [], _dates = [];
+
+            var options     = this.options, months = options.columns,
                 iterateDate = date.clone().decrement('month', Math.floor((months - 1) / 2));
+
             this.dateElements = [];
 
-            for (var i = months; i--;){
+            for (var i = months; i--;)
+            {
                 _date = iterateDate.clone();
                 _dates.push(_date);
                 _columns.push(renderers.days(
@@ -600,9 +627,16 @@ define([
                     options,
                     this.date.clone(),
                     this.dateElements,
-                    function(date){
-                        if (options.pickOnly == 'days' || !options.timePicker) this.select(date)
-                        else this.renderTime(date, 'fade');
+                    function(date)
+                    {
+                        if (options.pickOnly == 'days' || !options.timePicker)
+                        {
+                            this.select(date);
+                        } else
+                        {
+                            this.renderTime(date, 'fade');
+                        }
+
                         this.date = date;
                     }.bind(this)
                 ));
