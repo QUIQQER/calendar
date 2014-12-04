@@ -9,13 +9,15 @@
 
 define([
 
-    'URL_OPT_DIR/quiqqer/calendar/bin/Source/Picker',
-    'URL_OPT_DIR/quiqqer/calendar/bin/Source/Picker.Attach',
-    'URL_OPT_DIR/quiqqer/calendar/bin/Source/Picker.Date',
+    'package/quiqqer/calendar/bin/Source/Picker',
+    'package/quiqqer/calendar/bin/Source/Picker.Attach',
+    'package/quiqqer/calendar/bin/Source/Picker.Date',
 
-    'css!URL_OPT_DIR/quiqqer/calendar/bin/Source/datepicker_dashboard/datepicker_dashboard.css'
+    'css!package/quiqqer/calendar/bin/Source/datepicker_dashboard/datepicker_dashboard.css'
 
 ], function(Picker, Attach, DatePicker)
 {
+    "use strict";
+
     return DatePicker;
 });
