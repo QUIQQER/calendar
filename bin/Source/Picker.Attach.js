@@ -80,6 +80,13 @@ define(['package/quiqqer/calendar/bin/Source/Picker'], function(Picker)
                     var tag = event.target.get('tag');
                     if (tag == 'input' && event.type == 'click' && !element.match(':focus') || (self.opened && self.input == element)) return;
                     if (tag == 'a') event.stop();
+
+                    if ( tag == 'input' && element.value == '0000-00-00 00:00:00' )
+                    {
+                        element.value = '';
+                        element.set( 'data-oldDate', '0000-00-00 00:00:00' );
+                    }
+
                     self.position(element);
                     self.open();
                     self.fireEvent('attached', [event, element]);

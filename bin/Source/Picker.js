@@ -156,8 +156,26 @@ define(function()
             return this.open(true);
         },
 
-        close: function(noFx){
+        close: function(noFx)
+        {
             if (this.opened === false) return this;
+
+            // element.set( 'data-oldDate', '0000-00-00 00:00:00' )
+            this.inputs.each(function(input)
+            {
+                if ( input.get('value') != '0000-00-00 00:00:00' &&
+                     input.get('value') !== '' )
+                {
+                    return;
+                }
+
+                if ( input.get( 'data-oldDate' ) )
+                {
+                    input.set( 'value', input.get( 'data-oldDate' ) );
+                    input.set( 'data-oldDate', null );
+                }
+            });
+
             this.opened = false;
             this.fireEvent('close');
 
