@@ -5,6 +5,8 @@
  */
 namespace QUI\Calendar;
 
+use QUI;
+
 /**
  * Class Calendar
  * one Calendar
@@ -19,6 +21,7 @@ class Calendar
 
     public function addCalendarEvent()
     {
+        QUI::
     }
 
     public function editCalendarEvent()
