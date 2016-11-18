@@ -6,14 +6,17 @@
             <de><![CDATA[QUIQQER - Kalender / Termin Verwaltung]]></de>
             <en><![CDATA[QUIQQER - Calendar management]]></en>
         </locale>
-        <locale name="package.title">
+        <locale name="package.description">
             <de><![CDATA[]]></de>
             <en><![CDATA[]]></en>
         </locale>
     </groups>
 
     <groups name="quiqqer/calendar" datatype="js">
-
+        <locale name="panel.button.add.text">
+            <de><![CDATA[Event hinzufügen]]></de>
+            <en><![CDATA[Add event]]></en>
+        </locale>
     </groups>
 
 </locales>
