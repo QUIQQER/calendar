@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database>
+    <global>
+        <table name="calendars">
+            <field type="INT( 5 ) NOT NULL AUTO_INCREMENT PRIMARY KEY">id</field>
+            <field type="VARCHAR( 60 ) NOT NULL">name</field>
+            <field type="TINYINT( 1 )">global</field>
+        </table>
+
+        <table name="calendars_events">
+            <field type="INT( 6 ) NOT NULL AUTO_INCREMENT PRIMARY KEY">eventid</field>
+            <field type="VARCHAR( 60 ) NOT NULL">title</field>
+            <field type="TEXT NULL">desc</field>
+            <field type="DATETIME NOT NULL">start</field>
+            <field type="DATETIME NOT NULL">end</field>
+            <field type="INT( 5 ) NOT NULL">calendarid</field>
+        </table>
+    </global>
+</database>
