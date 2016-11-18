@@ -16,5 +16,10 @@
   },
   "require": {
     "quiqqer/quiqqer": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "QUI\\Calendar\\": "src/QUI/Calendar"
+    }
   }
 }
