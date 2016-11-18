@@ -19,6 +19,5 @@ class Handler
      */
     public static function createCalendar($name, $User = null)
     {
-
     }
 }

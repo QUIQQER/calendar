@@ -15,26 +15,21 @@ class Calendar
 {
     public function __construct($calendarId)
     {
-
     }
 
     public function addCalendarEvent()
     {
-
     }
 
     public function editCalendarEvent()
     {
-
     }
 
     public function removeCalendarEvent()
     {
-
     }
 
     public function toICal()
     {
-        
     }
 }
