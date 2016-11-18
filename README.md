@@ -2,6 +2,8 @@
 QUIQQER Kalender
 ========
 
+Kalender Plugin - Verwaltung von Terminen
+
 Paketname:
 
     quiqqer/calender
