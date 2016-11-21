@@ -21,7 +21,8 @@ define('package/quiqqer/calendar/bin/Panel', [
         Binds: [
             '$onCreate',
             '$onInject',
-            '$onButtonAddEventClick'
+            '$onButtonAddEventClick',
+            '$onButtonAddCalendarClick'
         ],
 
         initialize: function (options)
@@ -44,30 +45,58 @@ define('package/quiqqer/calendar/bin/Panel', [
         $onCreate: function ()
         {
             this.addButton({
-                text     : QUILocale.get(lg, 'panel.button.add.text'),
+                text     : QUILocale.get(lg, 'panel.button.add.event.text'),
                 textimage: 'fa fa-plus',
                 events   : {
                     onClick: this.$onButtonAddEventClick
                 }
             });
-        },
 
-        /**
-         *
-         */
-        $onInject: function ()
-        {
-            QUIAjax.get('package_quiqqer_calendar_ajax_getList', function (result)
-            {
-                console.info(result);
-            }, {
-                'package': 'quiqqer/calendar'
+            this.addButton({
+                text     : QUILocale.get(lg, 'panel.button.add.calendar.text'),
+                textimage: 'fa fa-plus',
+                events   : {
+                    onClick: this.$onButtonAddCalendarClick
+                }
             });
         },
 
+        /**
+         * Run when the Panel is inserted into the page.
+         */
+        $onInject: function ()
+        {
+//            QUIAjax.get('package_quiqqer_calendar_ajax_getList', function (result)
+//            {
+//                console.info(result);
+//            }, {
+//                'package': 'quiqqer/calendar'
+//            });
+        },
+
+        /**
+         * Adds a new event to a calendar
+         */
         $onButtonAddEventClick: function ()
         {
-            
+//            QUIAjax.post('package_quiqqer_calendar_ajax_createCalendar', function(result) {
+//                console.info(result);
+//            }, {
+//                'package' : 'quiqqer/calendar',
+//                'userid' : 0,
+//                'name' : 'Test'
+//            })
+        },
+
+        /**
+         * Adds a new calendar.
+         */
+        $onButtonAddCalendarClick: function ()
+        {
+            require(['package/quiqqer/calendar/bin/AddCalendarWindow'], function (AddCalendarWindow) {
+                var acWindow = new AddCalendarWindow();
+                acWindow.open();
+            });
         }
     });
 });

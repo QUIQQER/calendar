@@ -12,10 +12,30 @@
         </locale>
     </groups>
 
+
+    <groups name="quiqqer/cron" datatype="php">
+        <locale name="message.calendar.successful.created">
+            <de><![CDATA[Der Kalender wurde erfolgreich erstellt.]]></de>
+            <en><![CDATA[The calendar was successfully created.]]></en>
+        </locale>
+    </groups>
+
+
     <groups name="quiqqer/calendar" datatype="js">
-        <locale name="panel.button.add.text">
+
+        <locale name="calendar.window.addcalendar.title">
+            <de><![CDATA[Kalender hinzufügen]]></de>
+            <en><![CDATA[Add Calendar]]></en>
+        </locale>
+
+        <locale name="panel.button.add.event.text">
             <de><![CDATA[Event hinzufügen]]></de>
             <en><![CDATA[Add event]]></en>
+        </locale>
+
+        <locale name="panel.button.add.calendar.text">
+            <de><![CDATA[Kalender hinzufügen]]></de>
+            <en><![CDATA[Add calendar]]></en>
         </locale>
     </groups>
 
