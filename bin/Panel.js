@@ -193,15 +193,12 @@ define('package/quiqqer/calendar/bin/Panel', [
          * @return {self}
          */
         deleteMarkedCalendars: function () {
-            console.log(this.$Grid);
             if (!this.$Grid) {
                 return this;
             }
 
             var self = this,
                 data = this.$Grid.getSelectedData();
-
-            console.log(data);
 
             if (!data.length) {
                 return this;
