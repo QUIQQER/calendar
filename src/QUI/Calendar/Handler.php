@@ -16,6 +16,7 @@ class Handler
 {
 
     public static $calendarTable = QUI_DB_PRFX . 'calendars';
+    public static $calendarEventsTable = QUI_DB_PRFX . 'calendars_events';
 
     /**
      * Creates a new Calendar
@@ -57,6 +58,10 @@ class Handler
 
             $Database->delete(Handler::$calendarTable, array(
                 'id' => $id
+            ));
+
+            $Database->delete(Handler::$calendarEventsTable, array(
+                'calendarid' => $id
             ));
         }
     }
