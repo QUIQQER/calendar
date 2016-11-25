@@ -114,6 +114,12 @@ define('package/quiqqer/calendar/bin/Panel', [
             this.$Grid.addEvents({
                 onRefresh: function () {
                     self.loadCalendars();
+                },
+
+                onDblClick: function (data) {
+                    var rowData = self.$Grid.getDataByRow(data.row);
+
+                    self.editCalendar(rowData.id);
                 }
             });
 
@@ -177,13 +183,37 @@ define('package/quiqqer/calendar/bin/Panel', [
         $onButtonAddCalendarClick: function ()
         {
             var self = this;
-            require(['package/quiqqer/calendar/bin/AddCalendarWindow'], function (AddCalendarWindow) {
-                var acWindow = new AddCalendarWindow();
-                acWindow.addEvent('onClose', function() {
+            require(['package/quiqqer/calendar/bin/CalendarWindow'], function (CalendarWindow) {
+                var cWindow = new CalendarWindow();
+                cWindow.addEvent('onClose', function() {
                     self.$Grid.refresh();
                 });
-                acWindow.open();
+                cWindow.open();
             });
+        },
+
+
+        /**
+         * Edits the calendar with the given ID
+         *
+         * @param calendarID - The calendar to edit
+         */
+        editCalendar: function(calendarID)
+        {
+            var self = this;
+
+            require(['package/quiqqer/calendar/bin/CalendarWindow'], function (CalendarWindow) {
+                new CalendarWindow({
+                    calendarID: calendarID,
+                    events: {
+                        onClose: function () {
+                            self.loadCalendars();
+                        }
+                    }
+                }).open();
+            });
+
+            return this;
         },
 
 
@@ -192,7 +222,8 @@ define('package/quiqqer/calendar/bin/Panel', [
          *
          * @return {self}
          */
-        deleteMarkedCalendars: function () {
+        deleteMarkedCalendars: function ()
+        {
             if (!this.$Grid) {
                 return this;
             }

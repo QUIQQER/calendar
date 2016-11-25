@@ -50,6 +50,33 @@ class Calendar
         return true;
     }
 
+    /**
+     * @param $name
+     * @param null|QUI\Users\User $user
+     */
+    public function editCalendar($name, $user = null)
+    {
+        $update = array(
+            'name'   => $name,
+            'userid' => null
+        );
+        $this->name = $name;
+
+        if (!empty($user) && !is_null($user)) {
+            $update['userid'] = $user->getId();
+            $this->user = $user;
+        }
+
+        QUI::getDataBase()->update(
+            $this->calendarsTable,
+            $update,
+            array(
+                'id' => $this->getId()
+            )
+        );
+    }
+
+
 
     /**
      * Adds an event to the calendar.
@@ -152,5 +179,15 @@ class Calendar
     public function isGlobal()
     {
         return is_null($this->user);
+    }
+
+
+    public function toArray()
+    {
+        return array(
+            'isGlobal' => $this->isGlobal(),
+            'calendarname' => $this->getName(),
+            'id' => $this->getId()
+        );
     }
 }
