@@ -81,14 +81,14 @@ define('package/quiqqer/calendar/bin/AddCalendarWindow', [
          *
          * @returns {Promise}
          */
-        createCalendar: function (name, userid)
+        createCalendar: function (calendarName, userid)
         {
             return new Promise(function (resolve, reject)
             {
                 QUIAjax.post('package_quiqqer_calendar_ajax_createCalendar', resolve, {
                     'package': 'quiqqer/calendar',
                     'userid' : userid,
-                    'name'   : name,
+                    'name'   : calendarName,
                     onError  : reject
                 });
             });

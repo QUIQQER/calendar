@@ -9,7 +9,7 @@ QUI::$Ajax->registerFunction(
     function ($name, $userid) {
         $user = null;
         if (!is_null($userid) && !empty($userid)) {
-            $user = new \QUI\Users\User($userid, new \QUI\Users\Manager());
+            $user = QUI::getUsers()->get($userid);
         }
         \QUI\Calendar\Handler::createCalendar($name, $user);
     },

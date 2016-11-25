@@ -14,6 +14,9 @@ use QUI\Users\User;
  */
 class Handler
 {
+
+    public static $calendarTable = QUI_DB_PRFX . 'calendars';
+
     /**
      * Creates a new Calendar
      *
@@ -38,5 +41,36 @@ class Handler
                 'message.calendar.successful.created'
             )
         );
+    }
+
+
+    /**
+     * Deletes calendars with the given IDs from the database
+     *
+     * @param array $ids - The IDs of calendar which should be deleted
+     */
+    public static function deleteCalendars($ids)
+    {
+        $Database = QUI::getDataBase();
+        foreach ($ids as $id) {
+            $id = (int)$id;
+
+            $Database->delete(Handler::$calendarTable, array(
+                'id' => $id
+            ));
+        }
+    }
+
+
+    /**
+     * Returns calendars from database.
+     *
+     * @return array - calendars in the database
+     */
+    public static function getCalendars()
+    {
+        return QUI::getDataBase()->fetch(array(
+            'from'  => QUI_DB_PRFX . 'calendars'
+        ));
     }
 }

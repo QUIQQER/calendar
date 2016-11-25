@@ -28,6 +28,53 @@
             <en><![CDATA[Add Calendar]]></en>
         </locale>
 
+        <locale name="calendar.window.addevent.title">
+            <de><![CDATA[Event hinzufügen]]></de>
+            <en><![CDATA[Add Event]]></en>
+        </locale>
+
+        <locale name="calendar.window.addevent.event.title">
+            <de><![CDATA[Titel]]></de>
+            <en><![CDATA[Title]]></en>
+        </locale>
+
+        <locale name="calendar.window.addevent.event.desc">
+            <de><![CDATA[Beschreibung]]></de>
+            <en><![CDATA[Description]]></en>
+        </locale>
+
+        <locale name="calendar.window.addevent.event.start">
+            <de><![CDATA[Start]]></de>
+            <en><![CDATA[Start]]></en>
+        </locale>
+
+        <locale name="calendar.window.addevent.event.end">
+            <de><![CDATA[End]]></de>
+            <en><![CDATA[End]]></en>
+        </locale>
+
+        <locale name="calendar.window.addevent.event.calendarID">
+            <de><![CDATA[Kalender ID]]></de>
+            <en><![CDATA[Calendar ID]]></en>
+        </locale>
+
+
+        <locale name="calendar.window.delete.calendar.title">
+            <de><![CDATA[Kalender löschen]]></de>
+            <en><![CDATA[Delete Calendar]]></en>
+        </locale>
+        <locale name="calendar.window.delete.calendar.text">
+            <de><![CDATA[<p>Möchten Sie folgende Kalender wirklich löschen?</p>]]></de>
+            <en><![CDATA[<p>Do you really want to delete the following calendars?</p>]]></en>
+        </locale>
+        <locale name="calendar.window.delete.calendar.information">
+            <de><![CDATA[<p>Zu löschende Kalender mit IDs: <b>[ids]</b></p>
+                <p>Beachten Sie, die Kalender und dazugehörige Events sind nicht wiederherstellbar</p>]]></de>
+            <en><![CDATA[<p>You want to delete following calendars with IDs: <b>[ids]</b></p>
+                <p>Note that the calendars and the corresponding events can not be restored.</p>]]></en>
+        </locale>
+
+
         <locale name="panel.button.add.event.text">
             <de><![CDATA[Event hinzufügen]]></de>
             <en><![CDATA[Add event]]></en>
@@ -36,6 +83,21 @@
         <locale name="panel.button.add.calendar.text">
             <de><![CDATA[Kalender hinzufügen]]></de>
             <en><![CDATA[Add calendar]]></en>
+        </locale>
+
+        <locale name="calendar.title">
+            <de><![CDATA[Kalender Name]]></de>
+            <en><![CDATA[Calendar Name]]></en>
+        </locale>
+
+        <locale name="calendar.userid">
+            <de><![CDATA[Besitzer]]></de>
+            <en><![CDATA[Owner]]></en>
+        </locale>
+
+        <locale name="calendar.isglobal">
+            <de><![CDATA[Global?]]></de>
+            <en><![CDATA[Global?]]></en>
         </locale>
     </groups>
 
