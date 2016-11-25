@@ -30,7 +30,7 @@ class Handler
             $userID = $User->getId();
         }
 
-        QUI::getDataBase()->insert(QUI_DB_PRFX . 'calendars', array(
+        QUI::getDataBase()->insert(Handler::$calendarTable, array(
             'name' => $name,
             'userid' => $userID
         ));
@@ -70,7 +70,7 @@ class Handler
     public static function getCalendars()
     {
         return QUI::getDataBase()->fetch(array(
-            'from'  => QUI_DB_PRFX . 'calendars'
+            'from'  => Handler::$calendarTable
         ));
     }
 }
