@@ -116,9 +116,13 @@ define('package/quiqqer/calendar/bin/Panel', [
                     self.loadCalendars();
                 },
 
+                onClick: function(data) {
+                    var rowData = self.$Grid.getDataByRow(data.row);
+                    self.showEvents(rowData.id);
+                },
+
                 onDblClick: function (data) {
                     var rowData = self.$Grid.getDataByRow(data.row);
-
                     self.editCalendar(rowData.id);
                 }
             });
@@ -260,6 +264,28 @@ define('package/quiqqer/calendar/bin/Panel', [
                     }
                 }
             }).open();
+
+            return this;
+        },
+
+
+        /**
+         * Show the events of a given calendar ID
+         *
+         * @param calendarID The calendar id of which the events should be shown
+         */
+        showEvents: function(calendarID) {
+            var self = this;
+
+            require([
+                'package/quiqqer/calendar/bin/CalendarPanel',
+                'utils/Panels'
+            ], function (CalendarPanel, Utils) {
+                Utils.openPanelInTasks( new CalendarPanel({
+                    title: 'Events',
+                    calendarID: calendarID
+                }) );
+            });
 
             return this;
         }

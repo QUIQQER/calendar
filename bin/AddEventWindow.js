@@ -15,12 +15,12 @@ define('package/quiqqer/calendar/bin/AddEventWindow', [
     var lg = 'quiqqer/calendar';
 
     return new Class({
-        Extends: QUIConfirm,
-        Type   : 'package/quiqqer/calendar/bin/AddEventWindow',
+        Extends  : QUIConfirm,
+        Type     : 'package/quiqqer/calendar/bin/AddEventWindow',
 
         Binds: [
             '$onSubmit',
-            '$onOpen'
+            '$onInject'
         ],
 
         options: {
@@ -41,7 +41,7 @@ define('package/quiqqer/calendar/bin/AddEventWindow', [
             });
         },
 
-        $onOpen: function ()
+        $onInject: function ()
         {
             var Content = this.getContent();
 
