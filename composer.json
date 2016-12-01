@@ -15,7 +15,8 @@
     "mail": "support@pcsg.de"
   },
   "require": {
-    "quiqqer/quiqqer": "*"
+    "quiqqer/quiqqer": "*",
+    "eluceo/ical": "0.11.0"
   },
   "autoload": {
     "psr-4": {

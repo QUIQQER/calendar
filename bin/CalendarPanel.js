@@ -49,7 +49,7 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
                 html: Mustache.render(template)
             });
 
-            Scheduler.init(Content.getElementById('scheduler_here'),new Date(2014,9,11));
+            Scheduler.init(Content.getElementById('scheduler_here'));
             var events = [
                 {id:1, text:"Meeting",   start_date:"04/11/2013 14:00",end_date:"04/11/2013 17:00"},
                 {id:2, text:"Conference",start_date:"04/15/2013 12:00",end_date:"04/18/2013 19:00"},
@@ -57,6 +57,9 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
             ];
 
             Scheduler.parse(events, 'json');
+//            Scheduler.addEvent('onEventChanged', function() {
+//                console.log('event changed.');
+//            })
         },
 
         /**
