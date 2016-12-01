@@ -4,6 +4,7 @@
  */
 namespace QUI\Calendar;
 
+use Eluceo\iCal\Component\Event;
 use QUI;
 
 /**
@@ -137,8 +138,38 @@ class Calendar
         ));
     }
 
+    /**
+     * Converts a calendar and all its' events to iCal format
+     *
+     * @return string
+     */
     public function toICal()
     {
+        $Calendar = new \Eluceo\iCal\Component\Calendar($this->getId());
+        $Events   = $this->getEvents();
+        foreach ($Events as $Event) {
+            $start = new \DateTime();
+            $start->setTimestamp($Event['start']);
+
+            $end = new \DateTime();
+            $end->setTimestamp($Event['end']);
+
+            $noTime = $Event['notime'] == 0 ? false : true;
+
+            $CalendarEvent = new Event();
+            $CalendarEvent
+                ->setDtStart($start)
+                ->setDtEnd($end)
+                ->setNoTime($noTime)
+                ->setSummary($Event['title'])
+                ->setDescription($Event['desc'])
+                ->setUniqueId($Event['eventid'])
+            ;
+
+            $Calendar->addComponent($CalendarEvent);
+        }
+
+        return $Calendar->render();
     }
 
     /**
@@ -179,6 +210,17 @@ class Calendar
     public function isGlobal()
     {
         return is_null($this->user);
+    }
+
+
+    public function getEvents()
+    {
+        return QUI::getDataBase()->fetch(array(
+            'from'  => $this->eventsTable,
+            'where' => array(
+                'calendarid' => (int)$this->getId()
+            )
+        ));
     }
 
 
