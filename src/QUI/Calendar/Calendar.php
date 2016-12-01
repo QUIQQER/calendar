@@ -78,7 +78,6 @@ class Calendar
     }
 
 
-
     /**
      * Adds an event to the calendar.
      *
@@ -86,15 +85,17 @@ class Calendar
      * @param string $desc - Event description
      * @param int $start - Unix timestamp when the event starts
      * @param int $end - Unix timestamp when the event ends
+     * @param int $notime - 0=false; 1=true event covers whole day
      */
-    public function addCalendarEvent($title, $desc, $start, $end)
+    public function addCalendarEvent($title, $desc, $start, $end, $notime = 0)
     {
 
         $data = array(
-            'title' => $title,
-            'desc'  => $desc,
-            'start' => $start,
-            'end'   => $end
+            'title'  => $title,
+            'desc'   => $desc,
+            'start'  => $start,
+            'end'    => $end,
+            'notime' => $notime
         );
 
         if (!$this->isGlobal()) {
@@ -113,16 +114,18 @@ class Calendar
      * @param string $desc - Event description
      * @param int $start - Unix timestamp when the event starts
      * @param int $end - Unix timestamp when the event ends
+     * @param int $notime - 0=false; 1=true event covers whole day
      */
-    public function editCalendarEvent($eventID, $title, $desc, $start, $end)
+    public function editCalendarEvent($eventID, $title, $desc, $start, $end, $notime = 0)
     {
         QUI::getDataBase()->update($this->eventsTable, array(
-            'title' => $title,
-            'desc'  => $desc,
-            'start' => $start,
-            'end'   => $end
+            'title'  => $title,
+            'desc'   => $desc,
+            'start'  => $start,
+            'end'    => $end,
+            'notime' => $notime
         ), array(
-            'id' => $eventID
+            'eventid' => $eventID
         ));
     }
 

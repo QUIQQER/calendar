@@ -44,6 +44,7 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
 
         $onCreate: function ()
         {
+            var self = this;
             console.log('CID: ' + this.calendarID);
 
             var Content = this.getContent();
@@ -61,6 +62,23 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
             }, {
                 'package' : 'quiqqer/calendar',
                 calendarID: this.calendarID
+            });
+
+            Scheduler.attachEvent("onEventChanged", function (id, ev)
+            {
+                QUIAjax.post('package_quiqqer_calendar_ajax_editEvent', function (result)
+                {
+                    console.log(result);
+                }, {
+                    'package'    : 'quiqqer/calendar',
+                    'calendarID' : self.calendarID,
+                    'eventID'    : ev.id,
+                    'title'      : ev.text,
+                    'desc'       : ev.description,
+                    'start'      : ev.start_date.getTime()/1000,
+                    'end'        : ev.end_date.getTime()/1000,
+                    'notime'     : (ev['x-microsoft-cdo-alldayevent'] === undefined) ? 0 : 1
+                });
             });
         },
 
