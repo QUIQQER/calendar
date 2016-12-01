@@ -6,10 +6,10 @@
 
 QUI::$Ajax->registerFunction(
     'package_quiqqer_calendar_ajax_addEvent',
-    function ($title, $desc, $start, $end, $calendarID) {
+    function ($calendarID, $title, $desc, $start, $end) {
         $calendar = new \QUI\Calendar\Calendar($calendarID);
-        $calendar->addCalendarEvent($title, $desc, $start, $end, 0);
+        $calendar->addCalendarEvent($title, $desc, $start, $end);
     },
-    array('title', 'desc', 'start', 'end', 'calendarID'),
+    array('calendarID', 'title', 'desc', 'start', 'end'),
     'Permission::checkAdminUser'
 );

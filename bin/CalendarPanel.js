@@ -53,11 +53,11 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
             });
 
             Scheduler.init(Content.getElementById('scheduler_here'));
+//            Scheduler.config.full_day = true;
 
             QUIAjax.get('package_quiqqer_calendar_ajax_getCalendarAsIcal', function (result)
             {
                 console.log(result);
-                Scheduler.config.full_day = true;
                 Scheduler.parse(result, 'ical');
             }, {
                 'package' : 'quiqqer/calendar',
@@ -66,6 +66,7 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
 
             Scheduler.attachEvent("onEventChanged", function (id, ev)
             {
+                console.log(ev);
                 QUIAjax.post('package_quiqqer_calendar_ajax_editEvent', function (result)
                 {
                     console.log(result);
@@ -76,8 +77,25 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
                     'title'      : ev.text,
                     'desc'       : ev.description,
                     'start'      : ev.start_date.getTime()/1000,
-                    'end'        : ev.end_date.getTime()/1000,
-                    'notime'     : (ev['x-microsoft-cdo-alldayevent'] === undefined) ? 0 : 1
+                    'end'        : ev.end_date.getTime()/1000
+                });
+            });
+
+
+            Scheduler.attachEvent("onEventAdded", function (id, ev)
+            {
+                console.log(ev);
+                console.log('Cal ID: ' + self.calendarID);
+                QUIAjax.post('package_quiqqer_calendar_ajax_addEvent', function (result)
+                {
+                    console.log(result);
+                }, {
+                    'package'    : 'quiqqer/calendar',
+                    'calendarID' : self.calendarID,
+                    'title'      : ev.text,
+                    'desc'       : ev.text,
+                    'start'      : ev.start_date.getTime()/1000,
+                    'end'        : ev.end_date.getTime()/1000
                 });
             });
         },

@@ -13,7 +13,6 @@
             <field type="TEXT NULL">desc</field>
             <field type="INT( 11 ) NOT NULL">start</field>
             <field type="INT( 11 ) NOT NULL">end</field>
-            <field type="TINYINT( 1 ) NOT NULL">notime</field>
             <field type="INT( 5 ) NOT NULL">calendarid</field>
         </table>
     </global>

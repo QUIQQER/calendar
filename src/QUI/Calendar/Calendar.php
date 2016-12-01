@@ -42,7 +42,7 @@ class Calendar
 
         $result = $result[0];
 
-        $this->id   = $result['id'];
+        $this->id   = $calendarId;
         $this->name = $result['name'];
         if (!is_null($result['userid'])) {
             $this->user = QUI::getUsers()->get($result['userid']);
@@ -85,22 +85,17 @@ class Calendar
      * @param string $desc - Event description
      * @param int $start - Unix timestamp when the event starts
      * @param int $end - Unix timestamp when the event ends
-     * @param int $notime - 0=false; 1=true event covers whole day
      */
-    public function addCalendarEvent($title, $desc, $start, $end, $notime = 0)
+    public function addCalendarEvent($title, $desc, $start, $end)
     {
 
         $data = array(
-            'title'  => $title,
-            'desc'   => $desc,
-            'start'  => $start,
-            'end'    => $end,
-            'notime' => $notime
+            'title'      => $title,
+            'desc'       => $desc,
+            'start'      => $start,
+            'end'        => $end,
+            'calendarid' => $this->getId()
         );
-
-        if (!$this->isGlobal()) {
-            $data['userid'] = $this->getUser()->getId();
-        }
 
         QUI::getDataBase()->insert($this->eventsTable, $data);
     }
@@ -114,16 +109,14 @@ class Calendar
      * @param string $desc - Event description
      * @param int $start - Unix timestamp when the event starts
      * @param int $end - Unix timestamp when the event ends
-     * @param int $notime - 0=false; 1=true event covers whole day
      */
-    public function editCalendarEvent($eventID, $title, $desc, $start, $end, $notime = 0)
+    public function editCalendarEvent($eventID, $title, $desc, $start, $end)
     {
         QUI::getDataBase()->update($this->eventsTable, array(
             'title'  => $title,
             'desc'   => $desc,
             'start'  => $start,
-            'end'    => $end,
-            'notime' => $notime
+            'end'    => $end
         ), array(
             'eventid' => $eventID
         ));
@@ -157,13 +150,10 @@ class Calendar
             $end = new \DateTime();
             $end->setTimestamp($Event['end']);
 
-            $noTime = $Event['notime'] == 0 ? false : true;
-
             $CalendarEvent = new Event();
             $CalendarEvent
                 ->setDtStart($start)
                 ->setDtEnd($end)
-                ->setNoTime($noTime)
                 ->setSummary($Event['title'])
                 ->setDescription($Event['desc'])
                 ->setUniqueId($Event['eventid'])
