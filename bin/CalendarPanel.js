@@ -45,7 +45,6 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
         $onCreate: function ()
         {
             var self = this;
-            console.log('CID: ' + this.calendarID);
 
             var Content = this.getContent();
             Content.set({
@@ -53,11 +52,9 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
             });
 
             Scheduler.init(Content.getElementById('scheduler_here'));
-//            Scheduler.config.full_day = true;
 
             QUIAjax.get('package_quiqqer_calendar_ajax_getCalendarAsIcal', function (result)
             {
-                console.log(result);
                 Scheduler.parse(result, 'ical');
             }, {
                 'package' : 'quiqqer/calendar',
@@ -66,11 +63,8 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
 
             Scheduler.attachEvent("onEventChanged", function (id, ev)
             {
-                console.log(ev);
-                QUIAjax.post('package_quiqqer_calendar_ajax_editEvent', function (result)
+                QUIAjax.post('package_quiqqer_calendar_ajax_editEvent', function (){},
                 {
-                    console.log(result);
-                }, {
                     'package'    : 'quiqqer/calendar',
                     'calendarID' : self.calendarID,
                     'eventID'    : ev.id,
@@ -84,12 +78,13 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
 
             Scheduler.attachEvent("onEventAdded", function (id, ev)
             {
-                console.log(ev);
-                console.log('Cal ID: ' + self.calendarID);
                 QUIAjax.post('package_quiqqer_calendar_ajax_addEvent', function (result)
                 {
-                    console.log(result);
-                }, {
+                    if(result == null) return;
+                    Scheduler.changeEventId(id, parseInt(result));
+
+                },
+                {
                     'package'    : 'quiqqer/calendar',
                     'calendarID' : self.calendarID,
                     'title'      : ev.text,
@@ -98,6 +93,18 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
                     'end'        : ev.end_date.getTime()/1000
                 });
             });
+
+
+            Scheduler.attachEvent("onEventDeleted", function (id)
+            {
+                QUIAjax.post('package_quiqqer_calendar_ajax_removeEvent', function () {},
+                {
+                    'package'   : 'quiqqer/calendar',
+                    'calendarID': self.calendarID,
+                    'eventID'   : id
+                });
+            });
+
         },
 
         /**

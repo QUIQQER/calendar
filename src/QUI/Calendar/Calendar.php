@@ -15,8 +15,8 @@ use QUI;
  */
 class Calendar
 {
-    private $calendarsTable = QUI_DB_PRFX . 'calendars';
-    private $eventsTable    = QUI_DB_PRFX . 'calendars_events';
+    public static $calendarsTable = QUI_DB_PRFX . 'calendars';
+    public static $eventsTable    = QUI_DB_PRFX . 'calendars_events';
 
     private $id;
     private $name;
@@ -29,7 +29,7 @@ class Calendar
     public function __construct($calendarId)
     {
         $result = QUI::getDataBase()->fetch(array(
-            'from'  => $this->calendarsTable,
+            'from'  => Calendar::$calendarsTable,
             'where' => array(
                 'id' => (int)$calendarId
             ),
@@ -69,7 +69,7 @@ class Calendar
         }
 
         QUI::getDataBase()->update(
-            $this->calendarsTable,
+            Calendar::$calendarsTable,
             $update,
             array(
                 'id' => $this->getId()
@@ -85,10 +85,11 @@ class Calendar
      * @param string $desc - Event description
      * @param int $start - Unix timestamp when the event starts
      * @param int $end - Unix timestamp when the event ends
+     * @return int - The ID of the added event
+     *
      */
     public function addCalendarEvent($title, $desc, $start, $end)
     {
-
         $data = array(
             'title'      => $title,
             'desc'       => $desc,
@@ -97,7 +98,8 @@ class Calendar
             'calendarid' => $this->getId()
         );
 
-        QUI::getDataBase()->insert($this->eventsTable, $data);
+        QUI::getDataBase()->insert(Calendar::$eventsTable, $data);
+        return QUI::getDataBase()->getPDO()->lastInsertId('eventid');
     }
 
 
@@ -112,7 +114,7 @@ class Calendar
      */
     public function editCalendarEvent($eventID, $title, $desc, $start, $end)
     {
-        QUI::getDataBase()->update($this->eventsTable, array(
+        QUI::getDataBase()->update(Calendar::$eventsTable, array(
             'title'  => $title,
             'desc'   => $desc,
             'start'  => $start,
@@ -129,7 +131,7 @@ class Calendar
      */
     public function removeCalendarEvent($eventID)
     {
-        QUI::getDataBase()->delete($this->eventsTable, array(
+        QUI::getDataBase()->delete(Calendar::$eventsTable, array(
             'eventid' => $eventID
         ));
     }
@@ -209,7 +211,7 @@ class Calendar
     public function getEvents()
     {
         return QUI::getDataBase()->fetch(array(
-            'from'  => $this->eventsTable,
+            'from'  => Calendar::$eventsTable,
             'where' => array(
                 'calendarid' => (int)$this->getId()
             )
