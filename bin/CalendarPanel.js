@@ -27,10 +27,15 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
 
         calendarID: null,
 
+        ChangeEvent: null,
+        AddEvent: null,
+        DeleteEvent: null,
+
         Binds: [
             '$onCreate',
             '$onResize',
-            '$onInject'
+            '$onInject',
+            '$onClose'
         ],
 
         initialize: function (options)
@@ -54,6 +59,7 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
                 html: Mustache.render(template)
             });
 
+            Scheduler.clearAll();
             Scheduler.init(Content.getElement('.dhx_cal_container'));
 
             // Parses the calendar iCal string into the scheduler
@@ -62,7 +68,7 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
             });
 
             // Run when an event is edited in the scheduler
-            Scheduler.attachEvent('onEventChanged', function (id, ev)
+            this.ChangeEvent = Scheduler.attachEvent('onEventChanged', function (id, ev)
             {
                 Calendars.editEvent(self.calendarID,
                     ev.id,
@@ -74,7 +80,7 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
             });
 
             // Run when an event is added to the scheduler
-            Scheduler.attachEvent('onEventAdded', function(id, ev)
+            this.AddEvent = Scheduler.attachEvent('onEventAdded', function(id, ev)
             {
                Calendars.addEvent(self.calendarID,
                    ev.text,
@@ -90,7 +96,7 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
             });
 
             // Run when an event is deleted from scheduler
-            Scheduler.attachEvent('onEventDeleted', function(id)
+            this.DeleteEvent = Scheduler.attachEvent('onEventDeleted', function(id)
             {
               Calendars.deleteEvent(self.calendarID, id);
             });
@@ -103,6 +109,19 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
         {
             this.updateSchedularView()
 
+        },
+
+
+        /**
+         * Removes all Events (add,change,delete) from Scheduler
+         *
+         * event : on destroy
+         */
+        $onDestroy: function()
+        {
+            Scheduler.detachEvent(this.AddEvent);
+            Scheduler.detachEvent(this.ChangeEvent);
+            Scheduler.detachEvent(this.DeleteEvent);
         },
 
         $onInject: function()

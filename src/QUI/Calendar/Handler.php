@@ -14,10 +14,6 @@ use QUI\Users\User;
  */
 class Handler
 {
-
-    public static $calendarTable = QUI_DB_PRFX . 'calendars';
-    public static $calendarEventsTable = QUI_DB_PRFX . 'calendars_events';
-
     /**
      * Creates a new Calendar
      *
@@ -27,12 +23,13 @@ class Handler
     public static function createCalendar($name, $User = null)
     {
         $userID = null;
-        if (!is_null($User) && get_class($User) == get_class($User)) {
+
+        if (QUI::getUsers()->isUser($User)) {
             $userID = $User->getId();
         }
 
-        QUI::getDataBase()->insert(Handler::$calendarTable, array(
-            'name' => $name,
+        QUI::getDataBase()->insert(self::tableCalendars(), array(
+            'name'   => $name,
             'userid' => $userID
         ));
 
@@ -44,6 +41,21 @@ class Handler
         );
     }
 
+    /**
+     * @return string
+     */
+    public static function tableCalendars()
+    {
+        return QUI::getDBTableName('calendars');
+    }
+
+    /**
+     * @return string
+     */
+    public static function tableCalendarsEvents()
+    {
+        return QUI::getDBTableName('calendars_events');
+    }
 
     /**
      * Deletes calendars with the given IDs from the database
@@ -53,19 +65,19 @@ class Handler
     public static function deleteCalendars($ids)
     {
         $Database = QUI::getDataBase();
+
         foreach ($ids as $id) {
             $id = (int)$id;
 
-            $Database->delete(Handler::$calendarTable, array(
+            $Database->delete(self::tableCalendars(), array(
                 'id' => $id
             ));
 
-            $Database->delete(Handler::$calendarEventsTable, array(
+            $Database->delete(self::tableCalendarsEvents(), array(
                 'calendarid' => $id
             ));
         }
     }
-
 
     /**
      * Returns calendars from database.
@@ -75,7 +87,7 @@ class Handler
     public static function getCalendars()
     {
         return QUI::getDataBase()->fetch(array(
-            'from'  => Handler::$calendarTable
+            'from' => self::tableCalendars()
         ));
     }
 }

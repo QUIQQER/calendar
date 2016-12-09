@@ -281,6 +281,11 @@ define('package/quiqqer/calendar/bin/Panel', [
                 'package/quiqqer/calendar/bin/CalendarPanel',
                 'utils/Panels'
             ], function (CalendarPanel, Utils) {
+                var panels = QUI.Controls.getByType('package/quiqqer/calendar/bin/CalendarPanel');
+                if( panels[0] !== undefined) {
+                    panels[0].destroy();
+                }
+
                 Utils.openPanelInTasks( new CalendarPanel({
                     title: 'Events',
                     calendarID: calendarID

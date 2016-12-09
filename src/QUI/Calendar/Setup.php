@@ -13,13 +13,16 @@ use QUI;
  */
 class Setup
 {
+    /**
+     *
+     */
     public static function run()
     {
         $Tables = QUI::getDataBase()->table();
 
         // Delete 'notime' column in events table
-        if ($Tables->existColumnInTable(Calendar::$eventsTable, 'notime')) {
-            $Tables->deleteColumn(Calendar::$eventsTable, 'notime');
+        if ($Tables->existColumnInTable(Handler::tableCalendarsEvents(), 'notime')) {
+            $Tables->deleteColumn(Handler::tableCalendarsEvents(), 'notime');
         }
     }
 }

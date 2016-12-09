@@ -15,21 +15,31 @@ use QUI;
  */
 class Calendar
 {
-    public static $calendarsTable = QUI_DB_PRFX . 'calendars';
-    public static $eventsTable    = QUI_DB_PRFX . 'calendars_events';
-
+    /**
+     * @var integer
+     */
     private $id;
+
+    /**
+     * @var string
+     */
     private $name;
+
+    /**
+     * @var false|null|QUI\Users\Nobody|QUI\Users\SystemUser|QUI\Users\User
+     */
     private $user = null;
 
     /**
      * Calendar constructor. Returns a calendar object for the given calendar id.
+     *
      * @param int - $calendarId
+     * @throws QUI\Calendar\Exception
      */
     public function __construct($calendarId)
     {
         $result = QUI::getDataBase()->fetch(array(
-            'from'  => Calendar::$calendarsTable,
+            'from'  => Handler::tableCalendars(),
             'where' => array(
                 'id' => (int)$calendarId
             ),
@@ -37,18 +47,20 @@ class Calendar
         ));
 
         if (!isset($result[0])) {
-            return false;
+            throw new QUI\Calendar\Exception(array(
+                'quiqqer/calendar',
+                'exception.calendar,not.found'
+            ));
         }
 
         $result = $result[0];
 
         $this->id   = $calendarId;
         $this->name = $result['name'];
+
         if (!is_null($result['userid'])) {
             $this->user = QUI::getUsers()->get($result['userid']);
         }
-
-        return true;
     }
 
     /**
@@ -61,22 +73,22 @@ class Calendar
             'name'   => $name,
             'userid' => null
         );
+
         $this->name = $name;
 
         if (!empty($user) && !is_null($user)) {
             $update['userid'] = $user->getId();
-            $this->user = $user;
+            $this->user       = $user;
         }
 
         QUI::getDataBase()->update(
-            Calendar::$calendarsTable,
+            Handler::tableCalendars(),
             $update,
             array(
                 'id' => $this->getId()
             )
         );
     }
-
 
     /**
      * Adds an event to the calendar.
@@ -90,15 +102,14 @@ class Calendar
      */
     public function addCalendarEvent($title, $desc, $start, $end)
     {
-        $data = array(
+        QUI::getDataBase()->insert(Handler::tableCalendarsEvents(), array(
             'title'      => $title,
             'desc'       => $desc,
             'start'      => $start,
             'end'        => $end,
             'calendarid' => $this->getId()
-        );
+        ));
 
-        QUI::getDataBase()->insert(Calendar::$eventsTable, $data);
         return QUI::getDataBase()->getPDO()->lastInsertId('eventid');
     }
 
@@ -114,11 +125,11 @@ class Calendar
      */
     public function editCalendarEvent($eventID, $title, $desc, $start, $end)
     {
-        QUI::getDataBase()->update(Calendar::$eventsTable, array(
-            'title'  => $title,
-            'desc'   => $desc,
-            'start'  => $start,
-            'end'    => $end
+        QUI::getDataBase()->update(Handler::tableCalendarsEvents(), array(
+            'title' => $title,
+            'desc'  => $desc,
+            'start' => $start,
+            'end'   => $end
         ), array(
             'eventid' => $eventID
         ));
@@ -131,7 +142,7 @@ class Calendar
      */
     public function removeCalendarEvent($eventID)
     {
-        QUI::getDataBase()->delete(Calendar::$eventsTable, array(
+        QUI::getDataBase()->delete(Handler::tableCalendarsEvents(), array(
             'eventid' => $eventID
         ));
     }
@@ -145,21 +156,21 @@ class Calendar
     {
         $Calendar = new \Eluceo\iCal\Component\Calendar($this->getId());
         $Events   = $this->getEvents();
-        foreach ($Events as $Event) {
+
+        foreach ($Events as $event) {
             $start = new \DateTime();
-            $start->setTimestamp($Event['start']);
+            $start->setTimestamp($event['start']);
 
             $end = new \DateTime();
-            $end->setTimestamp($Event['end']);
+            $end->setTimestamp($event['end']);
 
             $CalendarEvent = new Event();
-            $CalendarEvent
-                ->setDtStart($start)
+
+            $CalendarEvent->setDtStart($start)
                 ->setDtEnd($end)
-                ->setSummary($Event['title'])
-                ->setDescription($Event['desc'])
-                ->setUniqueId($Event['eventid'])
-            ;
+                ->setSummary($event['title'])
+                ->setDescription($event['desc'])
+                ->setUniqueId($event['eventid']);
 
             $Calendar->addComponent($CalendarEvent);
         }
@@ -207,24 +218,28 @@ class Calendar
         return is_null($this->user);
     }
 
-
+    /**
+     * @return array
+     */
     public function getEvents()
     {
         return QUI::getDataBase()->fetch(array(
-            'from'  => Calendar::$eventsTable,
+            'from'  => Handler::tableCalendarsEvents(),
             'where' => array(
                 'calendarid' => (int)$this->getId()
             )
         ));
     }
 
-
+    /**
+     * @return array
+     */
     public function toArray()
     {
         return array(
-            'isGlobal' => $this->isGlobal(),
+            'isGlobal'     => $this->isGlobal(),
             'calendarname' => $this->getName(),
-            'id' => $this->getId()
+            'id'           => $this->getId()
         );
     }
 }
