@@ -5,14 +5,17 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
 
     'qui/QUI',
     'qui/controls/desktop/Panel',
+    'qui/utils/Functions',
+    'package/quiqqer/calendar/bin/Calendars',
     'package/quiqqer/calendar-controls/bin/Scheduler',
     'Ajax',
     'Locale',
     'Mustache',
+
     'text!package/quiqqer/calendar/bin/CalendarPanel.html',
     'css!package/quiqqer/calendar-controls/bin/htmlxScheduler/dhtmlxscheduler.css'
 
-], function (QUI, QUIPanel, Scheduler, QUIAjax, QUILocale, Mustache, template)
+], function (QUI, QUIPanel, QUIFunctionUtils, Calendars, Scheduler, QUIAjax, QUILocale, Mustache, template)
 {
     "use strict";
 
@@ -45,66 +48,52 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
         $onCreate: function ()
         {
             var self = this;
-
             var Content = this.getContent();
+
             Content.set({
                 html: Mustache.render(template)
             });
 
-            Scheduler.init(Content.getElementById('scheduler_here'));
+            Scheduler.init(Content.getElement('.dhx_cal_container'));
 
-            QUIAjax.get('package_quiqqer_calendar_ajax_getCalendarAsIcal', function (result)
-            {
+            // Parses the calendar iCal string into the scheduler
+            Calendars.getCalendarAsIcal(this.calendarID).then(function(result) {
                 Scheduler.parse(result, 'ical');
-            }, {
-                'package' : 'quiqqer/calendar',
-                calendarID: this.calendarID
             });
 
-            Scheduler.attachEvent("onEventChanged", function (id, ev)
+            // Run when an event is edited in the scheduler
+            Scheduler.attachEvent('onEventChanged', function (id, ev)
             {
-                QUIAjax.post('package_quiqqer_calendar_ajax_editEvent', function (){},
-                {
-                    'package'    : 'quiqqer/calendar',
-                    'calendarID' : self.calendarID,
-                    'eventID'    : ev.id,
-                    'title'      : ev.text,
-                    'desc'       : ev.description,
-                    'start'      : ev.start_date.getTime()/1000,
-                    'end'        : ev.end_date.getTime()/1000
-                });
+                Calendars.editEvent(self.calendarID,
+                    ev.id,
+                    ev.text,
+                    ev.description,
+                    ev.start_date.getTime()/1000,
+                    ev.end_date.getTime()/1000
+                )
             });
 
-
-            Scheduler.attachEvent("onEventAdded", function (id, ev)
+            // Run when an event is added to the scheduler
+            Scheduler.attachEvent('onEventAdded', function(id, ev)
             {
-                QUIAjax.post('package_quiqqer_calendar_ajax_addEvent', function (result)
-                {
-                    if(result == null) return;
-                    Scheduler.changeEventId(id, parseInt(result));
-
-                },
-                {
-                    'package'    : 'quiqqer/calendar',
-                    'calendarID' : self.calendarID,
-                    'title'      : ev.text,
-                    'desc'       : ev.text,
-                    'start'      : ev.start_date.getTime()/1000,
-                    'end'        : ev.end_date.getTime()/1000
-                });
+               Calendars.addEvent(self.calendarID,
+                   ev.text,
+                   ev.text,
+                   ev.start_date.getTime()/1000,
+                   ev.end_date.getTime()/1000
+               ).then(function(result) {
+                   if (result == null) {
+                       return;
+                   }
+                   Scheduler.changeEventId(id, parseInt(result));
+               });
             });
 
-
-            Scheduler.attachEvent("onEventDeleted", function (id)
+            // Run when an event is deleted from scheduler
+            Scheduler.attachEvent('onEventDeleted', function(id)
             {
-                QUIAjax.post('package_quiqqer_calendar_ajax_removeEvent', function () {},
-                {
-                    'package'   : 'quiqqer/calendar',
-                    'calendarID': self.calendarID,
-                    'eventID'   : id
-                });
+              Calendars.deleteEvent(self.calendarID, id);
             });
-
         },
 
         /**
