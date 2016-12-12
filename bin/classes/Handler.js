@@ -19,6 +19,40 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
         {
         },
 
+
+
+        addCalendar: function (userid, calendarName)
+        {
+            return new Promise(function (resolve, reject)
+            {
+                QUIAjax.post('package_quiqqer_calendar_ajax_createCalendar', resolve, {
+                    'package': 'quiqqer/calendar',
+                    'userid' : userid,
+                    'name'   : calendarName,
+                    onError  : reject
+                });
+            });
+        },
+
+
+
+        editCalendar: function(calendarID, userid, calendarName)
+        {
+            return new Promise(function (resolve, reject)
+            {
+                QUIAjax.post('package_quiqqer_calendar_ajax_editCalendar', resolve, {
+                    'package'    : 'quiqqer/calendar',
+                    'calendarID' : calendarID,
+                    'userid'     : userid,
+                    'name'       : calendarName,
+                    onError      : reject
+                });
+            });
+        },
+
+
+
+
         /**
          * Returns the calendar for the given ID as an ical string.
          *

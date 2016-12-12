@@ -85,6 +85,16 @@
             <en><![CDATA[Add calendar]]></en>
         </locale>
 
+        <locale name="panel.button.edit.calendar.text">
+            <de><![CDATA[Markierten Kalender bearbeiten]]></de>
+            <en><![CDATA[Edit marked calendar]]></en>
+        </locale>
+
+        <locale name="panel.button.delete.calendar.text">
+            <de><![CDATA[Markierte Kalender löschen]]></de>
+            <en><![CDATA[Delete marked calendars]]></en>
+        </locale>
+
         <locale name="calendar.title">
             <de><![CDATA[Kalender Name]]></de>
             <en><![CDATA[Calendar Name]]></en>

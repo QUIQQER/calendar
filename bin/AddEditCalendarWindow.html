@@ -7,7 +7,7 @@
                     <span class="field-container-item">
                         Name
                     </span>
-                    <input type="text" name="calendarname" value="" class="field-container-field">
+                    <input type="text" name="calendarname" value="{{name}}" class="field-container-field">
                 </label>
             </td>
         </tr>
@@ -18,7 +18,7 @@
                         Global
                     </span>
                     <span class="field-container-field">
-                        <input type="checkbox" name="isGlobal">
+                        <input type="checkbox" name="isGlobal" {{#isGlobal}}checked{{/isGlobal}}>
                     </span>
                 </label>
             </td>

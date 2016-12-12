@@ -25,8 +25,10 @@ define('package/quiqqer/calendar/bin/Panel', [
             '$onInject',
             '$onResize',
             '$onButtonAddEventClick',
+            '$onButtonEditCalendarClick',
             '$onButtonAddCalendarClick',
-            'deleteMarkedCalendars'
+            'deleteMarkedCalendars',
+            'editCalendar'
         ],
 
         initialize: function (options)
@@ -50,15 +52,9 @@ define('package/quiqqer/calendar/bin/Panel', [
         $onCreate: function ()
         {
             var self = this;
-            this.addButton({
-                text     : QUILocale.get(lg, 'panel.button.add.event.text'),
-                textimage: 'fa fa-plus',
-                events   : {
-                    onClick: this.$onButtonAddEventClick
-                }
-            });
 
             this.addButton({
+                name     : 'addCalendar',
                 text     : QUILocale.get(lg, 'panel.button.add.calendar.text'),
                 textimage: 'fa fa-plus',
                 events   : {
@@ -66,13 +62,25 @@ define('package/quiqqer/calendar/bin/Panel', [
                 }
             });
 
+            this.addButton({
+                name     : 'editCalendar',
+                text     : QUILocale.get(lg, 'panel.button.edit.calendar.text'),
+                textimage: 'fa fa-pen',
+                events   : {
+                    onClick: this.$onButtonEditCalendarClick
+                }
+            });
+            this.getButtons('editCalendar').disable();
 
             this.addButton({
+                name     : 'deleteCalendar',
+                text     : QUILocale.get(lg, 'panel.button.delete.calendar.text'),
                 textimage: 'fa fa-trash',
                 events   : {
                     onClick: this.deleteMarkedCalendars
                 }
             });
+            this.getButtons('deleteCalendar').disable();
 
             var Content   = this.getContent(),
 
@@ -116,14 +124,27 @@ define('package/quiqqer/calendar/bin/Panel', [
                     self.loadCalendars();
                 },
 
-                onClick: function(data) {
+                onDblClick: function(data) {
                     var rowData = self.$Grid.getDataByRow(data.row);
-                    self.showEvents(rowData.id);
+                    self.openCalendar(rowData.id);
                 },
 
-                onDblClick: function (data) {
-                    var rowData = self.$Grid.getDataByRow(data.row);
-                    self.editCalendar(rowData.id);
+                onClick: function (data) {
+                    var delButton  = self.getButtons('deleteCalendar'),
+                        editButton = self.getButtons('editCalendar'),
+                        selected   = self.$Grid.getSelectedIndices().length;
+
+                    if (selected == 1) {
+                        editButton.enable();
+                    } else {
+                        editButton.disable();
+                    }
+
+                    if (selected) {
+                        delButton.enable();
+                    } else {
+                        delButton.disable();
+                    }
                 }
             });
 
@@ -187,28 +208,13 @@ define('package/quiqqer/calendar/bin/Panel', [
         $onButtonAddCalendarClick: function ()
         {
             var self = this;
-            require(['package/quiqqer/calendar/bin/CalendarWindow'], function (CalendarWindow) {
-                var cWindow = new CalendarWindow();
-                cWindow.addEvent('onClose', function() {
-                    self.$Grid.refresh();
-                });
-                cWindow.open();
-            });
-        },
-
-
-        /**
-         * Edits the calendar with the given ID
-         *
-         * @param calendarID - The calendar to edit
-         */
-        editCalendar: function(calendarID)
-        {
-            var self = this;
-
-            require(['package/quiqqer/calendar/bin/CalendarWindow'], function (CalendarWindow) {
+            require(['package/quiqqer/calendar/bin/AddEditCalendarWindow'], function (CalendarWindow) {
+//                var cWindow = new CalendarWindow();
+//                cWindow.addEvent('onClose', function() {
+//                    self.$Grid.refresh();
+//                });
+//                cWindow.open();
                 new CalendarWindow({
-                    calendarID: calendarID,
                     events: {
                         onClose: function () {
                             self.loadCalendars();
@@ -216,10 +222,45 @@ define('package/quiqqer/calendar/bin/Panel', [
                     }
                 }).open();
             });
+        },
 
+
+        /**
+         * Edits the calendar with the given ID
+         *
+         * @param calendar - The calendar to edit
+         */
+        editCalendar: function(calendar)
+        {
+            var self = this;
+            require(['package/quiqqer/calendar/bin/AddEditCalendarWindow'], function (CalendarWindow) {
+                new CalendarWindow({
+                    calendar: calendar,
+                    events: {
+                        onClose: function () {
+                            self.loadCalendars();
+                        }
+                    }
+                }).open();
+            });
             return this;
         },
 
+
+        $onButtonEditCalendarClick: function()
+        {
+            if (!this.$Grid) {
+                return this;
+            }
+
+            var data = this.$Grid.getSelectedData();
+
+            if (!data.length) {
+                return this;
+            }
+
+            this.editCalendar(data[0]);
+        },
 
         /**
          * Open the delete marked calendars window and delete all marked calendars
@@ -274,7 +315,7 @@ define('package/quiqqer/calendar/bin/Panel', [
          *
          * @param calendarID The calendar id of which the events should be shown
          */
-        showEvents: function(calendarID) {
+        openCalendar: function(calendarID) {
             var self = this;
 
             require([
