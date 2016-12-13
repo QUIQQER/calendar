@@ -26,7 +26,6 @@ define('package/quiqqer/calendar/bin/AddEditCalendarWindow', [
         ],
 
         options: {
-            title      : QUILocale.get(lg, 'calendar.window.addcalendar.title'),
             icon       : 'fa fa-calendar',
             calendar   : null,
             maxWidth   : 450,
@@ -39,6 +38,9 @@ define('package/quiqqer/calendar/bin/AddEditCalendarWindow', [
             this.parent();
 
             var calendar = this.getAttribute('calendar');
+
+            this.setAttribute('title', 'test');
+
             var data = {};
 
             if(calendar != null) {

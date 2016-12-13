@@ -214,12 +214,8 @@ define('package/quiqqer/calendar/bin/Panel', [
         {
             var self = this;
             require(['package/quiqqer/calendar/bin/AddEditCalendarWindow'], function (CalendarWindow) {
-//                var cWindow = new CalendarWindow();
-//                cWindow.addEvent('onClose', function() {
-//                    self.$Grid.refresh();
-//                });
-//                cWindow.open();
                 new CalendarWindow({
+                    title: QUILocale.get(lg, 'calendar.window.add.calendar.title'),
                     events: {
                         onClose: function () {
                             self.loadCalendars();
@@ -241,6 +237,7 @@ define('package/quiqqer/calendar/bin/Panel', [
             require(['package/quiqqer/calendar/bin/AddEditCalendarWindow'], function (CalendarWindow) {
                 new CalendarWindow({
                     calendar: calendar,
+                    title: QUILocale.get(lg, 'calendar.window.edit.calendar.title'),
                     events: {
                         onClose: function () {
                             self.loadCalendars();

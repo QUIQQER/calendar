@@ -65,6 +65,15 @@
             <en><![CDATA[Calendar ID]]></en>
         </locale>
 
+        <locale name="calendar.window.add.calendar.title">
+            <de><![CDATA[Kalender hinzufügen]]></de>
+            <en><![CDATA[Add calendar]]></en>
+        </locale>
+
+        <locale name="calendar.window.edit.calendar.title">
+            <de><![CDATA[Kalender bearbeiten]]></de>
+            <en><![CDATA[Edit calendar]]></en>
+        </locale>
 
         <locale name="calendar.window.delete.calendar.title">
             <de><![CDATA[Kalender löschen]]></de>
