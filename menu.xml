@@ -5,6 +5,6 @@
           icon="fa fa-calendar"
           require="package/quiqqer/calendar/bin/Panel"
     >
-        huhu, here i am
+        <locale group="quiqqer/calendar" var="menu.apps.calendar.title"/>
     </item>
 </menu>

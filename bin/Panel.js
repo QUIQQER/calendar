@@ -31,6 +31,11 @@ define('package/quiqqer/calendar/bin/Panel', [
             'editCalendar'
         ],
 
+        options: {
+            title: QUILocale.get(lg, 'panel.title'),
+            icon : 'fa fa-calendar'
+        },
+
         initialize: function (options)
         {
             this.parent(options);
@@ -126,7 +131,7 @@ define('package/quiqqer/calendar/bin/Panel', [
 
                 onDblClick: function(data) {
                     var rowData = self.$Grid.getDataByRow(data.row);
-                    self.openCalendar(rowData.id);
+                    self.openCalendar(rowData);
                 },
 
                 onClick: function (data) {
@@ -311,11 +316,11 @@ define('package/quiqqer/calendar/bin/Panel', [
 
 
         /**
-         * Show the events of a given calendar ID
+         * Opens a calendar in a new panel
          *
-         * @param calendarID The calendar id of which the events should be shown
+         * @param calendar The calendar to open
          */
-        openCalendar: function(calendarID) {
+        openCalendar: function(calendar) {
             var self = this;
 
             require([
@@ -328,8 +333,9 @@ define('package/quiqqer/calendar/bin/Panel', [
                 }
 
                 Utils.openPanelInTasks( new CalendarPanel({
-                    title: 'Events',
-                    calendarID: calendarID
+                    title: calendar.name,
+                    calendarID: calendar.id,
+                    icon : 'fa fa-calendar'
                 }) );
             });
 

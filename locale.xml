@@ -6,10 +6,17 @@
             <de><![CDATA[QUIQQER - Kalender / Termin Verwaltung]]></de>
             <en><![CDATA[QUIQQER - Calendar management]]></en>
         </locale>
+
         <locale name="package.description">
             <de><![CDATA[]]></de>
             <en><![CDATA[]]></en>
         </locale>
+
+        <locale name="menu.apps.calendar.title">
+            <de><![CDATA[Kalender]]></de>
+            <en><![CDATA[Calendars]]></en>
+        </locale>
+
     </groups>
 
 
@@ -74,6 +81,10 @@
                 <p>Note that the calendars and the corresponding events can not be restored.</p>]]></en>
         </locale>
 
+        <locale name="panel.title">
+            <de><![CDATA[Kalender]]></de>
+            <en><![CDATA[Calendars]]></en>
+        </locale>
 
         <locale name="panel.button.add.event.text">
             <de><![CDATA[Event hinzufügen]]></de>
