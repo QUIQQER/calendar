@@ -18,7 +18,7 @@ class Handler
      * Creates a new Calendar
      *
      * @param string $name - Calendar name
-     * @param User $User - optional, User for which the calendar is
+     * @param User $User   - optional, User for which the calendar is
      */
     public static function createCalendar($name, $User = null)
     {
@@ -42,6 +42,8 @@ class Handler
     }
 
     /**
+     * The name of the database table containing calendars
+     *
      * @return string
      */
     public static function tableCalendars()
@@ -50,6 +52,8 @@ class Handler
     }
 
     /**
+     * The name of the database table containing calendar events
+     *
      * @return string
      */
     public static function tableCalendarsEvents()
@@ -80,9 +84,9 @@ class Handler
     }
 
     /**
-     * Returns calendars from database.
+     * Returns all calendars from database.
      *
-     * @return array - calendars in the database
+     * @return array - all calendars in the database
      */
     public static function getCalendars()
     {

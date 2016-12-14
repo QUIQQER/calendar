@@ -14,7 +14,7 @@ use QUI;
 class Setup
 {
     /**
-     *
+     * Only for udpates: Delete columns created in older versions of the package
      */
     public static function run()
     {

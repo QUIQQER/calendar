@@ -1,5 +1,15 @@
 /**
+ * Main panel that lists all calendars in a grid
+ *
  * @module package/quiqqer/calendar/bin/Panel
+ * @author www.pcsg.de (Jan Wennrich)
+ *
+ * @require 'qui/QUI'
+ * @require 'qui/controls/buttons/Seperator',
+ * @require 'qui/controls/desktop/Panel'
+ * @require 'qui/controls/windows/Confirm'
+ * @require 'Locale'
+ * @require 'controls/grid/Grid'
  */
 define('package/quiqqer/calendar/bin/Panel', [
 
@@ -24,7 +34,6 @@ define('package/quiqqer/calendar/bin/Panel', [
 
         Binds: [
             '$onCreate',
-            '$onInject',
             '$onResize',
             '$onButtonAddEventClick',
             '$onButtonEditCalendarClick',
@@ -48,7 +57,6 @@ define('package/quiqqer/calendar/bin/Panel', [
 
             this.addEvents({
                 onCreate: this.$onCreate,
-                onInject: this.$onInject,
                 onResize: this.$onResize
             });
         },
@@ -71,6 +79,7 @@ define('package/quiqqer/calendar/bin/Panel', [
 
             this.addButton(new QUIButtonSeperator());
 
+            // Button to delete selected calendars. Activated if one calendar is selected in grid
             this.addButton({
                 name     : 'editCalendar',
                 text     : QUILocale.get(lg, 'panel.button.edit.marked_calendars.text'),
@@ -81,6 +90,7 @@ define('package/quiqqer/calendar/bin/Panel', [
             });
             this.getButtons('editCalendar').disable();
 
+            // Button to delete selected calendars. Activated if more than one calendar is selected in grid
             this.addButton({
                 name     : 'deleteCalendar',
                 text     : QUILocale.get(lg, 'panel.button.delete.marked_calendars.text'),
@@ -101,7 +111,7 @@ define('package/quiqqer/calendar/bin/Panel', [
                     }
                 }).inject(Content);
 
-
+            // creates grid
             this.$Grid = new Grid(Container, {
                 columnModel      : [{
                     header   : QUILocale.get('quiqqer/system', 'id'),
@@ -129,16 +139,21 @@ define('package/quiqqer/calendar/bin/Panel', [
             });
 
             this.$Grid.addEvents({
-                onRefresh: function () {
+                onRefresh: function ()
+                {
                     self.loadCalendars();
                 },
 
-                onDblClick: function(data) {
+                // On double click opens the calendar
+                onDblClick: function (data)
+                {
                     var rowData = self.$Grid.getDataByRow(data.row);
                     self.openCalendar(rowData);
                 },
 
-                onClick: function (data) {
+                // On single click select calendar and (de-)activate buttons
+                onClick: function (data)
+                {
                     var delButton  = self.getButtons('deleteCalendar'),
                         editButton = self.getButtons('editCalendar'),
                         selected   = self.$Grid.getSelectedIndices().length;
@@ -163,10 +178,12 @@ define('package/quiqqer/calendar/bin/Panel', [
         /**
          * Load the calendars into the grid.
          */
-        loadCalendars: function () {
+        loadCalendars: function ()
+        {
             var self = this;
 
-            QUIAjax.get('package_quiqqer_calendar_ajax_getCalendars', function (result) {
+            QUIAjax.get('package_quiqqer_calendar_ajax_getCalendars', function (result)
+            {
                 if (!self.$Grid) {
                     return;
                 }
@@ -177,18 +194,13 @@ define('package/quiqqer/calendar/bin/Panel', [
             }, {
                 'package': 'quiqqer/calendar'
             });
-            return this;
         },
-
-        /**
-         * Run when the Panel is inserted into the page.
-         */
-        $onInject: function () {},
 
         /**
          * event : on resize
          */
-        $onResize: function () {
+        $onResize: function ()
+        {
             if (!this.$Grid) {
                 return;
             }
@@ -201,27 +213,18 @@ define('package/quiqqer/calendar/bin/Panel', [
         },
 
         /**
-         * Adds a new event to a calendar
-         */
-        $onButtonAddEventClick: function ()
-        {
-            require(['package/quiqqer/calendar/bin/AddEventWindow'], function (AddEventWindow) {
-                var aeWindow = new AddEventWindow();
-                aeWindow.open();
-            });
-        },
-
-        /**
-         * Adds a new calendar.
+         * Creates a new calendar.
          */
         $onButtonAddCalendarClick: function ()
         {
             var self = this;
-            require(['package/quiqqer/calendar/bin/AddEditCalendarWindow'], function (CalendarWindow) {
+            require(['package/quiqqer/calendar/bin/AddEditCalendarWindow'], function (CalendarWindow)
+            {
                 new CalendarWindow({
-                    title: QUILocale.get(lg, 'calendar.window.add.calendar.title'),
+                    title : QUILocale.get(lg, 'calendar.window.add.calendar.title'),
                     events: {
-                        onClose: function () {
+                        onClose: function ()
+                        {
                             self.loadCalendars();
                         }
                     }
@@ -235,15 +238,17 @@ define('package/quiqqer/calendar/bin/Panel', [
          *
          * @param calendar - The calendar to edit
          */
-        editCalendar: function(calendar)
+        editCalendar: function (calendar)
         {
             var self = this;
-            require(['package/quiqqer/calendar/bin/AddEditCalendarWindow'], function (CalendarWindow) {
+            require(['package/quiqqer/calendar/bin/AddEditCalendarWindow'], function (CalendarWindow)
+            {
                 new CalendarWindow({
                     calendar: calendar,
-                    title: QUILocale.get(lg, 'calendar.window.edit.calendar.title'),
-                    events: {
-                        onClose: function () {
+                    title   : QUILocale.get(lg, 'calendar.window.edit.calendar.title'),
+                    events  : {
+                        onClose: function ()
+                        {
                             self.loadCalendars();
                         }
                     }
@@ -253,16 +258,19 @@ define('package/quiqqer/calendar/bin/Panel', [
         },
 
 
-        $onButtonEditCalendarClick: function()
+        /**
+         * event: fired when edit calendar button is clicked.
+         */
+        $onButtonEditCalendarClick: function ()
         {
             if (!this.$Grid) {
-                return this;
+                return;
             }
 
             var data = this.$Grid.getSelectedData();
 
             if (!data.length) {
-                return this;
+                return;
             }
 
             this.editCalendar(data[0]);
@@ -270,27 +278,24 @@ define('package/quiqqer/calendar/bin/Panel', [
 
         /**
          * Open the delete marked calendars window and delete all marked calendars
-         *
-         * @return {self}
          */
         deleteMarkedCalendars: function ()
         {
             if (!this.$Grid) {
-                return this;
+                return;
             }
 
             var self = this,
                 data = this.$Grid.getSelectedData();
 
             if (!data.length) {
-                return this;
+                return;
             }
 
-            var ids = data.map(function (o) {
+            var ids = data.map(function (o)
+            {
                 return o.id;
             });
-
-            console.log(ids);
 
             new QUIConfirm({
                 icon       : 'fa fa-remove',
@@ -300,9 +305,10 @@ define('package/quiqqer/calendar/bin/Panel', [
                     ids: ids.join(', ')
                 }),
                 events     : {
-                    onSubmit: function (Win) {
+                    onSubmit: function (Win)
+                    {
                         Win.Loader.show();
-                        Calendars.deleteCalendars(ids).then(function()
+                        Calendars.deleteCalendars(ids).then(function ()
                         {
                             Win.close();
                             self.loadCalendars();
@@ -310,8 +316,6 @@ define('package/quiqqer/calendar/bin/Panel', [
                     }
                 }
             }).open();
-
-            return this;
         },
 
 
@@ -320,32 +324,32 @@ define('package/quiqqer/calendar/bin/Panel', [
          *
          * @param calendar The calendar to open
          */
-        openCalendar: function(calendar) {
+        openCalendar: function (calendar)
+        {
             var self = this;
 
             require([
                 'package/quiqqer/calendar/bin/CalendarPanel',
                 'utils/Panels'
-            ], function (CalendarPanel, Utils) {
+            ], function (CalendarPanel, Utils)
+            {
                 var panels = QUI.Controls.getByType('package/quiqqer/calendar/bin/CalendarPanel');
-                if( panels[0] !== undefined) {
+                if (panels[0] !== undefined) {
                     panels[0].destroy();
                 }
 
-                Utils.openPanelInTasks( new CalendarPanel({
-                    title: calendar.name,
+                Utils.openPanelInTasks(new CalendarPanel({
+                    title       : calendar.name,
                     calendarData: calendar,
-                    icon : 'fa fa-calendar',
-                    events     : {
+                    icon        : 'fa fa-calendar',
+                    events      : {
                         onDestroy: function ()
                         {
                             self.loadCalendars();
                         }
                     }
-                }) );
+                }));
             });
-
-            return this;
         }
     });
 });

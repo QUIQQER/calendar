@@ -16,6 +16,7 @@
   },
   "require": {
     "quiqqer/quiqqer": "*",
+    "quiqqer/calendar-controls": "dev-dev",
     "eluceo/ical": "0.11.0"
   },
   "autoload": {

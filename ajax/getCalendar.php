@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Returns calendar information
+ * Returns calendar information as an array
  *
- * @param integer $calendarID - Calendar-ID
+ * @param integer $calendarID - The ID of the calendar of which the information should be returned
  *
  * @return array
  */

@@ -34,6 +34,7 @@ class Calendar
      * Calendar constructor. Returns a calendar object for the given calendar id.
      *
      * @param int - $calendarId
+     *
      * @throws QUI\Calendar\Exception
      */
     public function __construct($calendarId)
@@ -64,8 +65,10 @@ class Calendar
     }
 
     /**
-     * @param $name
-     * @param null|QUI\Users\User $user
+     * Edits the calendars values
+     *
+     * @param $name - The new calendar name
+     * @param null|QUI\Users\User $user - The new calendar owner, null for global calendar
      */
     public function editCalendar($name, $user = null)
     {
@@ -97,7 +100,8 @@ class Calendar
      * @param string $desc - Event description
      * @param int $start - Unix timestamp when the event starts
      * @param int $end - Unix timestamp when the event ends
-     * @return int - The ID of the added event
+     *
+     * @return int - The ID the event got assigned from the database
      *
      */
     public function addCalendarEvent($title, $desc, $start, $end)
@@ -150,7 +154,7 @@ class Calendar
     /**
      * Converts a calendar and all its' events to iCal format
      *
-     * @return string
+     * @return string - The calendar in iCal format
      */
     public function toICal()
     {
@@ -181,7 +185,7 @@ class Calendar
     /**
      * Returns the calendars ID.
      *
-     * @return int
+     * @return int - the calendar ID
      */
     public function getId()
     {
@@ -219,7 +223,9 @@ class Calendar
     }
 
     /**
-     * @return array
+     * Returns all events in a calendar as an array
+     *
+     * @return array - array of events
      */
     public function getEvents()
     {
@@ -232,6 +238,8 @@ class Calendar
     }
 
     /**
+     * Converts the calendars information to an array. Does not include events.
+     *
      * @return array
      */
     public function toArray()

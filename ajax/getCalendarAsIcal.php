@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Returns calendar information
+ * Returns calendar information in iCal format
  *
- * @param integer $calendarID - Calendar-ID
+ * @param integer $calendarID - The ID of the calendar which should be returned in iCal format
  *
- * @return array
+ * @return String - The calendar as an iCal string
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_calendar_ajax_getCalendarAsIcal',

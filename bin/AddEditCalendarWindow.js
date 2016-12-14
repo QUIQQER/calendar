@@ -1,23 +1,36 @@
+/**
+ * Displays a dialog to edit or add a calendar.
+ *
+ * @module 'package/quiqqer/calendar/bin/AddEditCalendarWindow'
+ * @author www.pcsg.de (Jan Wennrich)
+ *
+ * @require 'qui/QUI'
+ * @require 'qui/controls/windows/Confirm'
+ * @require 'package/quiqqer/calendar/bin/Calendars',
+ * @require 'Locale'
+ * @require 'Mustache'
+ * @require 'text!package/quiqqer/calendar/bin/AddEditCalendarWindow.html'
+ * @require 'css!package/quiqqer/calendar/bin/AddEditCalendarWindow.css'
+ */
 define('package/quiqqer/calendar/bin/AddEditCalendarWindow', [
 
     'qui/QUI',
     'qui/controls/windows/Confirm',
     'package/quiqqer/calendar/bin/Calendars',
-    'Ajax',
     'Locale',
     'Mustache',
     'text!package/quiqqer/calendar/bin/AddEditCalendarWindow.html',
     'css!package/quiqqer/calendar/bin/AddEditCalendarWindow.css'
 
-], function (QUI, QUIConfirm, Calendars, QUIAjax, QUILocale, Mustache, template)
+], function (QUI, QUIConfirm, Calendars, QUILocale, Mustache, template)
 {
     "use strict";
 
     var lg = 'quiqqer/calendar';
 
     return new Class({
-        Extends  : QUIConfirm,
-        Type     : 'package/quiqqer/calendar/bin/AddEditCalendarWindow',
+        Extends: QUIConfirm,
+        Type   : 'package/quiqqer/calendar/bin/AddEditCalendarWindow',
 
         Binds: [
             'submit',
@@ -26,13 +39,16 @@ define('package/quiqqer/calendar/bin/AddEditCalendarWindow', [
         ],
 
         options: {
-            icon       : 'fa fa-calendar',
-            calendar   : null,
-            maxWidth   : 450,
-            maxHeight  : 300,
-            autoclose  : false
+            icon     : 'fa fa-calendar',
+            calendar : null,
+            maxWidth : 450,
+            maxHeight: 300,
+            autoclose: false
         },
 
+        /**
+         * event: fired when the window is opened
+         */
         open: function ()
         {
             this.parent();
@@ -43,9 +59,9 @@ define('package/quiqqer/calendar/bin/AddEditCalendarWindow', [
 
             var data = {};
 
-            if(calendar != null) {
+            if (calendar != null) {
                 data = {
-                    name: calendar.name,
+                    name    : calendar.name,
                     isGlobal: calendar.isglobal
                 }
             }
@@ -56,7 +72,7 @@ define('package/quiqqer/calendar/bin/AddEditCalendarWindow', [
         },
 
         /**
-         * event: on submit event
+         * event: fired when the window (form) is submitted
          */
         submit: function (values)
         {
@@ -65,15 +81,17 @@ define('package/quiqqer/calendar/bin/AddEditCalendarWindow', [
             var calendarName = Content.getElement('[name=calendarname]').value;
             var userid = null;
 
-            if(!Content.getElement('[name=isGlobal]').checked) {
+            if (!Content.getElement('[name=isGlobal]').checked) {
                 userid = USER.id;
             }
 
             this.Loader.show();
 
-            if(this.getAttribute('calendar')) {
+            // Do we edit or create a calendar?
+            if (this.getAttribute('calendar')) {
+                // Editing a calendar
                 var calender = this.getAttribute('calendar');
-                this.editCalendar(calender.id, calendarName, userid).then(function ()
+                Calendars.editCalendar(calender.id, userid, calendarName).then(function ()
                 {
                     this.close();
                 }.bind(this)).catch(function ()
@@ -81,7 +99,8 @@ define('package/quiqqer/calendar/bin/AddEditCalendarWindow', [
                     this.Loader.hide();
                 }.bind(this));
             } else {
-                this.createCalendar(calendarName, userid).then(function ()
+                // Creating a calendar
+                Calendars.addCalendar(userid, calendarName).then(function ()
                 {
                     this.close();
                 }.bind(this)).catch(function ()
@@ -89,36 +108,6 @@ define('package/quiqqer/calendar/bin/AddEditCalendarWindow', [
                     this.Loader.hide();
                 }.bind(this));
             }
-        },
-
-        /**
-         * Create a new calendar
-         *
-         * @returns {Promise}
-         */
-        createCalendar: function (calendarName, userid)
-        {
-            return Calendars.addCalendar(userid, calendarName);
-        },
-
-
-        /**
-         * Edits a calendar
-         *
-         * @param calendarID
-         * @param calendarName
-         * @param userid
-         */
-        editCalendar: function(calendarID, calendarName, userid)
-        {
-            return Calendars.editCalendar(calendarID, userid, calendarName);
-//                QUIAjax.post('package_quiqqer_calendar_ajax_editCalendar', resolve, {
-//                    'package'    : 'quiqqer/calendar',
-//                    'calendarID' : calendarID,
-//                    'userid'     : userid,
-//                    'name'       : calendarName,
-//                    onError      : reject
-//                });
         }
     });
 });

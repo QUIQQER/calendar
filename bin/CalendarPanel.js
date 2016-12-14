@@ -1,5 +1,21 @@
 /**
- * @module package/quiqqer/calendar/bin/CalendarPanel
+ * Panel that displays a calendar/scheduler
+ *
+ * @module 'package/quiqqer/calendar/bin/CalendarPanel'
+ * @author www.pcsg.de (Jan Wennrich)
+ *
+ * @require 'qui/QUI'
+ * @require 'qui/controls/windows/Confirm'
+ * @require 'qui/controls/desktop/Panel',
+ * @require 'qui/controls/buttons/Seperator',
+ * @require 'qui/utils/Functions',
+ * @require 'package/quiqqer/calendar/bin/Calendars',
+ * @require 'package/quiqqer/calendar-controls/bin/Scheduler',
+ * @require 'Ajax',
+ * @require 'Locale'
+ * @require 'Mustache'
+ *
+ * @require 'text!package/quiqqer/calendar/bin/CalendarPanel.html'
  */
 define('package/quiqqer/calendar/bin/CalendarPanel', [
 
@@ -14,8 +30,7 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
     'Locale',
     'Mustache',
 
-    'text!package/quiqqer/calendar/bin/CalendarPanel.html',
-    'css!package/quiqqer/calendar-controls/bin/htmlxScheduler/dhtmlxscheduler.css'
+    'text!package/quiqqer/calendar/bin/CalendarPanel.html'
 
 ], function (QUI, QUIConfirm, QUIPanel, QUIButtonSeperator, QUIFunctionUtils, Calendars, Scheduler, QUIAjax, QUILocale, Mustache, template)
 {
@@ -42,6 +57,11 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
             '$onButtonDeleteCalendarClick'
         ],
 
+        /**
+         * Constructor of the class
+         *
+         * @param options - constructor options
+         */
         initialize: function (options)
         {
             this.parent(options);
@@ -54,6 +74,9 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
             });
         },
 
+        /**
+         * Event: fired when the window is added to DOM
+         */
         $onCreate: function ()
         {
             var self = this;
@@ -93,7 +116,10 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
                 html: Mustache.render(template)
             });
 
+            // Remove all events from calendar (if another scheduler was opened previously)
             Scheduler.clearAll();
+
+            // Container to display the scheduler in
             Scheduler.init(Content.getElement('.dhx_cal_container'));
 
             // Parses the calendar iCal string into the scheduler
@@ -141,19 +167,19 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
         },
 
         /**
+         * Updates the scheduler size when the window is resized
          * event : on resize
          */
         $onResize: function ()
         {
             this.updateSchedularView()
-
         },
 
 
         /**
          * Removes all Events (add,change,delete) from Scheduler
          *
-         * event : on destroy
+         * event : fired when panel is closed/destroyed
          */
         $onDestroy: function ()
         {
@@ -162,11 +188,17 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
             Scheduler.detachEvent(this.DeleteEvent);
         },
 
+        /**
+         * event: fired when panel is added to DOM
+         */
         $onInject: function ()
         {
             this.updateSchedularView()
         },
 
+        /**
+         * Updates events in the scheduler
+         */
         updateSchedularView: function ()
         {
             if (Scheduler) {
@@ -174,7 +206,10 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
             }
         },
 
-
+        /**
+         * Event: fired when edit calendar button is clicked
+         * Opens the edit calendar window
+         */
         $onButtonEditCalendarClick: function ()
         {
             var self = this;
@@ -191,14 +226,12 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
                     }
                 }).open();
             });
-            return this;
         },
 
 
         /**
+         * Event: Fired when the add event button is clicked
          * Opens the dialog to add an event
-         *
-         * @return {self}
          */
         $onButtonAddEventClick: function ()
         {
@@ -219,8 +252,8 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
 
                     Scheduler.addEvent({
                         start_date: start,
-                        end_date:   end,
-                        text:   title
+                        end_date  : end,
+                        text      : title
                     });
 
                     this.Loader.hide();
@@ -232,9 +265,7 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
 
 
         /**
-         * Opens the dialog to add an event
-         *
-         * @return {self}
+         * Opens the dialog to remove a calendar
          */
         $onButtonDeleteCalendarClick: function ()
         {

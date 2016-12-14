@@ -3,7 +3,7 @@
 /**
  * Delete calendars with the given IDs
  *
- * @param string $ids - json array
+ * @param string $ids - JSON array of event IDs
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_calendar_ajax_delete',

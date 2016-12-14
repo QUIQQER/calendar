@@ -1,14 +1,26 @@
+/**
+ * Windows to add an event to a calendar
+ *
+ * @module package/quiqqer/calendar/bin/AddEventWindow
+ * @author www.pcsg.de (Jan Wennrich)
+ *
+ * @require 'qui/QUI',
+ * @require 'qui/controls/windows/Confirm'
+ * @require 'Locale'
+ * @require 'Mustache'
+ * @require 'text!package/quiqqer/calendar/bin/AddEventWindow.html'
+ * @require 'css!package/quiqqer/calendar/bin/AddEventWindow.css'
+ */
 define('package/quiqqer/calendar/bin/AddEventWindow', [
 
     'qui/QUI',
     'qui/controls/windows/Confirm',
-    'Ajax',
     'Locale',
     'Mustache',
     'text!package/quiqqer/calendar/bin/AddEventWindow.html',
     'css!package/quiqqer/calendar/bin/AddEventWindow.css'
 
-], function (QUI, QUIConfirm, QUIAjax, QUILocale, Mustache, template)
+], function (QUI, QUIConfirm, QUILocale, Mustache, template)
 {
     "use strict";
 
@@ -37,6 +49,9 @@ define('package/quiqqer/calendar/bin/AddEventWindow', [
             });
         },
 
+        /**
+         * event: fired when window is opened
+         */
         $onOpen: function ()
         {
             this.getContent().set({
