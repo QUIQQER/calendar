@@ -40,6 +40,11 @@
             <en><![CDATA[Add Event]]></en>
         </locale>
 
+        <locale name="calendar.window.addevent.tip">
+            <de><![CDATA[Hinweis: Sie können Events auch einfach per Doppelklick auf die entsprechende Stelle im Kalender hinzufügen.]]></de>
+            <en><![CDATA[Tip: You can also add events by just double clicking a spot in the calendar.]]></en>
+        </locale>
+
         <locale name="calendar.window.addevent.event.title">
             <de><![CDATA[Titel]]></de>
             <en><![CDATA[Title]]></en>
@@ -106,11 +111,21 @@
         </locale>
 
         <locale name="panel.button.edit.calendar.text">
+            <de><![CDATA[Kalender bearbeiten]]></de>
+            <en><![CDATA[Edit calendar]]></en>
+        </locale>
+
+        <locale name="panel.button.edit.marked_calendars.text">
             <de><![CDATA[Markierten Kalender bearbeiten]]></de>
             <en><![CDATA[Edit marked calendar]]></en>
         </locale>
 
         <locale name="panel.button.delete.calendar.text">
+            <de><![CDATA[Kalender löschen]]></de>
+            <en><![CDATA[Delete calendar]]></en>
+        </locale>
+
+        <locale name="panel.button.delete.marked_calendars.text">
             <de><![CDATA[Markierte Kalender löschen]]></de>
             <en><![CDATA[Delete marked calendars]]></en>
         </locale>

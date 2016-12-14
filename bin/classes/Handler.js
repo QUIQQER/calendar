@@ -156,6 +156,20 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
                     onError     : reject
                 });
             });
+        },
+
+
+        deleteCalendars: function (ids)
+        {
+            return new Promise(function (resolve, reject)
+            {
+                QUIAjax.post('package_quiqqer_calendar_ajax_delete', resolve, {
+                    'package': 'quiqqer/calendar',
+                    ids      : JSON.encode(ids),
+                    onError  : reject
+                });
+            })
         }
+
     });
 });

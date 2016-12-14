@@ -5,7 +5,7 @@
             <td>
                 <label class="field-container">
                     <span class="field-container-item">
-                        Title
+                        {{title}}
                     </span>
                     <input type="text" name="eventtitle" value="" class="field-container-field">
                 </label>
@@ -15,7 +15,7 @@
             <td>
                 <label class="field-container hasCheckbox">
                     <span class="field-container-item">
-                        Description
+                        {{desc}}
                     </span>
                     <input type="text" name="eventdesc" value="" class="field-container-field">
                 </label>
@@ -25,9 +25,9 @@
             <td>
                 <label class="field-container">
                     <span class="field-container-item">
-                        Start
+                        {{start}}
                     </span>
-                    <input type="number" name="eventstart" value="" class="field-container-field">
+                    <input type="text" name="eventstart" value="" class="field-container-field">
                 </label>
             </td>
         </tr>
@@ -35,22 +35,13 @@
             <td>
                 <label class="field-container hasCheckbox">
                     <span class="field-container-item">
-                        End
+                        {{end}}
                     </span>
-                    <input type="number" name="eventend" value="" class="field-container-field">
-                </label>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <label class="field-container">
-                    <span class="field-container-item">
-                        Calendar ID
-                    </span>
-                    <input type="number" name="calendarid" value="" class="field-container-field">
+                    <input type="text" name="eventend" value="" class="field-container-field">
                 </label>
             </td>
         </tr>
         </tbody>
     </table>
 </form>
+{{tip}}

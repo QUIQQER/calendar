@@ -6,11 +6,13 @@ define('package/quiqqer/calendar/bin/Panel', [
     'qui/QUI',
     'qui/controls/desktop/Panel',
     'qui/controls/windows/Confirm',
+    'qui/controls/buttons/Seperator',
+    'package/quiqqer/calendar/bin/Calendars',
     'Ajax',
     'Locale',
     'controls/grid/Grid'
 
-], function (QUI, QUIPanel, QUIConfirm, QUIAjax, QUILocale, Grid)
+], function (QUI, QUIPanel, QUIConfirm, QUIButtonSeperator, Calendars, QUIAjax, QUILocale, Grid)
 {
     "use strict";
 
@@ -67,10 +69,12 @@ define('package/quiqqer/calendar/bin/Panel', [
                 }
             });
 
+            this.addButton(new QUIButtonSeperator());
+
             this.addButton({
                 name     : 'editCalendar',
-                text     : QUILocale.get(lg, 'panel.button.edit.calendar.text'),
-                textimage: 'fa fa-pen',
+                text     : QUILocale.get(lg, 'panel.button.edit.marked_calendars.text'),
+                textimage: 'fa fa-pencil',
                 events   : {
                     onClick: this.$onButtonEditCalendarClick
                 }
@@ -79,7 +83,7 @@ define('package/quiqqer/calendar/bin/Panel', [
 
             this.addButton({
                 name     : 'deleteCalendar',
-                text     : QUILocale.get(lg, 'panel.button.delete.calendar.text'),
+                text     : QUILocale.get(lg, 'panel.button.delete.marked_calendars.text'),
                 textimage: 'fa fa-trash',
                 events   : {
                     onClick: this.deleteMarkedCalendars
@@ -286,6 +290,8 @@ define('package/quiqqer/calendar/bin/Panel', [
                 return o.id;
             });
 
+            console.log(ids);
+
             new QUIConfirm({
                 icon       : 'fa fa-remove',
                 title      : QUILocale.get(lg, 'calendar.window.delete.calendar.title'),
@@ -296,13 +302,10 @@ define('package/quiqqer/calendar/bin/Panel', [
                 events     : {
                     onSubmit: function (Win) {
                         Win.Loader.show();
-
-                        QUIAjax.post('package_quiqqer_calendar_ajax_delete', function () {
+                        Calendars.deleteCalendars(ids).then(function()
+                        {
                             Win.close();
                             self.loadCalendars();
-                        }, {
-                            'package': 'quiqqer/calendar',
-                            ids      : JSON.encode(ids)
                         });
                     }
                 }
@@ -331,8 +334,14 @@ define('package/quiqqer/calendar/bin/Panel', [
 
                 Utils.openPanelInTasks( new CalendarPanel({
                     title: calendar.name,
-                    calendarID: calendar.id,
-                    icon : 'fa fa-calendar'
+                    calendarData: calendar,
+                    icon : 'fa fa-calendar',
+                    events     : {
+                        onDestroy: function ()
+                        {
+                            self.loadCalendars();
+                        }
+                    }
                 }) );
             });
 
