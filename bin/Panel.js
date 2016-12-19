@@ -148,7 +148,7 @@ define('package/quiqqer/calendar/bin/Panel', [
                 onDblClick: function (data)
                 {
                     var rowData = self.$Grid.getDataByRow(data.row);
-                    self.openCalendar(rowData);
+                    Calendars.openCalendar(rowData);
                 },
 
                 // On single click select calendar and (de-)activate buttons
@@ -316,40 +316,6 @@ define('package/quiqqer/calendar/bin/Panel', [
                     }
                 }
             }).open();
-        },
-
-
-        /**
-         * Opens a calendar in a new panel
-         *
-         * @param calendar The calendar to open
-         */
-        openCalendar: function (calendar)
-        {
-            var self = this;
-
-            require([
-                'package/quiqqer/calendar/bin/CalendarPanel',
-                'utils/Panels'
-            ], function (CalendarPanel, Utils)
-            {
-                var panels = QUI.Controls.getByType('package/quiqqer/calendar/bin/CalendarPanel');
-                if (panels[0] !== undefined) {
-                    panels[0].destroy();
-                }
-
-                Utils.openPanelInTasks(new CalendarPanel({
-                    title       : calendar.name,
-                    calendarData: calendar,
-                    icon        : 'fa fa-calendar',
-                    events      : {
-                        onDestroy: function ()
-                        {
-                            self.loadCalendars();
-                        }
-                    }
-                }));
-            });
         }
     });
 });

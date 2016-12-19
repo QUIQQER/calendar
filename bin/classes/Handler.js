@@ -23,7 +23,7 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
     return new Class({
 
         Extends: QUIDOM,
-        Type   : 'package/quiqqer/calendar/bin/CalendarWindow',
+        Type   : 'package/quiqqer/calendar/bin/classes/Handler',
 
         initialize: function ()
         {
@@ -197,6 +197,58 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
                     onError  : reject
                 });
             })
+        },
+
+        /**
+         * Returns all Calendars as an Array of Objects
+         *
+         * @return {array}
+         */
+        getAsArray: function ()
+        {
+            return new Promise(function (resolve, reject)
+            {
+                QUIAjax.get('package_quiqqer_calendar_ajax_getCalendars', function (result)
+                {
+                    resolve(result);
+                }, {
+                    'package': 'quiqqer/calendar',
+                    onError  : reject
+                });
+            });
+        },
+
+        /**
+         * Opens a calendar in a new panel
+         *
+         * @param calendar The calendar to open
+         */
+        openCalendar: function (calendar)
+        {
+            var self = this;
+
+            require([
+                'package/quiqqer/calendar/bin/CalendarPanel',
+                'utils/Panels'
+            ], function (CalendarPanel, Utils)
+            {
+                var panels = QUI.Controls.getByType('package/quiqqer/calendar/bin/CalendarPanel');
+                if (panels[0] !== undefined) {
+                    panels[0].destroy();
+                }
+
+                Utils.openPanelInTasks(new CalendarPanel({
+                    title       : calendar.name,
+                    calendarData: calendar,
+                    icon        : 'fa fa-calendar',
+//                    events      : {
+//                        onDestroy: function ()
+//                        {
+//                            self.loadCalendars();
+//                        }
+//                    }
+                }));
+            });
         }
 
     });
