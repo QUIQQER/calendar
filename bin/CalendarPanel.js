@@ -85,9 +85,15 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
 
             return new Promise(function (resolve)
             {
-                Scheduler.loadExtension('agenda_view').then(function (Scheduler)
+                Promise.all([
+                    Scheduler.loadExtension('agenda_view'),
+                    Scheduler.loadExtension('cookie')
+                ]).then(function (Scheduler)
                 {
+                    // Get last scheduler object (the one with all loaded extensions)
+                    Scheduler = Scheduler[Scheduler.length - 1];
 
+                    // Get the real Scheduler instance
                     self.Scheduler = Scheduler.getScheduler();
 
                     // Remove all events from calendar (if another scheduler was opened previously)
