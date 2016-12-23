@@ -85,6 +85,7 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
 
             return new Promise(function (resolve)
             {
+                // Load scheduler extensions
                 Promise.all([
                     Scheduler.loadExtension('agenda_view'),
                     Scheduler.loadExtension('cookie')
@@ -95,6 +96,9 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
 
                     // Get the real Scheduler instance
                     self.Scheduler = Scheduler.getScheduler();
+
+                    // Default event length 60 minutes
+                    self.Scheduler.config.event_duration = 60;
 
                     // Remove all events from calendar (if another scheduler was opened previously)
                     self.Scheduler.clearAll();
@@ -201,20 +205,6 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
                 icon  : 'fa fa-trash',
                 events: {
                     onClick: this.$onButtonDeleteCalendarClick
-                }
-            });
-
-            this.addButton(new QUIButtonSeperator());
-
-            this.addButton({
-                name     : 'showAsList',
-                text     : QUILocale.get(lg, 'panel.button.show_as_list.text'),
-                textimage: 'fa fa-list',
-                events   : {
-                    onClick: function ()
-                    {
-                        self.$onButtonShowAsListClick(self)
-                    }
                 }
             });
 
@@ -408,44 +398,7 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
                     multipleSelection: true,
                     pagination       : true
                 });
-
-//                this.$Grid.addEvents({
-//                    onRefresh: function ()
-//                    {
-//                        self.loadCalendars();
-//                    },
-//
-//                    // On double click opens the calendar
-//                    onDblClick: function (data)
-//                    {
-//                        var rowData = self.$Grid.getDataByRow(data.row);
-//                        Calendars.openCalendar(rowData);
-//                    },
-//
-//                    // On single click select calendar and (de-)activate buttons
-//                    onClick: function (data)
-//                    {
-//                        var delButton  = self.getButtons('deleteCalendar'),
-//                            editButton = self.getButtons('editCalendar'),
-//                            selected   = self.$Grid.getSelectedIndices().length;
-//
-//                        if (selected == 1) {
-//                            editButton.enable();
-//                        } else {
-//                            editButton.disable();
-//                        }
-//
-//                        if (selected) {
-//                            delButton.enable();
-//                        } else {
-//                            delButton.disable();
-//                        }
-//                    }
-//                });
-//
-//                this.loadCalendars();
             });
-
         }
     });
 });
