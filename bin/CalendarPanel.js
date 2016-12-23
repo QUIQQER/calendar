@@ -44,6 +44,10 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
 
         calendarData: null,
 
+        schedulerReady: false,
+
+        Scheduler: null,
+
         ChangeEvent: null,
         AddEvent   : null,
         DeleteEvent: null,
@@ -71,6 +75,91 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
                 onCreate: this.$onCreate,
                 onResize: this.$onResize,
                 onInject: this.$onInject
+            });
+        },
+
+
+        initScheduler: function ()
+        {
+            var self = this;
+
+            return new Promise(function (resolve)
+            {
+                Scheduler.loadExtension('agenda_view').then(function (Scheduler)
+                {
+
+                    self.Scheduler = Scheduler.getScheduler();
+
+                    // Remove all events from calendar (if another scheduler was opened previously)
+                    self.Scheduler.clearAll();
+
+                    // Container to display the scheduler in
+                    self.Scheduler.init(self.getContent().getElement('.dhx_cal_container'));
+
+                    // Parses the calendar iCal string into the scheduler
+                    Calendars.getCalendarAsIcal(self.calendarData.id).then(function (result)
+                    {
+                        self.Scheduler.parse(result, 'ical');
+                    });
+
+                    // Run when an event is edited in the scheduler
+                    self.ChangeEvent = self.Scheduler.attachEvent('onEventChanged', function (id, ev)
+                    {
+                        Calendars.editEvent(
+                            self.calendarData.id,
+                            ev.id,
+                            ev.text,
+                            ev.description,
+                            ev.start_date.getTime() / 1000,
+                            ev.end_date.getTime() / 1000
+                        )
+                    });
+
+                    // Run when an event is added to the scheduler
+                    self.AddEvent = self.Scheduler.attachEvent('onEventAdded', function (id, ev)
+                    {
+                        Calendars.addEvent(
+                            self.calendarData.id,
+                            ev.text,
+                            ev.text,
+                            ev.start_date.getTime() / 1000,
+                            ev.end_date.getTime() / 1000
+                        ).then(function (result)
+                        {
+                            if (result == null) {
+                                return;
+                            }
+                            self.Scheduler.changeEventId(id, parseInt(result));
+                        });
+                    });
+
+                    // Run when an event is deleted from scheduler
+                    self.DeleteEvent = self.Scheduler.attachEvent('onEventDeleted', function (id)
+                    {
+                        Calendars.deleteEvent(self.calendarData.id, id);
+                    });
+
+                    self.schedulerReady = true;
+                    resolve();
+                });
+            });
+
+        },
+
+
+        isSchedulerReady: function ()
+        {
+            var self = this;
+            return new Promise(function (resolve)
+            {
+                if (self.schedulerReady) {
+                    resolve();
+                } else {
+                    self.initScheduler().then(function ()
+                    {
+                        resolve();
+                    });
+                }
             });
         },
 
@@ -102,11 +191,24 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
             });
 
             this.addButton({
-                name     : 'deleteCalendar',
-                text     : QUILocale.get(lg, 'panel.button.delete.calendar.text'),
-                textimage: 'fa fa-trash',
-                events   : {
+                name  : 'deleteCalendar',
+                icon  : 'fa fa-trash',
+                events: {
                     onClick: this.$onButtonDeleteCalendarClick
+                }
+            });
+
+            this.addButton(new QUIButtonSeperator());
+
+            this.addButton({
+                name     : 'showAsList',
+                text     : QUILocale.get(lg, 'panel.button.show_as_list.text'),
+                textimage: 'fa fa-list',
+                events   : {
+                    onClick: function ()
+                    {
+                        self.$onButtonShowAsListClick(self)
+                    }
                 }
             });
 
@@ -116,54 +218,7 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
                 html: Mustache.render(template)
             });
 
-            // Remove all events from calendar (if another scheduler was opened previously)
-            Scheduler.clearAll();
-
-            // Container to display the scheduler in
-            Scheduler.init(Content.getElement('.dhx_cal_container'));
-
-            // Parses the calendar iCal string into the scheduler
-            Calendars.getCalendarAsIcal(this.calendarData.id).then(function (result)
-            {
-                Scheduler.parse(result, 'ical');
-            });
-
-            // Run when an event is edited in the scheduler
-            this.ChangeEvent = Scheduler.attachEvent('onEventChanged', function (id, ev)
-            {
-                Calendars.editEvent(
-                    self.calendarData.id,
-                    ev.id,
-                    ev.text,
-                    ev.description,
-                    ev.start_date.getTime() / 1000,
-                    ev.end_date.getTime() / 1000
-                )
-            });
-
-            // Run when an event is added to the scheduler
-            this.AddEvent = Scheduler.attachEvent('onEventAdded', function (id, ev)
-            {
-                Calendars.addEvent(
-                    self.calendarData.id,
-                    ev.text,
-                    ev.text,
-                    ev.start_date.getTime() / 1000,
-                    ev.end_date.getTime() / 1000
-                ).then(function (result)
-                {
-                    if (result == null) {
-                        return;
-                    }
-                    Scheduler.changeEventId(id, parseInt(result));
-                });
-            });
-
-            // Run when an event is deleted from scheduler
-            this.DeleteEvent = Scheduler.attachEvent('onEventDeleted', function (id)
-            {
-                Calendars.deleteEvent(self.calendarData.id, id);
-            });
+            self.initScheduler();
         },
 
         /**
@@ -183,9 +238,11 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
          */
         $onDestroy: function ()
         {
-            Scheduler.detachEvent(this.AddEvent);
-            Scheduler.detachEvent(this.ChangeEvent);
-            Scheduler.detachEvent(this.DeleteEvent);
+            if (this.schedulerReady) {
+                this.Scheduler.detachEvent(this.AddEvent);
+                this.Scheduler.detachEvent(this.ChangeEvent);
+                this.Scheduler.detachEvent(this.DeleteEvent);
+            }
         },
 
         /**
@@ -201,8 +258,8 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
          */
         updateSchedularView: function ()
         {
-            if (Scheduler) {
-                Scheduler.update_view();
+            if (this.schedulerReady) {
+                this.Scheduler.update_view();
             }
         },
 
@@ -250,14 +307,18 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
 
                     this.Loader.show();
 
-                    Scheduler.addEvent({
-                        start_date: start,
-                        end_date  : end,
-                        text      : title
+                    this.isSchedulerReady().then(function ()
+                    {
+                        self.Scheduler.addEvent({
+                            start_date: start,
+                            end_date  : end,
+                            text      : title
+                        });
+
+                        self.Loader.hide();
+                        aeWindow.close();
                     });
 
-                    this.Loader.hide();
-                    aeWindow.close();
                 });
                 aeWindow.open();
             });
@@ -291,6 +352,94 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
                     }
                 }
             }).open();
+        },
+
+
+        /**
+         * Shows the calendar events as a list
+         */
+        $onButtonShowAsListClick: function (Panel)
+        {
+            require(['controls/grid/Grid'], function (Grid)
+            {
+                console.log('Show as list click');
+
+                var Content = Panel.getContent();
+
+                Content.getElement('.dhx_cal_container').setStyle('display', 'none');
+
+                var Container = new Element('div', {
+                    'class': 'box',
+                    styles : {
+                        width : '100%',
+                        height: '100%'
+                    }
+                }).inject(Content);
+
+                // creates grid
+                Panel.$Grid = new Grid(Container, {
+                    columnModel      : [{
+                        header   : QUILocale.get('quiqqer/system', 'id'),
+                        dataIndex: 'id',
+                        dataType : 'string',
+                        width    : 50
+                    }, {
+                        header   : QUILocale.get(lg, 'calendar.window.addevent.event.title'),
+                        dataIndex: 'title',
+                        dataType : 'string',
+                        width    : 150
+                    }, {
+                        header   : QUILocale.get(lg, 'calendar.window.addevent.event.start'),
+                        dataIndex: 'start',
+                        dataType : 'string',
+                        width    : 75
+                    }, {
+                        header   : QUILocale.get(lg, 'calendar.window.addevent.event.end'),
+                        dataIndex: 'end',
+                        dataType : 'string',
+                        width    : 50
+                    }],
+                    multipleSelection: true,
+                    pagination       : true
+                });
+
+//                this.$Grid.addEvents({
+//                    onRefresh: function ()
+//                    {
+//                        self.loadCalendars();
+//                    },
+//
+//                    // On double click opens the calendar
+//                    onDblClick: function (data)
+//                    {
+//                        var rowData = self.$Grid.getDataByRow(data.row);
+//                        Calendars.openCalendar(rowData);
+//                    },
+//
+//                    // On single click select calendar and (de-)activate buttons
+//                    onClick: function (data)
+//                    {
+//                        var delButton  = self.getButtons('deleteCalendar'),
+//                            editButton = self.getButtons('editCalendar'),
+//                            selected   = self.$Grid.getSelectedIndices().length;
+//
+//                        if (selected == 1) {
+//                            editButton.enable();
+//                        } else {
+//                            editButton.disable();
+//                        }
+//
+//                        if (selected) {
+//                            delButton.enable();
+//                        } else {
+//                            delButton.disable();
+//                        }
+//                    }
+//                });
+//
+//                this.loadCalendars();
+            });
+
         }
     });
 });

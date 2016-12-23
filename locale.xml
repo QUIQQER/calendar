@@ -61,7 +61,7 @@
         </locale>
 
         <locale name="calendar.window.addevent.event.end">
-            <de><![CDATA[End]]></de>
+            <de><![CDATA[Ende]]></de>
             <en><![CDATA[End]]></en>
         </locale>
 
@@ -128,6 +128,11 @@
         <locale name="panel.button.delete.marked_calendars.text">
             <de><![CDATA[Markierte Kalender löschen]]></de>
             <en><![CDATA[Delete marked calendars]]></en>
+        </locale>
+
+        <locale name="panel.button.show_as_list.text">
+            <de><![CDATA[Als Liste anzeigen]]></de>
+            <en><![CDATA[Show as list]]></en>
         </locale>
 
         <locale name="calendar.title">
