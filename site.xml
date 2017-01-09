@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+    <types>
+        <!-- Calendar Full Page -->
+        <type type="sitetypes/calendar" icon="fa fa-calendar" template="sitetypes/calendar.html">
+            <locale group="quiqqer/calendar" var="admin.types.calendar.title"/>
+
+            <desc>
+                <locale group="quiqqer/calendar" var="admin.types.calendar.desc"/>
+            </desc>
+
+            <attributes>
+                <attribute>calendar.settings.ids</attribute>
+            </attributes>
+
+            <settings>
+                <category name="calendar-fullpage-settings">
+                    <settings>
+                        <title>
+                            <locale group="quiqqer/calendar" var="calendar.settings.title"/>
+                        </title>
+
+                        <input conf="calendar.settings.ids" type="text">
+                            <text>
+                                <locale group="quiqqer/calendar" var="quiqqer.settings.calendar.ids"/>
+                            </text>
+                        </input>
+                    </settings>
+                </category>
+            </settings>
+
+        </type>
+    </types>
+</site>
