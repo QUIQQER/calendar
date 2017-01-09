@@ -57,7 +57,7 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
         },
 
 
-        $onImport: function()
+        $onImport: function ()
         {
             try {
                 this.calIDs = JSON.parse(this.getAttribute('calendarids'));
@@ -116,18 +116,17 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
                     // Container to display the scheduler in
                     self.Scheduler.init(Element);
 
-                    // Parses the calendar iCal string into the scheduler
-                    Calendars.getCalendarAsIcal(self.calIDs[0]).then(function (result)
+                    // Parse events from all calendars in Scheduler
+                    self.calIDs.forEach(function (calID)
                     {
-                        self.Scheduler.parse(result, 'ical');
-                        self.Scheduler.update_view();
-                        self.schedulerReady = true;
-                        resolve();
+                        Calendars.getCalendarAsIcal(calID).then(function (result)
+                        {
+                            self.Scheduler.parse(result, 'ical');
+
+                        });
                     });
                 });
             });
         }
-
-
     });
 });
