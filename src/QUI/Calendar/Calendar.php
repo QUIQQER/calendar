@@ -196,10 +196,10 @@ class Calendar
         foreach ($eventsRaw as $key => $event) {
             $eventsFormatted[$key]['id']          = (int)$event['eventid'];
             $eventsFormatted[$key]['text']        = $event['title'];
-//            $eventsFormatted[$key]['description'] = $event['desc'];
+            $eventsFormatted[$key]['description'] = $event['desc'];
             $eventsFormatted[$key]['start_date']  = $this->timestampToSchedulerFormat($event['start']);
             $eventsFormatted[$key]['end_date']    = $this->timestampToSchedulerFormat($event['end']);
-//            $eventsFormatted[$key]['calendar_id'] = $event['calendarid'];
+            $eventsFormatted[$key]['calendar_id'] = $event['calendarid'];
         }
 
         return json_encode($eventsFormatted);
