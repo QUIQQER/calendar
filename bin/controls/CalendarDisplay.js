@@ -104,6 +104,9 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
                     // Get the real Scheduler instance
                     self.Scheduler = Scheduler.getScheduler();
 
+                    // Set date format
+                    self.Scheduler.config.xml_date = "%Y-%m-%d %H:%i";
+
                     // Read-Only mode
                     self.Scheduler.config.readonly = true;
 
@@ -119,14 +122,32 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
                     // Parse events from all calendars in Scheduler
                     self.calIDs.forEach(function (calID)
                     {
-                        Calendars.getCalendarAsIcal(calID).then(function (result)
+                        Calendars.getEventsAsJson(calID).then(function (result)
                         {
-                            self.Scheduler.parse(result, 'ical');
-
+                            var events = JSON.parse(result);
+                            events.forEach(function (event)
+                            {
+                                event.color = self.getRandomColor();
+                            });
+                            self.Scheduler.parse(JSON.stringify(events), 'json');
                         });
                     });
                 });
             });
+        },
+
+
+        /**
+         * Generates a random rgb(X, Y, Z) string
+         * @return {string} - The random color string
+         */
+        getRandomColor: function ()
+        {
+            var color_r = Math.floor(Math.random() * 255),
+                color_g = Math.floor(Math.random() * 255),
+                color_b = Math.floor(Math.random() * 255);
+            return 'rgb(' + color_r + ',' + color_g + ',' + color_b + ')';
         }
+
     });
 });

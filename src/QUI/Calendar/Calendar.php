@@ -182,6 +182,42 @@ class Calendar
         return $Calendar->render();
     }
 
+
+    /**
+     * Converts the calendars events to JSON format
+     *
+     * @return string - The calendars events in JSON format
+     */
+    public function toJSON()
+    {
+        $eventsRaw       = $this->getEvents();
+        $eventsFormatted = array();
+
+        foreach ($eventsRaw as $key => $event) {
+            $eventsFormatted[$key]['id']          = (int)$event['eventid'];
+            $eventsFormatted[$key]['text']        = $event['title'];
+//            $eventsFormatted[$key]['description'] = $event['desc'];
+            $eventsFormatted[$key]['start_date']  = $this->timestampToSchedulerFormat($event['start']);
+            $eventsFormatted[$key]['end_date']    = $this->timestampToSchedulerFormat($event['end']);
+//            $eventsFormatted[$key]['calendar_id'] = $event['calendarid'];
+        }
+
+        return json_encode($eventsFormatted);
+    }
+
+
+    /**
+     * Converts a UNIX timestamp to the format for DHTMLX Scheduler
+     *
+     * @param $timestamp int - A unix timestamp
+     * @return false|string  - The converted timestamp or false on error
+     */
+    public function timestampToSchedulerFormat($timestamp)
+    {
+        return date("Y-m-d H:i", $timestamp);
+    }
+
+
     /**
      * Returns the calendars ID.
      *

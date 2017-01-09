@@ -96,6 +96,29 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
             });
         },
 
+
+        /**
+         * Returns the calendars events as a JSON string.
+         *
+         * @param {int} calendarID - The calendar ID of which to iCal string should be returned
+         *
+         * @returns {Promise} - Resolves with the JSON string, rejects on error
+         */
+        getEventsAsJson: function (calendarID)
+        {
+            return new Promise(function (resolve, reject)
+            {
+                QUIAjax.get('package_quiqqer_calendar_ajax_getEventsAsJson', function (result)
+                {
+                    resolve(result);
+                }, {
+                    'package'   : 'quiqqer/calendar',
+                    'calendarID': calendarID,
+                    onError     : reject
+                });
+            });
+        },
+
         /**
          * Edits an event values
          *
