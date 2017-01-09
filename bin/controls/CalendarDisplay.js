@@ -88,6 +88,7 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
 
             return new Promise(function (resolve)
             {
+                // If scheduler already initiated return/resolve
                 if (self.schedulerReady) {
                     resolve();
                 }
@@ -122,12 +123,13 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
                     // Parse events from all calendars in Scheduler
                     self.calIDs.forEach(function (calID)
                     {
+                        var color = self.getRandomColor();
                         Calendars.getEventsAsJson(calID).then(function (result)
                         {
                             var events = JSON.parse(result);
                             events.forEach(function (event)
                             {
-                                event.color = self.getRandomColor();
+                                event.color = color;
                             });
                             self.Scheduler.parse(JSON.stringify(events), 'json');
                         });
