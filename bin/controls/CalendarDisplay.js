@@ -9,15 +9,20 @@
  * @require 'package/quiqqer/calendar/bin/Calendars'
  * @require 'package/quiqqer/calendar-controls/bin/Scheduler'
  *
+ * @require 'Mustache'
+ *
  */
 define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
 
     'qui/QUI',
     'qui/controls/Control',
     'package/quiqqer/calendar/bin/Calendars',
-    'package/quiqqer/calendar-controls/bin/Scheduler'
+    'package/quiqqer/calendar-controls/bin/Scheduler',
 
-], function (QUI, QUIControl, Calendars, Scheduler)
+    'package/bin/mustache/mustache',
+    'text!package/quiqqer/calendar/bin/controls/CalendarDisplay.html'
+
+], function (QUI, QUIControl, Calendars, Scheduler, Mustache, displayTemplate)
 {
     "use strict";
 
@@ -40,7 +45,7 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
         DeleteEvent: null,
 
         Binds: [
-            '$onImport'
+            '$onInject'
         ],
 
         /**
@@ -53,12 +58,12 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
             this.parent(options);
 
             this.addEvents({
-                onImport: this.$onImport
+                onInject: this.$onInject
             });
         },
 
 
-        $onImport: function ()
+        $onInject: function ()
         {
             try {
                 this.calIDs = JSON.parse(this.getAttribute('calendarids'));
@@ -94,6 +99,10 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
                     resolve();
                 }
 
+                Element.set({
+                   html: Mustache.render(displayTemplate)
+                });
+
                 // Load scheduler extensions
                 Promise.all([
                     Scheduler.loadExtension('agenda_view'),
@@ -119,7 +128,7 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
                     self.Scheduler.clearAll();
 
                     // Container to display the scheduler in
-                    self.Scheduler.init(Element);
+                    self.Scheduler.init(Element.getElementById('calendar'));
 
                     // Parse events from all calendars in Scheduler
                     self.calIDs.forEach(function (calID)
