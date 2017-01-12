@@ -5,6 +5,7 @@
  * @author www.pcsg.de (Jan Wennrich)
  *
  * @require 'qui/QUI' *
+ * @require 'qui/controls/Control',
  * @require 'package/quiqqer/calendar/bin/Calendars'
  * @require 'package/quiqqer/calendar-controls/bin/Scheduler'
  *
