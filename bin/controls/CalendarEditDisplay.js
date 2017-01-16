@@ -60,6 +60,11 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
         },
 
 
+        /**
+         * Determines the calendar ID and starts initializing the Scheduler
+         *
+         * Fired when Class is inserted in HTML via qui-data Attribute
+         */
         $onInject: function ()
         {
             var calID = this.getAttribute('calendarid');
@@ -77,9 +82,10 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
         },
 
         /**
+         * Initialize the scheduler
          *
          * @param Element - The element to create the Scheduler in
-         * @return Promise
+         * @return Promise - Resolves when Scheduler is initialized
          */
         initScheduler: function (Element)
         {
@@ -136,6 +142,9 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
         },
 
 
+        /**
+         * Attaches add, edit, delete Event events to the Scheduler
+         */
         attachEvents: function ()
         {
             var self = this;
