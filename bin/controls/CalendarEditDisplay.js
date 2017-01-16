@@ -1,7 +1,7 @@
 /**
- * Control that displays a calendar
+ * Control that displays an editable calendar
  *
- * @module 'package/quiqqer/calendar/bin/controls/CalendarDisplay'
+ * @module 'package/quiqqer/calendar/bin/controls/CalendarEditDisplay'
  * @author www.pcsg.de (Jan Wennrich)
  *
  * @require 'qui/QUI' *
@@ -12,7 +12,7 @@
  * @require 'Mustache'
  *
  */
-define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
+define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
 
     'qui/QUI',
     'qui/controls/Control',
@@ -31,9 +31,9 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
     return new Class({
 
         Extends: QUIControl,
-        Type   : 'package/quiqqer/calendar/bin/controls/CalendarDisplay',
+        Type   : 'package/quiqqer/calendar/bin/controls/CalendarEditDisplay',
 
-        calIDs: Array,
+        calID: Number,
 
         schedulerReady: Boolean,
 
@@ -62,20 +62,16 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
 
         $onInject: function ()
         {
-            try {
-                this.calIDs = JSON.parse(this.getAttribute('calendarids'));
-            } catch (Exception) {
-                // TODO: show error invalid calendar IDs
-                console.error('Invalid calendar ID(s). Must be array in JSON format');
+            var calID = this.getAttribute('calendarid');
+
+            // Is ID numeric?
+            if (isNaN(calID)) {
+                // TODO: show error non numeric calendar IDs
+                console.error('Non numeric calendar ID');
                 return;
             }
 
-            // All IDs numeric?
-            if (this.calIDs.some(isNaN)) {
-                // TODO: show error non numeric calendar IDs
-                console.error('Non numeric calendar ID(s)');
-                return;
-            }
+            this.calID = calID;
 
             this.initScheduler(this.getElm());
         },
@@ -102,8 +98,7 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
 
                 // Load scheduler extensions
                 Promise.all([
-                    Scheduler.loadExtension('agenda_view'),
-                    Scheduler.loadExtension('cookie')
+                    Scheduler.loadExtension('agenda_view')
                 ]).then(function (Scheduler)
                 {
                     // Get last scheduler object (the one with all loaded extensions)
@@ -115,9 +110,6 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
                     // Set date format
                     self.Scheduler.config.xml_date = "%Y-%m-%d %H:%i";
 
-                    // Read-Only mode
-                    self.Scheduler.config.readonly = true;
-
                     // Default event length 60 minutes
                     self.Scheduler.config.event_duration = 60;
 
@@ -127,38 +119,64 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
                     // Container to display the scheduler in
                     self.Scheduler.init(Element.getElementById('calendar'));
 
-                    // Parse events from all calendars in Scheduler
-                    self.calIDs.forEach(function (calID)
-                    {
-                        var color = self.getRandomColor();
-                        Calendars.getEventsAsJson(calID).then(function (result)
-                        {
-                            var events = JSON.parse(result);
-                            events.forEach(function (event)
-                            {
-                                event.color = color;
-                            });
-                            self.Scheduler.parse(JSON.stringify(events), 'json');
-                        });
-                    });
+                    self.attachEvents();
 
-                    self.schedulerReady = true;
-                    resolve();
+                    Calendars.getEventsAsJson(self.calID).then(function (result)
+                    {
+                        var events = JSON.parse(result);
+                        self.Scheduler.parse(JSON.stringify(events), 'json');
+                        self.schedulerReady = true;
+                        resolve();
+                    }).catch(function ()
+                    {
+                        console.error('Error getting events');
+                    });
                 });
             });
         },
 
-        /**
-         * Generates a random rgb(X, Y, Z) string
-         * @return {string} - The random color string
-         */
-        getRandomColor: function ()
-        {
-            var color_r = Math.floor(Math.random() * 255),
-                color_g = Math.floor(Math.random() * 255),
-                color_b = Math.floor(Math.random() * 255);
-            return 'rgb(' + color_r + ',' + color_g + ',' + color_b + ')';
-        }
 
+        attachEvents: function ()
+        {
+            var self = this;
+
+            // Run when an event is edited in the scheduler
+            this.ChangeEvent = this.Scheduler.attachEvent('onEventChanged', function (id, ev)
+            {
+                Calendars.editEvent(
+                    self.calID,
+                    ev.id,
+                    ev.text,
+                    ev.description,
+                    ev.start_date.getTime() / 1000,
+                    ev.end_date.getTime() / 1000
+                );
+            });
+
+            // Run when an event is added to the scheduler
+            this.AddEvent = this.Scheduler.attachEvent('onEventAdded', function (id, ev)
+            {
+                Calendars.addEvent(
+                    self.calID,
+                    ev.text,
+                    ev.text,
+                    ev.start_date.getTime() / 1000,
+                    ev.end_date.getTime() / 1000
+                ).then(function (result)
+                {
+                    console.log(result);
+                    if (result == null) {
+                        return;
+                    }
+                    self.Scheduler.changeEventId(id, parseInt(result));
+                });
+            });
+
+            // Run when an event is deleted from scheduler
+            this.DeleteEvent = this.Scheduler.attachEvent('onEventDeleted', function (id)
+            {
+                Calendars.deleteEvent(self.calID, id);
+            });
+        }
     });
 });
