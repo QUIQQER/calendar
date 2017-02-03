@@ -39,9 +39,9 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
 
         Scheduler: Scheduler,
 
-        ChangeEvent: null,
-        AddEvent   : null,
-        DeleteEvent: null,
+        ChangeEventInCalendarEvent: null,
+        AddEventToCalendarEvent   : null,
+        DeleteEventFromCalendarEvent: null,
 
         Binds: [
             '$onInject',
@@ -65,33 +65,6 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
                 onInject: this.$onInject,
                 onResize: this.$onResize
             });
-        },
-
-
-        /**
-         * Updates the scheduler size when the window is resized
-         * event : on resize
-         */
-        $onResize: function ()
-        {
-            if(this.schedulerReady) {
-                this.Scheduler.update_view();
-            }
-        },
-
-
-        /**
-         * Sets width and height of the display
-         *
-         * @param {Number} width
-         * @param {Number} height
-         */
-        setDimensions: function(width, height)
-        {
-            if (width < 0 || height < 0) {
-                return;
-            }
-            this.getElm().setAttribute('style', 'width: ' + width + 'px; height: ' + height + 'px;');
         },
 
 
@@ -184,14 +157,41 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
 
 
         /**
+         * Updates the scheduler size when the window is resized
+         * event : on resize
+         */
+        $onResize: function ()
+        {
+            if(this.schedulerReady) {
+                this.Scheduler.update_view();
+            }
+        },
+
+
+        /**
+         * Sets width and height of the display
+         *
+         * @param {Number} width
+         * @param {Number} height
+         */
+        setDimensions: function(width, height)
+        {
+            if (width < 0 || height < 0) {
+                return;
+            }
+            this.getElm().setAttribute('style', 'width: ' + width + 'px; height: ' + height + 'px;');
+        },
+
+
+        /**
          * Adds an event to the Scheduler
          *
          * @param {Array} data - Array with the fields start_date, end, text
          */
-        addEvent: function (data)
-        {
-            this.Scheduler.addEvent(data);
-        },
+//        addEventToScheduler: function (data)
+//        {
+//            this.Scheduler.addEvent(data);
+//        },
 
 
         /**
@@ -202,7 +202,7 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
             var self = this;
 
             // Run when an event is edited in the scheduler
-            this.ChangeEvent = this.Scheduler.attachEvent('onEventChanged', function (id, ev)
+            this.ChangeEventInCalendarEvent = this.Scheduler.attachEvent('onEventChanged', function (id, ev)
             {
                 Calendars.editEvent(
                     self.calID,
@@ -215,7 +215,7 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
             });
 
             // Run when an event is added to the scheduler
-            this.AddEvent = this.Scheduler.attachEvent('onEventAdded', function (id, ev)
+            this.AddEventToCalendarEvent = this.Scheduler.attachEvent('onEventAdded', function (id, ev)
             {
                 Calendars.addEvent(
                     self.calID,
@@ -233,7 +233,7 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
             });
 
             // Run when an event is deleted from scheduler
-            this.DeleteEvent = this.Scheduler.attachEvent('onEventDeleted', function (id)
+            this.DeleteEventFromCalendarEvent = this.Scheduler.attachEvent('onEventDeleted', function (id)
             {
                 Calendars.deleteEvent(self.calID, id);
             });
@@ -243,9 +243,9 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
         detachEvents: function()
         {
             if(this.schedulerReady) {
-                this.Scheduler.detachEvent(this.AddEvent);
-                this.Scheduler.detachEvent(this.ChangeEvent);
-                this.Scheduler.detachEvent(this.DeleteEvent);
+                this.Scheduler.detachEvent(this.AddEventToCalendarEvent);
+                this.Scheduler.detachEvent(this.ChangeEventInCalendarEvent);
+                this.Scheduler.detachEvent(this.DeleteEventFromCalendarEvent);
             }
         }
     });
