@@ -134,7 +134,6 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
 
             this.Scheduler = new CalendarEditDisplay(self.calendarData.id);
             this.Scheduler.inject(Content);
-            this.Scheduler.$onInject();
         },
 
 
