@@ -39,8 +39,13 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
 
         Scheduler: Scheduler,
 
+        ChangeEvent: null,
+        AddEvent   : null,
+        DeleteEvent: null,
+
         Binds: [
-            '$onInject'
+            '$onInject',
+            '$onResize'
         ],
 
         /**
@@ -52,11 +57,41 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
         {
             this.parent(options);
 
+            this.calID = options;
+
             this.schedulerReady = false;
 
             this.addEvents({
-                onInject: this.$onInject
+                onInject: this.$onInject,
+                onResize: this.$onResize
             });
+        },
+
+
+        /**
+         * Updates the scheduler size when the window is resized
+         * event : on resize
+         */
+        $onResize: function ()
+        {
+            if(this.schedulerReady) {
+                this.Scheduler.update_view();
+            }
+        },
+
+
+        /**
+         * Sets width and height of the display
+         *
+         * @param {Number} width
+         * @param {Number} height
+         */
+        setDimensions: function(width, height)
+        {
+            if (width < 0 || height < 0) {
+                return;
+            }
+            this.getElm().setAttribute('style', 'width: ' + width + 'px; height: ' + height + 'px;');
         },
 
 
@@ -67,7 +102,12 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
          */
         $onInject: function ()
         {
-            var calID = this.getAttribute('calendarid');
+            var calID;
+            if (this.calID !== undefined) {
+                calID = this.calID;
+            } else {
+                calID = this.getAttribute('calendarid');
+            }
 
             // Is ID numeric?
             if (isNaN(calID)) {
@@ -80,6 +120,7 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
 
             this.initScheduler(this.getElm());
         },
+
 
         /**
          * Initialize the scheduler
@@ -143,6 +184,17 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
 
 
         /**
+         * Adds an event to the Scheduler
+         *
+         * @param {Array} data - Array with the fields start_date, end, text
+         */
+        addEvent: function (data)
+        {
+            this.Scheduler.addEvent(data);
+        },
+
+
+        /**
          * Attaches add, edit, delete Event events to the Scheduler
          */
         attachEvents: function ()
@@ -173,7 +225,6 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
                     ev.end_date.getTime() / 1000
                 ).then(function (result)
                 {
-                    console.log(result);
                     if (result == null) {
                         return;
                     }
@@ -186,6 +237,16 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
             {
                 Calendars.deleteEvent(self.calID, id);
             });
+        },
+
+
+        detachEvents: function()
+        {
+            if(this.schedulerReady) {
+                this.Scheduler.detachEvent(this.AddEvent);
+                this.Scheduler.detachEvent(this.ChangeEvent);
+                this.Scheduler.detachEvent(this.DeleteEvent);
+            }
         }
     });
 });
