@@ -8,13 +8,31 @@
         </locale>
 
         <locale name="package.description">
-            <de><![CDATA[]]></de>
-            <en><![CDATA[]]></en>
+            <de><![CDATA[Bietet Seitentypen zur Anzeige und Bearbeitung von Kalendern.]]></de>
+            <en><![CDATA[Offers sitetypes to display and edit calendars.]]></en>
         </locale>
 
         <locale name="menu.apps.calendar.title">
             <de><![CDATA[Kalender]]></de>
             <en><![CDATA[Calendars]]></en>
+        </locale>
+
+        <locale name="quiqqer/calendar:sitetypes/calendar.title">
+            <de><![CDATA[Kalender Anzeige]]></de>
+            <en><![CDATA[Calendar Display]]></en>
+        </locale>
+        <locale name="quiqqer/calendar:sitetypes/calendar.description">
+            <de><![CDATA[Zeigt einen oder mehrere Kalender auf einer Seite an.]]></de>
+            <en><![CDATA[Displays one or more calendars on a page.]]></en>
+        </locale>
+
+        <locale name="quiqqer/calendar:sitetypes/calendarEdit.title">
+            <de><![CDATA[Editierbarer Kalender sitetypes]]></de>
+            <en><![CDATA[Editable Calendar sitetypes]]></en>
+        </locale>
+        <locale name="quiqqer/calendar:sitetypes/calendarEdit.description">
+            <de><![CDATA[Zeigt einen editierbaren Kalender auf einer Seite an.]]></de>
+            <en><![CDATA[Displays an editable calendar on a page.]]></en>
         </locale>
 
     </groups>
@@ -24,6 +42,16 @@
         <locale name="message.calendar.successful.created">
             <de><![CDATA[Der Kalender wurde erfolgreich erstellt.]]></de>
             <en><![CDATA[The calendar was successfully created.]]></en>
+        </locale>
+
+        <locale name="admin.types.calendar.title">
+            <de><![CDATA[Kalender Anzeige]]></de>
+            <en><![CDATA[Calendar Display]]></en>
+        </locale>
+
+        <locale name="admin.types.calendarEdit.title">
+            <de><![CDATA[Editierbarer Kalender]]></de>
+            <en><![CDATA[Editable Kalender]]></en>
         </locale>
     </groups>
 
