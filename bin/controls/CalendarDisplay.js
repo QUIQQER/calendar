@@ -102,8 +102,7 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
 
                 // Load scheduler extensions
                 Promise.all([
-                    Scheduler.loadExtension('agenda_view'),
-                    Scheduler.loadExtension('cookie')
+                    Scheduler.loadExtension('agenda_view')
                 ]).then(function (Scheduler)
                 {
                     // Get last scheduler object (the one with all loaded extensions)
