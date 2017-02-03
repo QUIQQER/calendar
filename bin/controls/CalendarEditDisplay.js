@@ -186,12 +186,15 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
         /**
          * Adds an event to the Scheduler
          *
-         * @param {Array} data - Array with the fields start_date, end, text
+         * @param {Object} data            - Object with the parameters text, start_date, end_date
+         * @param {String} data.text       - Description of the event
+         * @param {String} data.start_date - Start date and time of the event in format '%d-%m-%Y %H:%i'
+         * @param {String} data.end_date   - End date and time of the event in format '%d-%m-%Y %H:%i'
          */
-//        addEventToScheduler: function (data)
-//        {
-//            this.Scheduler.addEvent(data);
-//        },
+        addEventToScheduler: function (data)
+        {
+            this.Scheduler.addEvent(data);
+        },
 
 
         /**

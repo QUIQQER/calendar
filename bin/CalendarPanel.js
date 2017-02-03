@@ -52,7 +52,8 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
         Binds: [
             '$onCreate',
             '$onResize',
-            'editCalendarClick'
+            'editCalendarClick',
+            'addEventClick'
         ],
 
         /**
@@ -181,9 +182,9 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
          */
         addEventClick: function ()
         {
+            var self = this;
             require(['package/quiqqer/calendar/bin/AddEventWindow'], function (AddEventWindow)
             {
-                var self = this;
                 var aeWindow = new AddEventWindow();
                 aeWindow.addEvent('onSubmit', function (Window)
                 {
@@ -193,7 +194,7 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
                     var start = Content.getElement('[name=eventstart]').value;
                     var end = Content.getElement('[name=eventend]').value;
                     this.Loader.show();
-                    self.Scheduler.addEvent({
+                    self.Scheduler.addEventToScheduler({
                         start_date: start,
                         end_date  : end,
                         text      : title
