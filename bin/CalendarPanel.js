@@ -189,8 +189,6 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
          */
         editCalendarClick: function ()
         {
-            console.log('editClick');
-            console.log(this.calendarData);
             var self = this;
             require(['package/quiqqer/calendar/bin/AddEditCalendarWindow'], function (CalendarWindow)
             {
@@ -221,10 +219,10 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
                 aeWindow.addEvent('onSubmit', function (Window)
                 {
                     var Content = Window.getContent();
-                    var title = Content.getElement('[name=eventtitle]').value;
-                    var desc = Content.getElement('[name=eventdesc]').value;
-                    var start = Content.getElement('[name=eventstart]').value;
-                    var end = Content.getElement('[name=eventend]').value;
+                    var title   = Content.getElement('[name=eventtitle]').value;
+                    var desc    = Content.getElement('[name=eventdesc]').value;
+                    var start   = Content.getElement('[name=eventstart]').value;
+                    var end     = Content.getElement('[name=eventend]').value;
                     this.Loader.show();
                     self.Scheduler.addEventToScheduler({
                         start_date: start,

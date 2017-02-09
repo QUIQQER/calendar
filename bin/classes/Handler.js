@@ -32,20 +32,23 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
         /**
          * Creates a new calendar
          *
-         * @param {int|null} userid     - The ID of the owner. Null for global calendar.
+         * @param {int} userid - The ID of the owner.
          * @param {String} calendarName - The name of the calendar
+         * @param {boolean} isPublic - Is the calendar private or public?
          *
          * @return {Promise} - Resolves when calendar was created, rejects on error
          */
-        addCalendar: function (userid, calendarName)
+        addCalendar: function (userid, calendarName, isPublic)
         {
+            var isPublicAsBool = isPublic == true ? 1 : 0;
             return new Promise(function (resolve, reject)
             {
                 QUIAjax.post('package_quiqqer_calendar_ajax_createCalendar', resolve, {
-                    'package': 'quiqqer/calendar',
-                    'userid' : userid,
-                    'name'   : calendarName,
-                    onError  : reject
+                    'package' : 'quiqqer/calendar',
+                    'userid'  : userid,
+                    'name'    : calendarName,
+                    'isPublic': isPublicAsBool,
+                    onError   : reject
                 });
             });
         },
@@ -54,20 +57,21 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
          * Edits a calendars values
          *
          * @param {int} calendarID      - The ID of the calendar to edit.
-         * @param {int|null} userid     - The user ID of the new owner. Null for global calendar.
          * @param {String} calendarName - The new name of the calendar.
+         * @param {boolean} isPublic - Is the calendar public or private?.
          *
          * @return {Promise} - Resolves when calendar was created, rejects on error
          */
-        editCalendar: function (calendarID, userid, calendarName)
+        editCalendar: function (calendarID, calendarName, isPublic)
         {
+            var isPublicAsBool = isPublic == true ? 1 : 0;
             return new Promise(function (resolve, reject)
             {
                 QUIAjax.post('package_quiqqer_calendar_ajax_editCalendar', resolve, {
                     'package'   : 'quiqqer/calendar',
                     'calendarID': calendarID,
-                    'userid'    : userid,
                     'name'      : calendarName,
+                    'isPublic'  : isPublicAsBool,
                     onError     : reject
                 });
             });
@@ -120,7 +124,7 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
         },
 
         /**
-         * Edits an event values
+         * Edits an events values
          *
          * @param {int} cID       - ID of the calendar where the event is in
          * @param {int} eID       - ID of the event

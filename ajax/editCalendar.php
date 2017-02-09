@@ -3,23 +3,27 @@
 /**
  * Edits a calendars values
  *
- * @param int $calendarID   - The ID of the calendar to edit.
- * @param String $name      - The new name of the calendar.
- * @param int|null $userid  - The user ID of the new owner. Null for global calendar.
+ * @param int $calendarID - The ID of the calendar to edit.
+ * @param String $name - The new name of the calendar.
+ * @param boolean $isPublic - Is the calendar public or private?
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_calendar_ajax_editCalendar',
-    function ($calendarID, $name, $userid) {
-        $calendar = new \QUI\Calendar\Calendar($calendarID);
-
-        if (is_null($userid) || empty($userid)) {
-            $User = null;
-        } else {
-            $User = QUI::getUsers()->get($userid);
+    function ($calendarID, $name, $isPublic) {
+        try {
+            $calendar = new \QUI\Calendar\Calendar($calendarID);
+        } catch (\QUI\Calendar\Exception $ex) {
+            return $ex;
         }
 
-        $calendar->editCalendar($name, $User);
+        $calendar->editCalendar($name, $isPublic);
+
+        ob_start();
+        var_dump($isPublic);
+        return ob_get_clean();  // string(0) ""
+
+        return null;
     },
-    array('calendarID', 'name', 'userid'),
+    array('calendarID', 'name', 'isPublic'),
     'Permission::checkAdminUser'
 );

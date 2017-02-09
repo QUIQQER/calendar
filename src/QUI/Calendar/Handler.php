@@ -18,19 +18,15 @@ class Handler
      * Creates a new Calendar
      *
      * @param string $name - Calendar name
-     * @param User $User   - optional, User for which the calendar is
+     * @param User $User - Owner of the calendar
+     * @param $isPublic - Is the calendar private or public?
      */
-    public static function createCalendar($name, $User = null)
+    public static function createCalendar($name, $User, $isPublic = false)
     {
-        $userID = null;
-
-        if (QUI::getUsers()->isUser($User)) {
-            $userID = $User->getId();
-        }
-
         QUI::getDataBase()->insert(self::tableCalendars(), array(
-            'name'   => $name,
-            'userid' => $userID
+            'name'     => $name,
+            'userid'   => $User->getId(),
+            'isPublic' => $isPublic
         ));
 
         QUI::getMessagesHandler()->addSuccess(
@@ -90,8 +86,14 @@ class Handler
      */
     public static function getCalendars()
     {
-        return QUI::getDataBase()->fetch(array(
+        $calendars = QUI::getDataBase()->fetch(array(
             'from' => self::tableCalendars()
         ));
+
+        foreach ($calendars as $key => $calendar) {
+            $calendars[$key]['isPublic'] = $calendar['isPublic'] == 1 ? true : false;
+        }
+
+        return $calendars;
     }
 }

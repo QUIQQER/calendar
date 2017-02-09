@@ -3,18 +3,20 @@
 /**
  * Creates a new calendar
  *
- * @param String $name     - The name of the calendar
- * @param int|null $userid - The ID of the owner. Null for global calendar.
+ * @param String $name - The name of the calendar
+ * @param int $userid - The ID of the owner.
+ * @param boolean $isPublic - Is the calendar public or private?.
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_calendar_ajax_createCalendar',
-    function ($name, $userid) {
-        $User = null;
-        if (!is_null($userid) && !empty($userid)) {
+    function ($name, $userid, $isPublic) {
+        try {
             $User = QUI::getUsers()->get($userid);
+        } catch (Exception $ex) {
+            return null;
         }
-        \QUI\Calendar\Handler::createCalendar($name, $User);
+        \QUI\Calendar\Handler::createCalendar($name, $User, $isPublic);
     },
-    array('name', 'userid'),
+    array('name', 'userid', 'isPublic'),
     'Permission::checkAdminUser'
 );

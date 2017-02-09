@@ -16,19 +16,33 @@ use QUI;
 class Calendar
 {
     /**
+     * The calendar ID
+     *
      * @var integer
      */
     private $id;
 
     /**
+     * The name of the calendar
+     *
      * @var string
      */
     private $name;
 
     /**
-     * @var false|null|QUI\Users\Nobody|QUI\Users\SystemUser|QUI\Users\User
+     * The owner of the calendar
+     *
+     * @var QUI\Users\User
      */
-    private $user = null;
+    private $User;
+
+
+    /**
+     * Is the calendar public or private?
+     *
+     * @var boolean
+     */
+    private $isPublic;
 
     /**
      * Calendar constructor. Returns a calendar object for the given calendar id.
@@ -50,7 +64,7 @@ class Calendar
         if (!isset($result[0])) {
             throw new QUI\Calendar\Exception(array(
                 'quiqqer/calendar',
-                'exception.calendar,not.found'
+                'exception.calendar.not_found'
             ));
         }
 
@@ -58,38 +72,28 @@ class Calendar
 
         $this->id   = $calendarId;
         $this->name = $result['name'];
-
-        if (!is_null($result['userid'])) {
-            $this->user = QUI::getUsers()->get($result['userid']);
-        }
+        $this->User = QUI::getUsers()->get($result['userid']);
+        $this->isPublic = $result['isPublic'] == 1 ? true : false;
     }
 
     /**
      * Edits the calendars values
      *
      * @param $name - The new calendar name
-     * @param null|QUI\Users\User $user - The new calendar owner, null for global calendar
+     * @param $isPublic - Is the calendar public?
      */
-    public function editCalendar($name, $user = null)
+    public function editCalendar($name, $isPublic)
     {
-        $update = array(
-            'name'   => $name,
-            'userid' => null
-        );
-
-        $this->name = $name;
-
-        if (!empty($user) && !is_null($user)) {
-            $update['userid'] = $user->getId();
-            $this->user       = $user;
-        }
+        $this->name     = $name;
+        $this->isPublic = $isPublic;
 
         QUI::getDataBase()->update(
             Handler::tableCalendars(),
-            $update,
-            array(
-                'id' => $this->getId()
-            )
+            [
+                'name'     => $name,
+                'isPublic' => $isPublic
+            ],
+            ['id' => $this->getId()]
         );
     }
 
@@ -239,23 +243,23 @@ class Calendar
     }
 
     /**
-     * Returns the calendars owner User object or null if the calendar is global.
+     * Returns the calendars owner User object.
      *
-     * @return null|QUI\Users\User
+     * @return QUI\Users\User
      */
     public function getUser()
     {
-        return $this->user;
+        return $this->User;
     }
 
     /**
-     * Returns if the calendar is global.
+     * Returns if the calendar is public or private.
      *
      * @return bool
      */
-    public function isGlobal()
+    public function isPublic()
     {
-        return is_null($this->user);
+        return $this->isPublic();
     }
 
     /**
@@ -281,7 +285,7 @@ class Calendar
     public function toArray()
     {
         return array(
-            'isGlobal'     => $this->isGlobal(),
+            'isPublic'     => $this->isPublic(),
             'calendarname' => $this->getName(),
             'id'           => $this->getId()
         );

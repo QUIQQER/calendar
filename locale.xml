@@ -173,9 +173,9 @@
             <en><![CDATA[Owner]]></en>
         </locale>
 
-        <locale name="calendar.isglobal">
-            <de><![CDATA[Global?]]></de>
-            <en><![CDATA[Global?]]></en>
+        <locale name="calendar.is_public">
+            <de><![CDATA[Öffentlich?]]></de>
+            <en><![CDATA[Public?]]></en>
         </locale>
     </groups>
 

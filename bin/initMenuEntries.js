@@ -24,7 +24,6 @@ require([
                     new QUIMenuItem({
                         text    : CalendarData[i].name,
                         icon    : 'icon-calendar',
-                        calendar: 'test',
                         events  : {
                             onClick: click.bind(CalendarData[i])
                         }

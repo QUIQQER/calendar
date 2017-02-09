@@ -129,10 +129,10 @@ define('package/quiqqer/calendar/bin/Panel', [
                     dataType : 'string',
                     width    : 75
                 }, {
-                    header   : QUILocale.get(lg, 'calendar.isglobal'),
-                    dataIndex: 'isglobal',
+                    header   : QUILocale.get(lg, 'calendar.is_public'),
+                    dataIndex: 'isPublic',
                     dataType : 'boolean',
-                    width    : 50
+                    width    : 75
                 }],
                 multipleSelection: true,
                 pagination       : true
@@ -187,6 +187,8 @@ define('package/quiqqer/calendar/bin/Panel', [
                 if (!self.$Grid) {
                     return;
                 }
+
+                console.log(result);
 
                 self.$Grid.setData({
                     data: result

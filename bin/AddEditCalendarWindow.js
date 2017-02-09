@@ -55,15 +55,13 @@ define('package/quiqqer/calendar/bin/AddEditCalendarWindow', [
 
             var calendar = this.getAttribute('calendar');
 
-            this.setAttribute('title', 'test');
-
             var data = {};
 
-            if (calendar != null) {
+            if (calendar !== null) {
                 data = {
                     name    : calendar.name,
-                    isGlobal: calendar.isglobal
-                }
+                    isPublic: calendar.isPublic
+                };
             }
 
             this.getContent().set({
@@ -79,11 +77,8 @@ define('package/quiqqer/calendar/bin/AddEditCalendarWindow', [
             var Content = this.getContent();
 
             var calendarName = Content.getElement('[name=calendarname]').value;
-            var userid = null;
-
-            if (!Content.getElement('[name=isGlobal]').checked) {
-                userid = USER.id;
-            }
+            var userid       = USER.id;
+            var isPublic     = Content.getElement('[name=isPublic]').checked;
 
             this.Loader.show();
 
@@ -91,7 +86,7 @@ define('package/quiqqer/calendar/bin/AddEditCalendarWindow', [
             if (this.getAttribute('calendar')) {
                 // Editing a calendar
                 var calender = this.getAttribute('calendar');
-                Calendars.editCalendar(calender.id, userid, calendarName).then(function ()
+                Calendars.editCalendar(calender.id, calendarName, isPublic).then(function (result)
                 {
                     this.close();
                 }.bind(this)).catch(function ()
@@ -100,7 +95,7 @@ define('package/quiqqer/calendar/bin/AddEditCalendarWindow', [
                 }.bind(this));
             } else {
                 // Creating a calendar
-                Calendars.addCalendar(userid, calendarName).then(function ()
+                Calendars.addCalendar(userid, calendarName, isPublic).then(function ()
                 {
                     this.close();
                 }.bind(this)).catch(function ()
