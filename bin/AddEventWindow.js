@@ -63,6 +63,24 @@ define('package/quiqqer/calendar/bin/AddEventWindow', [
                     tip  : QUILocale.get(lg, 'calendar.window.addevent.tip')
                 })
             });
+            var popUpZIndex = this.getElm().style['z-index'];
+
+            var StartInput = this.getContent().getElementById('eventstart');
+            var EndInput = this.getContent().getElementById('eventend');
+
+            require([
+                'package/quiqqer/calendar-controls/bin/Source/Picker',
+                'package/quiqqer/calendar-controls/bin/Source/Picker.Attach',
+                'package/quiqqer/calendar-controls/bin/Source/Picker.Date',
+                'css!package/quiqqer/calendar-controls/bin/Source/datepicker.css'
+            ], function(Picker, PickerAttach, PickerDate) {
+                var DatePicker = new PickerDate([StartInput, EndInput], {
+                    timePicker: true,
+                    format: '%d-%m-%Y %H:%M'
+                });
+
+                DatePicker.picker.style['z-index'] = popUpZIndex + 1;
+            });
         }
     });
 });
