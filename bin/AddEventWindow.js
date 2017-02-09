@@ -65,6 +65,7 @@ define('package/quiqqer/calendar/bin/AddEventWindow', [
             });
             var popUpZIndex = this.getElm().style['z-index'];
 
+            // Display a date picker for the event start/end inputs
             var StartInput = this.getContent().getElementById('eventstart');
             var EndInput = this.getContent().getElementById('eventend');
 
@@ -79,6 +80,7 @@ define('package/quiqqer/calendar/bin/AddEventWindow', [
                     format: '%d-%m-%Y %H:%M'
                 });
 
+                // Place the date picker in front of the currently open AddEvent Popup
                 DatePicker.picker.style['z-index'] = popUpZIndex + 1;
             });
         }
