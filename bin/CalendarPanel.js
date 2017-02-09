@@ -53,7 +53,9 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
             '$onCreate',
             '$onResize',
             'editCalendarClick',
-            'addEventClick'
+            'addEventClick',
+            'serialize',
+            'unserialize'
         ],
 
         /**
@@ -64,7 +66,10 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
         initialize: function (options)
         {
             this.parent(options);
-            this.calendarData = options.calendarData;
+
+            if(this.calendarData === null) {
+                this.calendarData = options.calendarData;
+            }
 
             this.addEvents({
                 onCreate: this.$onCreate,
@@ -148,6 +153,33 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
             if (this.Scheduler) {
                 this.Scheduler.detachEvents();
             }
+        },
+
+
+        /**
+         * Called from Panel Handler.
+         * Stores the data of the current panel in the workspace so the panel can be displayed after page reload.
+         * @return {{type, attributes, calendarData: *}}
+         */
+        serialize: function () {
+            return {
+                type        : this.getType(),
+                attributes  : this.getAttributes(),
+                calendarData: this.calendarData
+            };
+        },
+
+
+        /**
+         * Import the saved data from the workspace to display the panel after page reload
+         *
+         * @param {Object} data
+         * @return {Object} this (package/quiqqer/calendar/bin/CalendarPanel)
+         */
+        unserialize: function (data) {
+            this.setAttributes(data.attributes);
+            this.calendarData  = data.calendarData;
+            return this;
         },
 
 
