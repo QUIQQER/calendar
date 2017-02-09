@@ -9,11 +9,11 @@
 QUI::$Ajax->registerFunction(
     'package_quiqqer_calendar_ajax_createCalendar',
     function ($name, $userid) {
-        $user = null;
+        $User = null;
         if (!is_null($userid) && !empty($userid)) {
-            $user = QUI::getUsers()->get($userid);
+            $User = QUI::getUsers()->get($userid);
         }
-        \QUI\Calendar\Handler::createCalendar($name, $user);
+        \QUI\Calendar\Handler::createCalendar($name, $User);
     },
     array('name', 'userid'),
     'Permission::checkAdminUser'

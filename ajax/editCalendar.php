@@ -13,12 +13,12 @@ QUI::$Ajax->registerFunction(
         $calendar = new \QUI\Calendar\Calendar($calendarID);
 
         if (is_null($userid) || empty($userid)) {
-            $user = null;
+            $User = null;
         } else {
-            $user = QUI::getUsers()->get($userid);
+            $User = QUI::getUsers()->get($userid);
         }
 
-        $calendar->editCalendar($name, $user);
+        $calendar->editCalendar($name, $User);
     },
     array('calendarID', 'name', 'userid'),
     'Permission::checkAdminUser'
