@@ -66,8 +66,8 @@ define('package/quiqqer/calendar/bin/AddEventWindow', [
             var popUpZIndex = this.getElm().style['z-index'];
 
             // Display a date picker for the event start/end inputs
-            var StartInput = this.getContent().getElementById('eventstart');
-            var EndInput = this.getContent().getElementById('eventend');
+            var EventStartInput = this.getContent().getElementById('eventstart');
+            var EventEndInput   = this.getContent().getElementById('eventend');
 
             require([
                 'package/quiqqer/calendar-controls/bin/Source/Picker',
@@ -75,7 +75,7 @@ define('package/quiqqer/calendar/bin/AddEventWindow', [
                 'package/quiqqer/calendar-controls/bin/Source/Picker.Date',
                 'css!package/quiqqer/calendar-controls/bin/Source/datepicker.css'
             ], function(Picker, PickerAttach, PickerDate) {
-                var DatePicker = new PickerDate([StartInput, EndInput], {
+                var DatePicker = new PickerDate([EventStartInput, EventEndInput], {
                     timePicker: true,
                     format: '%d-%m-%Y %H:%M'
                 });
