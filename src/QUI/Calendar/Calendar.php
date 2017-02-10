@@ -112,6 +112,8 @@ class Calendar
      */
     public function addCalendarEvent($title, $desc, $start, $end)
     {
+        $this->checkPermission(self::PERMISSION_ADD_EVENT);
+
         QUI::getDataBase()->insert(Handler::tableCalendarsEvents(), array(
             'title'      => $title,
             'desc'       => $desc,
@@ -135,6 +137,8 @@ class Calendar
      */
     public function editCalendarEvent($eventID, $title, $desc, $start, $end)
     {
+        $this->checkPermission(self::PERMISSION_EDIT_EVENT);
+
         QUI::getDataBase()->update(Handler::tableCalendarsEvents(), array(
             'title' => $title,
             'desc'  => $desc,
@@ -152,6 +156,8 @@ class Calendar
      */
     public function removeCalendarEvent($eventID)
     {
+        $this->checkPermission(self::PERMISSION_REMOVE_EVENT);
+
         QUI::getDataBase()->delete(Handler::tableCalendarsEvents(), array(
             'eventid' => $eventID
         ));
@@ -323,6 +329,9 @@ class Calendar
         switch ($permission) {
             case self::PERMISSION_EDIT_CALENDAR:
             case self::PERMISSION_DELETE_CALENDAR:
+            case self::PERMISSION_ADD_EVENT:
+            case self::PERMISSION_REMOVE_EVENT:
+            case self::PERMISSION_EDIT_EVENT:
             default:
                 if ($this->isOwner($User)) {
                     return true;
@@ -344,6 +353,9 @@ class Calendar
     }
 
 
-    const PERMISSION_EDIT_CALENDAR   = 'editCalendar';
+    const PERMISSION_EDIT_CALENDAR = 'editCalendar';
     const PERMISSION_DELETE_CALENDAR = 'deleteCalendar';
+    const PERMISSION_ADD_EVENT = 'addEvent';
+    const PERMISSION_REMOVE_EVENT = 'removeEvent';
+    const PERMISSION_EDIT_EVENT = 'editEvent';
 }
