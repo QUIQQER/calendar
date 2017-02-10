@@ -68,6 +68,9 @@ class Handler
 
         foreach ($ids as $id) {
             $id = (int)$id;
+            
+            $Calendar = new Calendar($id);
+            $Calendar->checkPermission($Calendar::PERMISSION_DELETE_CALENDAR);
 
             $Database->delete(self::tableCalendars(), array(
                 'id' => $id
