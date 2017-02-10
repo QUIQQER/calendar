@@ -53,6 +53,7 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
             '$onCreate',
             '$onResize',
             'editCalendarClick',
+            'deleteCalendarClick',
             'addEventClick',
             'serialize',
             'unserialize'
