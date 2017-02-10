@@ -35,6 +35,39 @@
             <en><![CDATA[Displays an editable calendar on a page.]]></en>
         </locale>
 
+        <locale name="permission.quiqqer.calendar._header">
+            <de><![CDATA[Kalender]]></de>
+            <en><![CDATA[Calendars]]></en>
+        </locale>
+        <locale name="permission.quiqqer.calendar.create">
+            <de><![CDATA[Kalender erstellen]]></de>
+            <en><![CDATA[Create Calendars]]></en>
+        </locale>
+        <locale name="permission.quiqqer.calendar.edit">
+            <de><![CDATA[Kalender bearbeiten]]></de>
+            <en><![CDATA[Edit Calendars]]></en>
+        </locale>
+        <locale name="permission.quiqqer.calendar.delete">
+            <de><![CDATA[Kalender löschen]]></de>
+            <en><![CDATA[Delete Calendars]]></en>
+        </locale>
+
+        <locale name="permission.quiqqer.calendar.event._header">
+            <de><![CDATA[Events]]></de>
+            <en><![CDATA[Events]]></en>
+        </locale>
+        <locale name="permission.quiqqer.calendar.event.create">
+            <de><![CDATA[Events erstellen]]></de>
+            <en><![CDATA[Create Events]]></en>
+        </locale>
+        <locale name="permission.quiqqer.calendar.event.edit">
+            <de><![CDATA[Events bearbeiten]]></de>
+            <en><![CDATA[Edit Events]]></en>
+        </locale>
+        <locale name="permission.quiqqer.calendar.event.delete">
+            <de><![CDATA[Events löschen]]></de>
+            <en><![CDATA[Delete Events]]></en>
+        </locale>
     </groups>
 
 
