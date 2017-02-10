@@ -84,6 +84,8 @@ class Calendar
      */
     public function editCalendar($name, $isPublic)
     {
+        $this->checkPermission(self::PERMISSION_EDIT_CALENDAR);
+
         $this->name     = $name;
         $this->isPublic = $isPublic;
 
@@ -290,4 +292,58 @@ class Calendar
             'id'           => $this->getId()
         );
     }
+
+
+    /**
+     * Checks if the user can perform a specified action on the calendar
+     *
+     * @param $permission - Name of the permission to check
+     *
+     * @return boolean
+     *
+     * @throws \QUI\Permissions\Exception
+     */
+    public function checkPermission($permission)
+    {
+        $User = QUI::getUsers()->getUserBySession();
+
+        if ($User->isSU()) {
+            return true;
+        }
+
+        if (QUI::getUsers()->isSystemUser($User)) {
+            return true;
+        }
+
+        $NoPermissionException = new QUI\Permissions\Exception(
+            QUI::getLocale()->get('quiqqer/system', 'exception.no.permission'),
+            403
+        );
+
+        switch ($permission) {
+            case self::PERMISSION_EDIT_CALENDAR:
+            case self::PERMISSION_DELETE_CALENDAR:
+            default:
+                if ($this->isOwner($User)) {
+                    return true;
+                }
+                throw $NoPermissionException;
+        }
+    }
+
+    /**
+     * Checks if the specified user is the owner of this calendar
+     *
+     * @param QUI\Users\User|QUI\Interfaces\Users\User $User - The user to check
+     *
+     * @return boolean
+     */
+    public function isOwner($User)
+    {
+        return $User->getId() === $this->User->getId();
+    }
+
+
+    const PERMISSION_EDIT_CALENDAR   = 'editCalendar';
+    const PERMISSION_DELETE_CALENDAR = 'deleteCalendar';
 }
