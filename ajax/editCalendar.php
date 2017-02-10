@@ -25,5 +25,5 @@ QUI::$Ajax->registerFunction(
         return null;
     },
     array('calendarID', 'name', 'isPublic'),
-    'Permission::checkAdminUser'
+    'quiqqer.calendar.edit'
 );

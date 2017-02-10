@@ -18,5 +18,5 @@ QUI::$Ajax->registerFunction(
         \QUI\Calendar\Handler::createCalendar($name, $User, $isPublic);
     },
     array('name', 'userid', 'isPublic'),
-    'Permission::checkAdminUser'
+    'quiqqer.calendar.create'
 );

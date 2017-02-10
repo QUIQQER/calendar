@@ -12,5 +12,5 @@ QUI::$Ajax->registerFunction(
         \QUI\Calendar\Handler::deleteCalendars($ids);
     },
     array('ids'),
-    'Permission::checkAdminUser'
+    'quiqqer.calendar.delete'
 );

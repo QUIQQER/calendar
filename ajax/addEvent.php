@@ -23,5 +23,5 @@ QUI::$Ajax->registerFunction(
         return (int)$eventID;
     },
     array('calendarID', 'title', 'desc', 'start', 'end'),
-    'Permission::checkAdminUser'
+    'quiqqer.calendar.event.create'
 );

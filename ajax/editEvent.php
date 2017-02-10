@@ -16,5 +16,5 @@ QUI::$Ajax->registerFunction(
         $Calendar->editCalendarEvent($eventID, $title, $desc, $start, $end);
     },
     array('calendarID', 'eventID', 'title', 'desc', 'start', 'end'),
-    'Permission::checkAdminUser'
+    'quiqqer.calendar.event.edit'
 );
