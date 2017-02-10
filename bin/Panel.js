@@ -188,8 +188,6 @@ define('package/quiqqer/calendar/bin/Panel', [
                     return;
                 }
 
-                console.log(result);
-
                 self.$Grid.setData({
                     data: result
                 });
