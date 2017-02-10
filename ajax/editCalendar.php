@@ -10,19 +10,8 @@
 QUI::$Ajax->registerFunction(
     'package_quiqqer_calendar_ajax_editCalendar',
     function ($calendarID, $name, $isPublic) {
-        try {
-            $calendar = new \QUI\Calendar\Calendar($calendarID);
-        } catch (\QUI\Calendar\Exception $ex) {
-            return $ex;
-        }
-
+        $calendar = new \QUI\Calendar\Calendar($calendarID);
         $calendar->editCalendar($name, $isPublic);
-
-        ob_start();
-        var_dump($isPublic);
-        return ob_get_clean();  // string(0) ""
-
-        return null;
     },
     array('calendarID', 'name', 'isPublic'),
     'quiqqer.calendar.edit'
