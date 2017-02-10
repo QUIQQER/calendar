@@ -2,21 +2,24 @@
 <locales>
 
     <groups name="quiqqer/calendar" datatype="js,php">
+        <!-- Package -->
         <locale name="package.title">
             <de><![CDATA[QUIQQER - Kalender / Termin Verwaltung]]></de>
             <en><![CDATA[QUIQQER - Calendar management]]></en>
         </locale>
-
         <locale name="package.description">
             <de><![CDATA[Bietet Seitentypen zur Anzeige und Bearbeitung von Kalendern.]]></de>
             <en><![CDATA[Offers sitetypes to display and edit calendars.]]></en>
         </locale>
+
 
         <locale name="menu.apps.calendar.title">
             <de><![CDATA[Kalender]]></de>
             <en><![CDATA[Calendars]]></en>
         </locale>
 
+
+        <!-- Sitetypes -->
         <locale name="quiqqer/calendar:sitetypes/calendar.title">
             <de><![CDATA[Kalender Anzeige]]></de>
             <en><![CDATA[Calendar Display]]></en>
@@ -35,6 +38,8 @@
             <en><![CDATA[Displays an editable calendar on a page.]]></en>
         </locale>
 
+
+        <!-- Permissions -->
         <locale name="permission.quiqqer.calendar._header">
             <de><![CDATA[Kalender]]></de>
             <en><![CDATA[Calendars]]></en>
@@ -77,6 +82,8 @@
             <en><![CDATA[The calendar was successfully created.]]></en>
         </locale>
 
+        
+        <!-- Sitetypes -->
         <locale name="admin.types.calendar.title">
             <de><![CDATA[Kalender Anzeige]]></de>
             <en><![CDATA[Calendar Display]]></en>
@@ -96,6 +103,8 @@
             <en><![CDATA[Add Calendar]]></en>
         </locale>
 
+
+        <!-- Add Event Popup -->
         <locale name="calendar.window.addevent.title">
             <de><![CDATA[Event hinzufügen]]></de>
             <en><![CDATA[Add Event]]></en>
@@ -131,6 +140,8 @@
             <en><![CDATA[Calendar ID]]></en>
         </locale>
 
+
+        <!-- Add/Edit Calendar -->
         <locale name="calendar.window.add.calendar.title">
             <de><![CDATA[Kalender hinzufügen]]></de>
             <en><![CDATA[Add calendar]]></en>
@@ -156,6 +167,8 @@
                 <p>Note that the calendars and the corresponding events can not be restored.</p>]]></en>
         </locale>
 
+
+        <!-- Panel Elements -->
         <locale name="panel.title">
             <de><![CDATA[Kalender]]></de>
             <en><![CDATA[Calendars]]></en>
@@ -196,6 +209,8 @@
             <en><![CDATA[Show as list]]></en>
         </locale>
 
+
+        <!-- Kalender Table Headers -->
         <locale name="calendar.title">
             <de><![CDATA[Kalender Name]]></de>
             <en><![CDATA[Calendar Name]]></en>
