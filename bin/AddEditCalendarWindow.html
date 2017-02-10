@@ -5,7 +5,7 @@
             <td>
                 <label class="field-container">
                     <span class="field-container-item">
-                        Name
+                        {{calendar_title}}
                     </span>
                     <input type="text" name="calendarname" value="{{name}}" class="field-container-field">
                 </label>
@@ -15,7 +15,7 @@
             <td>
                 <label class="field-container hasCheckbox">
                     <span class="field-container-item">
-                        Public
+                        {{calendar_isPublic}}
                     </span>
                     <span class="field-container-field">
                         <input type="checkbox" name="isPublic" {{#isPublic}}checked{{/isPublic}}>

@@ -55,13 +55,14 @@ define('package/quiqqer/calendar/bin/AddEditCalendarWindow', [
 
             var calendar = this.getAttribute('calendar');
 
-            var data = {};
+            var data = {
+                calendar_title   : QUILocale.get(lg, 'calendar.title'),
+                calendar_isPublic: QUILocale.get(lg, 'calendar.is_public')
+            };
 
             if (calendar !== null) {
-                data = {
-                    name    : calendar.name,
-                    isPublic: calendar.isPublic
-                };
+                data.name     = calendar.name;
+                data.isPublic = calendar.isPublic;
             }
 
             this.getContent().set({
@@ -77,8 +78,8 @@ define('package/quiqqer/calendar/bin/AddEditCalendarWindow', [
             var Content = this.getContent();
 
             var calendarName = Content.getElement('[name=calendarname]').value;
-            var userid       = USER.id;
-            var isPublic     = Content.getElement('[name=isPublic]').checked;
+            var userid = USER.id;
+            var isPublic = Content.getElement('[name=isPublic]').checked;
 
             this.Loader.show();
 
