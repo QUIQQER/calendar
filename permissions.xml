@@ -1,9 +1,11 @@
 <permissions>
 
+    <!-- Calendar -->
     <permission name="quiqqer.calendar.create" type="bool" />
     <permission name="quiqqer.calendar.edit"   type="bool" />
     <permission name="quiqqer.calendar.delete" type="bool" />
 
+    <!-- Events -->
     <permission name="quiqqer.calendar.event.create" type="bool" />
     <permission name="quiqqer.calendar.event.edit"   type="bool" />
     <permission name="quiqqer.calendar.event.delete" type="bool" />
