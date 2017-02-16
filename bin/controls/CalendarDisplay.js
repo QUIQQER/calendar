@@ -138,7 +138,7 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
                                 event.color = color;
                             });
                             self.Scheduler.parse(JSON.stringify(events), 'json');
-                        });
+                        }).catch(function(error) {});
                     });
 
                     self.schedulerReady = true;
