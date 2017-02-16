@@ -276,6 +276,27 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
 //                    }
                 }));
             });
+        },
+
+
+        /**
+         * Can the current User edit the calendar with the given ID?
+         *
+         * @param calendarID
+         */
+        canUserEditCalendar: function (calendarID)
+        {
+            return new Promise(function (resolve, reject)
+            {
+                QUIAjax.get('package_quiqqer_calendar_ajax_canUserEditCalendar', function (result)
+                {
+                    resolve(result);
+                }, {
+                    'package': 'quiqqer/calendar',
+                    'calendarID': calendarID,
+                    onError  : reject
+                });
+            });
         }
 
     });
