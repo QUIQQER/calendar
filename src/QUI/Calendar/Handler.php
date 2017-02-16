@@ -93,10 +93,21 @@ class Handler
             'from' => self::tableCalendars()
         ));
 
-        foreach ($calendars as $key => $calendar) {
-            $calendars[$key]['isPublic'] = $calendar['isPublic'] == 1 ? true : false;
+        foreach ($calendars as $key => $calendarData) {
+            $Calendar = new Calendar($calendarData['id']);
+
+            // Only return calendars the user can edit
+            try {
+                $Calendar->checkPermission($Calendar::PERMISSION_EDIT_CALENDAR);
+            } catch (QUI\Permissions\Exception $ex) {
+                unset($calendars[$key]);
+                continue;
+            }
+
+            $calendars[$key]['isPublic'] = $calendarData['isPublic'] == 1 ? true : false;
         }
 
-        return $calendars;
+        // Return array with new indexes starting at 0
+        return array_values($calendars);
     }
 }
