@@ -99,7 +99,7 @@ class Handler
             // Only return calendars the user can edit
             try {
                 $Calendar->checkPermission($Calendar::PERMISSION_EDIT_CALENDAR);
-            } catch (QUI\Permissions\Exception $ex) {
+            } catch (QUI\Calendar\Exception $ex) {
                 unset($calendars[$key]);
                 continue;
             }

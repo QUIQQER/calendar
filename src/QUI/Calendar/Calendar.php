@@ -315,7 +315,7 @@ class Calendar
      *
      * @return boolean
      *
-     * @throws \QUI\Permissions\Exception
+     * @throws \QUI\Calendar\Exception
      */
     public function checkPermission($permission)
     {
@@ -329,17 +329,15 @@ class Calendar
             return true;
         }
 
-        $NoPermissionException = new QUI\Permissions\Exception(
-            QUI::getLocale()->get('quiqqer/system', 'exception.no.permission'),
-            403
-        );
-
         switch ($permission) {
             case self::PERMISSION_VIEW_CALENDAR:
                 if ($this->isOwner($User) || $this->isPublic()) {
                     return true;
                 } else {
-                    throw $NoPermissionException;
+                    throw new QUI\Calendar\Exception(array(
+                        'quiqqer/calendar',
+                        'exception.calendar.permission.view'
+                    ));
                 }
                 break;
             case self::PERMISSION_EDIT_CALENDAR:
@@ -351,7 +349,10 @@ class Calendar
                 if ($this->isOwner($User)) {
                     return true;
                 }
-                throw $NoPermissionException;
+                throw new QUI\Calendar\Exception(array(
+                    'quiqqer/calendar',
+                    'exception.calendar.permission.edit'
+                ));
         }
     }
 
