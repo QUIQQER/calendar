@@ -74,14 +74,21 @@
             <en><![CDATA[Delete Events]]></en>
         </locale>
 
+
+        <!-- Exceptions -->
         <locale name="exception.calendar.permission.view">
-            <de><![CDATA[Du hast keine Berechtigung einen dieser Kalender anzusehen]]></de>
-            <en><![CDATA[You have no permission to view one of these calendars]]></en>
+            <de><![CDATA[Du hast keine Berechtigung einen dieser Kalender anzusehen.]]></de>
+            <en><![CDATA[You have no permission to view one of these calendars.]]></en>
         </locale>
 
         <locale name="exception.calendar.permission.edit">
-            <de><![CDATA[Du hast keine Berechtigung diesen Kalender zu bearbeiten]]></de>
-            <en><![CDATA[You have no permission to edit this calendar]]></en>
+            <de><![CDATA[Du hast keine Berechtigung diesen Kalender zu bearbeiten.]]></de>
+            <en><![CDATA[You have no permission to edit this calendar.]]></en>
+        </locale>
+
+        <locale name="exception.calendar.not_found">
+            <de><![CDATA[Dieser Kalender existiert nicht.]]></de>
+            <en><![CDATA[This calendar doesn't exist.]]></en>
         </locale>
     </groups>
 
