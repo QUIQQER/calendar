@@ -127,6 +127,13 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
                     // Get the real Scheduler instance
                     self.Scheduler = Scheduler.getScheduler();
 
+                    // Can the current User edit the calendar?
+                    // Throws error if not editable
+                    Calendars.canUserEditCalendar(self.calID).catch(function()
+                    {
+                        self.Scheduler.config.readonly = true;
+                    });
+
                     // Set date format
                     self.Scheduler.config.xml_date = "%Y-%m-%d %H:%i";
 
