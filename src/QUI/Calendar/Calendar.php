@@ -271,7 +271,7 @@ class Calendar
      */
     public function isPublic()
     {
-        return $this->isPublic();
+        return $this->isPublic;
     }
 
     /**
