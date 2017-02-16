@@ -70,7 +70,7 @@ class Calendar
 
         $result = $result[0];
 
-        $this->id   = $calendarId;
+        $this->id   = (int)$calendarId;
         $this->name = $result['name'];
         $this->User = QUI::getUsers()->get($result['userid']);
         $this->isPublic = $result['isPublic'] == 1 ? true : false;
@@ -170,6 +170,8 @@ class Calendar
      */
     public function toICal()
     {
+        $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
+
         $Calendar = new \Eluceo\iCal\Component\Calendar($this->getId());
         $Events   = $this->getEvents();
 
@@ -202,6 +204,8 @@ class Calendar
      */
     public function toJSON()
     {
+        $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
+
         $eventsRaw       = $this->getEvents();
         $eventsFormatted = array();
 
@@ -277,6 +281,8 @@ class Calendar
      */
     public function getEvents()
     {
+        $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
+
         return QUI::getDataBase()->fetch(array(
             'from'  => Handler::tableCalendarsEvents(),
             'where' => array(
@@ -292,6 +298,8 @@ class Calendar
      */
     public function toArray()
     {
+        $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
+
         return array(
             'isPublic'     => $this->isPublic(),
             'calendarname' => $this->getName(),
@@ -327,6 +335,13 @@ class Calendar
         );
 
         switch ($permission) {
+            case self::PERMISSION_VIEW_CALENDAR:
+                if ($this->isOwner($User) || $this->isPublic()) {
+                    return true;
+                } else {
+                    throw $NoPermissionException;
+                }
+                break;
             case self::PERMISSION_EDIT_CALENDAR:
             case self::PERMISSION_DELETE_CALENDAR:
             case self::PERMISSION_ADD_EVENT:
@@ -349,12 +364,14 @@ class Calendar
      */
     public function isOwner($User)
     {
-        return $User->getId() === $this->User->getId();
+        return $User->getId() == $this->User->getId();
     }
 
 
+    const PERMISSION_VIEW_CALENDAR = 'viewCalendar';
     const PERMISSION_EDIT_CALENDAR = 'editCalendar';
     const PERMISSION_DELETE_CALENDAR = 'deleteCalendar';
+
     const PERMISSION_ADD_EVENT = 'addEvent';
     const PERMISSION_REMOVE_EVENT = 'removeEvent';
     const PERMISSION_EDIT_EVENT = 'editEvent';
