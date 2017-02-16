@@ -14,5 +14,5 @@ QUI::$Ajax->registerFunction(
         return $Calendar->toJSON();
     },
     array('calendarID'),
-    'Permission::checkAdminUser'
+    false
 );
