@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <locales>
 
+    <!-- JS & PHP -->
     <groups name="quiqqer/calendar" datatype="js,php">
         <!-- Package -->
         <locale name="package.title">
@@ -93,6 +94,7 @@
     </groups>
 
 
+    <!-- PHP ONLY -->
     <groups name="quiqqer/calendar" datatype="php">
         <locale name="message.calendar.successful.created">
             <de><![CDATA[Der Kalender wurde erfolgreich erstellt.]]></de>
@@ -110,9 +112,28 @@
             <de><![CDATA[Editierbarer Kalender]]></de>
             <en><![CDATA[Editable Kalender]]></en>
         </locale>
+
+        <locale name="calendar.settings.title">
+            <de><![CDATA[Kalender Einstellungen]]></de>
+            <en><![CDATA[Kalender Einstellungen]]></en>
+        </locale>
+        <locale name="quiqqer.settings.calendar.ids">
+            <de><![CDATA[Kalender IDs]]></de>
+            <en><![CDATA[Kalender IDs]]></en>
+        </locale>
+
+        <locale name="calendarEdit.settings.title">
+            <de><![CDATA[Kalender Einstellungen]]></de>
+            <en><![CDATA[Kalender Einstellungen]]></en>
+        </locale>
+        <locale name="quiqqer.settings.calendarEdit.id">
+            <de><![CDATA[Kalender ID]]></de>
+            <en><![CDATA[Kalender ID]]></en>
+        </locale>
     </groups>
 
 
+    <!-- JS ONLY -->
     <groups name="quiqqer/calendar" datatype="js">
 
         <locale name="calendar.window.addcalendar.title">
