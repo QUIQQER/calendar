@@ -227,6 +227,11 @@
             <en><![CDATA[Edit calendar]]></en>
         </locale>
 
+        <locale name="panel.button.ical.export.text">
+            <de><![CDATA[Kalender als iCal exportieren]]></de>
+            <en><![CDATA[Export calendar as iCal]]></en>
+        </locale>
+
         <locale name="panel.button.edit.marked_calendars.text">
             <de><![CDATA[Markierten Kalender bearbeiten]]></de>
             <en><![CDATA[Edit marked calendar]]></en>

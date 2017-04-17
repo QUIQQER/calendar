@@ -56,7 +56,8 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
             'deleteCalendarClick',
             'addEventClick',
             'serialize',
-            'unserialize'
+            'unserialize',
+            'exportIcalClick'
         ],
 
         /**
@@ -126,6 +127,17 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
                 textimage: 'fa fa-pencil',
                 events   : {
                     onClick: this.editCalendarClick
+                }
+            });
+
+            this.addButton(new QUIButtonSeperator());
+
+            this.addButton({
+                name     : 'exportIcal',
+                text     : QUILocale.get(lg, 'panel.button.ical.export.text'),
+                textimage: 'fa fa-download',
+                events   : {
+                    onClick: this.exportIcalClick
                 }
             });
 
@@ -235,6 +247,28 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
                 });
                 aeWindow.open();
             });
+        },
+
+
+        /**
+         * Downloads the calendar as an iCal file
+         */
+        exportIcalClick: function ()
+        {
+            var downloadFile = URL_OPT_DIR + 'quiqqer/calendar/bin/iCalExport.php?calendar=' + this.calendarData.id,
+                iframeId     = Math.floor(Date.now() / 1000),
+                Frame        = new Element('iframe', {
+                    id             : 'download-iframe-' + iframeId,
+                    src            : downloadFile,
+                    styles         : {
+                        left    : -1000,
+                        height  : 10,
+                        position: 'absolute',
+                        top     : -1000,
+                        width   : 10
+                    },
+                    'data-iframeid': iframeId
+                }).inject(document.body);
         },
 
 
