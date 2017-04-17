@@ -20,6 +20,8 @@ class Handler
      * @param string $name - Calendar name
      * @param User $User - Owner of the calendar
      * @param $isPublic - Is the calendar private or public?
+     *
+     * @return Calendar - The created calendar
      */
     public static function createCalendar($name, $User, $isPublic = false)
     {
@@ -28,6 +30,7 @@ class Handler
             'userid'   => $User->getId(),
             'isPublic' => $isPublic
         ));
+        $calendarID = QUI::getPDO()->lastInsertId();
 
         QUI::getMessagesHandler()->addSuccess(
             QUI::getLocale()->get(
@@ -35,6 +38,8 @@ class Handler
                 'message.calendar.successful.created'
             )
         );
+
+        return new Calendar($calendarID);
     }
 
     /**
