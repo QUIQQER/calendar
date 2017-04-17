@@ -69,7 +69,7 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
         {
             this.parent(options);
 
-            if(this.calendarData === null) {
+            if (this.calendarData === null) {
                 this.calendarData = options.calendarData;
             }
 
@@ -174,7 +174,8 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
          * Stores the data of the current panel in the workspace so the panel can be displayed after page reload.
          * @return {{type, attributes, calendarData: *}}
          */
-        serialize: function () {
+        serialize: function ()
+        {
             return {
                 type        : this.getType(),
                 attributes  : this.getAttributes(),
@@ -189,9 +190,10 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
          * @param {Object} data
          * @return {Object} this (package/quiqqer/calendar/bin/CalendarPanel)
          */
-        unserialize: function (data) {
+        unserialize: function (data)
+        {
             this.setAttributes(data.attributes);
-            this.calendarData  = data.calendarData;
+            this.calendarData = data.calendarData;
             return this;
         },
 
@@ -232,10 +234,10 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
                 aeWindow.addEvent('onSubmit', function (Window)
                 {
                     var Content = Window.getContent();
-                    var title   = Content.getElement('[name=eventtitle]').value;
-                    var desc    = Content.getElement('[name=eventdesc]').value;
-                    var start   = Content.getElement('[name=eventstart]').value;
-                    var end     = Content.getElement('[name=eventend]').value;
+                    var title = Content.getElement('[name=eventtitle]').value;
+                    var desc = Content.getElement('[name=eventdesc]').value;
+                    var start = Content.getElement('[name=eventstart]').value;
+                    var end = Content.getElement('[name=eventend]').value;
                     this.Loader.show();
                     self.Scheduler.addEventToScheduler({
                         start_date: start,
