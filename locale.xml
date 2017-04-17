@@ -19,6 +19,10 @@
             <en><![CDATA[Calendars]]></en>
         </locale>
 
+        <locale name="calendar">
+            <de><![CDATA[Kalender]]></de>
+            <en><![CDATA[Calendar]]></en>
+        </locale>
 
         <!-- Sitetypes -->
         <locale name="quiqqer/calendar:sitetypes/calendar.title">
@@ -205,6 +209,11 @@
                 <p>Note that the calendars and the corresponding events can not be restored.</p>]]></en>
         </locale>
 
+        <!-- iCal import -->
+        <locale name="calendar.ical.import.info">
+            <de><![CDATA[Geben Sie hier die URL zu einer iCal Datei (.ics) ein:]]></de>
+            <en><![CDATA[Enter the URL to an iCal file (.ics) here:]]></en>
+        </locale>
 
         <!-- Panel Elements -->
         <locale name="panel.title">
@@ -230,6 +239,11 @@
         <locale name="panel.button.ical.export.text">
             <de><![CDATA[Kalender als iCal exportieren]]></de>
             <en><![CDATA[Export calendar as iCal]]></en>
+        </locale>
+
+        <locale name="panel.button.ical.import.text">
+            <de><![CDATA[Kalender aus iCal importieren]]></de>
+            <en><![CDATA[Import calendar from iCal]]></en>
         </locale>
 
         <locale name="panel.button.edit.marked_calendars.text">

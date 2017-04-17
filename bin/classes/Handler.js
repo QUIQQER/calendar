@@ -53,6 +53,27 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
             });
         },
 
+
+        /**
+         * Creates a calendar from an iCal url
+         *
+         * @param {string} icalUrl - iCal data
+         * @param {int} userid - The user to create the calendar for
+         */
+        addCalendarFromIcalUrl: function (icalUrl, userid)
+        {
+            return new Promise(function (resolve, reject)
+            {
+                QUIAjax.post('package_quiqqer_calendar_ajax_createCalendarFromIcal', resolve, {
+                    'package': 'quiqqer/calendar',
+                    'icalUrl': icalUrl,
+                    'userid' : userid,
+                    onError  : reject
+                });
+            });
+        },
+
+
         /**
          * Edits a calendars values
          *
@@ -292,9 +313,9 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
                 {
                     resolve(result);
                 }, {
-                    'package': 'quiqqer/calendar',
+                    'package'   : 'quiqqer/calendar',
                     'calendarID': calendarID,
-                    onError  : reject
+                    onError     : reject
                 });
             });
         }

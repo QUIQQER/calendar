@@ -3,8 +3,10 @@
 /**
  * This file contains QUI\Calendar\Handler
  */
+
 namespace QUI\Calendar;
 
+use ICal\ICal;
 use QUI;
 use QUI\Users\User;
 
@@ -40,6 +42,36 @@ class Handler
         );
 
         return new Calendar($calendarID);
+    }
+
+    /**
+     * Creates a new calendar (with events) from an iCal URL
+     *
+     * @param string $icalUrl - The iCal URL
+     * @param User $User - The calendar owner
+     *
+     * @return Calendar - The created calendar object
+     */
+    public static function createCalendarFromIcal($icalUrl, $User)
+    {
+        // Translation of the word "Calendar"
+        $calendarTranslation = QUI::getLocale()->get('quiqqer/calendar', 'calendar');
+
+        $IcalCalendar = new ICal($icalUrl);
+        $Calendar     = self::createCalendar($User->getName() . " " . $calendarTranslation, $User);
+
+        $events = $IcalCalendar->events();
+
+        foreach ($events as $Event) {
+            $Calendar->addCalendarEvent(
+                $Event->summary,
+                $Event->description,
+                (int)$IcalCalendar->iCalDateToUnixTimestamp($Event->dtstart),
+                (int)$IcalCalendar->iCalDateToUnixTimestamp($Event->dtend)
+            );
+        }
+
+        return $Calendar;
     }
 
     /**
