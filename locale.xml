@@ -105,6 +105,11 @@
             <en><![CDATA[The calendar was successfully created.]]></en>
         </locale>
 
+        <locale name="message.calendar.successful.imported">
+            <de><![CDATA[Der Kalender wurde erfolgreich importiert.]]></de>
+            <en><![CDATA[The calendar was successfully imported.]]></en>
+        </locale>
+
         
         <!-- Sitetypes -->
         <locale name="admin.types.calendar.title">

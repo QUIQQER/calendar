@@ -15,6 +15,13 @@ QUI::$Ajax->registerFunction(
             return null;
         }
         \QUI\Calendar\Handler::createCalendarFromIcal($icalUrl, $User);
+
+        QUI::getMessagesHandler()->addSuccess(
+            QUI::getLocale()->get(
+                'quiqqer/calendar',
+                'message.calendar.successful.imported'
+            )
+        );
     },
     array('icalUrl', 'userid'),
     'quiqqer.calendar.create'
