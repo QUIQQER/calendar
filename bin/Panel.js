@@ -81,7 +81,7 @@ define('package/quiqqer/calendar/bin/Panel', [
             this.addButton({
                 name     : 'importIcal',
                 text     : QUILocale.get(lg, 'panel.button.ical.import.text'),
-                textimage: 'fa fa-cloud-upload',
+                textimage: 'fa fa-cloud-download',
                 events   : {
                     onClick: this.importIcalClick
                 }
@@ -250,7 +250,7 @@ define('package/quiqqer/calendar/bin/Panel', [
             {
                 new Prompt({
                     title      : QUILocale.get(lg, 'panel.button.ical.import.text'),
-                    icon       : 'fa fa-cloud-upload',
+                    icon       : 'fa fa-cloud-download',
                     information: QUILocale.get(lg, 'calendar.ical.import.info'),
                     autoclose  : false,
                     events     : {
