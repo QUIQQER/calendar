@@ -34,13 +34,6 @@ class Handler
         ));
         $calendarID = QUI::getPDO()->lastInsertId();
 
-        QUI::getMessagesHandler()->addSuccess(
-            QUI::getLocale()->get(
-                'quiqqer/calendar',
-                'message.calendar.successful.created'
-            )
-        );
-
         return new Calendar($calendarID);
     }
 

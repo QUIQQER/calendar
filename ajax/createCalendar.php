@@ -16,6 +16,13 @@ QUI::$Ajax->registerFunction(
             return null;
         }
         \QUI\Calendar\Handler::createCalendar($name, $User, $isPublic);
+
+        QUI::getMessagesHandler()->addSuccess(
+            QUI::getLocale()->get(
+                'quiqqer/calendar',
+                'message.calendar.successful.created'
+            )
+        );
     },
     array('name', 'userid', 'isPublic'),
     'quiqqer.calendar.create'
