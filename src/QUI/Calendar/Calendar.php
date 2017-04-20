@@ -2,8 +2,10 @@
 /**
  * This file contains QUI\Calendar\Calendar
  */
+
 namespace QUI\Calendar;
 
+use function DusanKasan\Knapsack\last;
 use Eluceo\iCal\Component\Event;
 use QUI;
 
@@ -70,9 +72,9 @@ class Calendar
 
         $result = $result[0];
 
-        $this->id   = (int)$calendarId;
-        $this->name = $result['name'];
-        $this->User = QUI::getUsers()->get($result['userid']);
+        $this->id       = (int)$calendarId;
+        $this->name     = $result['name'];
+        $this->User     = QUI::getUsers()->get($result['userid']);
         $this->isPublic = $result['isPublic'] == 1 ? true : false;
     }
 
@@ -125,6 +127,41 @@ class Calendar
         return QUI::getDataBase()->getPDO()->lastInsertId('eventid');
     }
 
+    // TODO: Add function to add multiple events at once -> only one SQL query
+
+    /**
+     * Adds multiple events at once to the calendar.
+     *
+     * @param \QUI\Calendar\Event[] $events
+     */
+    public function addCalendarEvents($events)
+    {
+        if (!is_array($events) || empty($events)) {
+            return;
+        }
+
+        $sql      = "INSERT INTO " . Handler::tableCalendarsEvents() . " (title, `desc`, start, `end`, calendarid) VALUES ";
+        $lastElem = last($events);
+        foreach ($events as $Event) {
+            $data = implode(',', [
+                "'" . $Event->title . "'",
+                "'" . $Event->desc . "'",
+                $Event->start,
+                $Event->end,
+                $this->getId()
+            ]);
+            $sql  = $sql . "($data)";
+            if ($Event != $lastElem) {
+                $sql = $sql . ",";
+            }
+        }
+
+        $sql = $sql . ";";
+
+        QUI\System\Log::write($sql);
+        QUI::getDataBase()->getPDO()->prepare($sql)->execute();
+
+    }
 
     /**
      * Edits an event in the calendar.
