@@ -64,14 +64,6 @@ class Handler
 
         $events = array();
         foreach ($eventsFromIcal as $IcalEvent) {
-            // TODO: Add all Events at once -> only one SQL query
-//            $Calendar->addCalendarEvent(
-//                $Event->summary,
-//                $Event->description,
-//                (int)$IcalCalendar->iCalDateToUnixTimestamp($Event->dtstart),
-//                (int)$IcalCalendar->iCalDateToUnixTimestamp($Event->dtend)
-//            );
-
             $events[] = new Event(
                 $IcalEvent->summary,
                 $IcalEvent->description,

@@ -127,7 +127,6 @@ class Calendar
         return QUI::getDataBase()->getPDO()->lastInsertId('eventid');
     }
 
-    // TODO: Add function to add multiple events at once -> only one SQL query
 
     /**
      * Adds multiple events at once to the calendar.
@@ -158,9 +157,7 @@ class Calendar
 
         $sql = $sql . ";";
 
-        QUI\System\Log::write($sql);
         QUI::getDataBase()->getPDO()->prepare($sql)->execute();
-
     }
 
     /**
