@@ -15,37 +15,8 @@ use QUI;
  *
  * @package QUI\Calendar
  */
-class Calendar
+class Calendar extends AbstractCalendar
 {
-    /**
-     * The calendar ID
-     *
-     * @var integer
-     */
-    private $id;
-
-    /**
-     * The name of the calendar
-     *
-     * @var string
-     */
-    private $name;
-
-    /**
-     * The owner of the calendar
-     *
-     * @var QUI\Users\User
-     */
-    private $User;
-
-
-    /**
-     * Is the calendar public or private?
-     *
-     * @var boolean
-     */
-    private $isPublic;
-
     /**
      * Calendar constructor. Returns a calendar object for the given calendar id.
      *
@@ -269,46 +240,6 @@ class Calendar
 
 
     /**
-     * Returns the calendars ID.
-     *
-     * @return int - the calendar ID
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Returns the calendars name.
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Returns the calendars owner User object.
-     *
-     * @return QUI\Users\User
-     */
-    public function getUser()
-    {
-        return $this->User;
-    }
-
-    /**
-     * Returns if the calendar is public or private.
-     *
-     * @return bool
-     */
-    public function isPublic()
-    {
-        return $this->isPublic;
-    }
-
-    /**
      * Returns all events in a calendar as an array
      *
      * @return array - array of events
@@ -340,74 +271,4 @@ class Calendar
             'id'           => $this->getId()
         );
     }
-
-
-    /**
-     * Checks if the user can perform a specified action on the calendar
-     *
-     * @param $permission - Name of the permission to check
-     *
-     * @return boolean
-     *
-     * @throws \QUI\Calendar\Exception
-     */
-    public function checkPermission($permission)
-    {
-        $User = QUI::getUsers()->getUserBySession();
-
-        if ($User->isSU()) {
-            return true;
-        }
-
-        if (QUI::getUsers()->isSystemUser($User)) {
-            return true;
-        }
-
-        switch ($permission) {
-            case self::PERMISSION_VIEW_CALENDAR:
-                if ($this->isOwner($User) || $this->isPublic()) {
-                    return true;
-                } else {
-                    throw new QUI\Calendar\Exception(array(
-                        'quiqqer/calendar',
-                        'exception.calendar.permission.view'
-                    ));
-                }
-                break;
-            case self::PERMISSION_EDIT_CALENDAR:
-            case self::PERMISSION_DELETE_CALENDAR:
-            case self::PERMISSION_ADD_EVENT:
-            case self::PERMISSION_REMOVE_EVENT:
-            case self::PERMISSION_EDIT_EVENT:
-            default:
-                if ($this->isOwner($User)) {
-                    return true;
-                }
-                throw new QUI\Calendar\Exception(array(
-                    'quiqqer/calendar',
-                    'exception.calendar.permission.edit'
-                ));
-        }
-    }
-
-    /**
-     * Checks if the specified user is the owner of this calendar
-     *
-     * @param QUI\Users\User|QUI\Interfaces\Users\User $User - The user to check
-     *
-     * @return boolean
-     */
-    public function isOwner($User)
-    {
-        return $User->getId() == $this->User->getId();
-    }
-
-
-    const PERMISSION_VIEW_CALENDAR = 'viewCalendar';
-    const PERMISSION_EDIT_CALENDAR = 'editCalendar';
-    const PERMISSION_DELETE_CALENDAR = 'deleteCalendar';
-
-    const PERMISSION_ADD_EVENT = 'addEvent';
-    const PERMISSION_REMOVE_EVENT = 'removeEvent';
-    const PERMISSION_EDIT_EVENT = 'editEvent';
 }
