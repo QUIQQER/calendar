@@ -173,18 +173,6 @@ class InternalCalendar extends AbstractCalendar
 
 
     /**
-     * Converts a UNIX timestamp to the format for DHTMLX Scheduler
-     *
-     * @param $timestamp int - A unix timestamp
-     * @return false|string  - The converted timestamp or false on error
-     */
-    public function timestampToSchedulerFormat($timestamp)
-    {
-        return date("Y-m-d H:i", $timestamp);
-    }
-
-
-    /**
      * Returns all events in a calendar as an array
      *
      * @return array - array of events
@@ -199,21 +187,5 @@ class InternalCalendar extends AbstractCalendar
                 'calendarid' => (int)$this->getId()
             )
         ));
-    }
-
-    /**
-     * Converts the calendars information to an array. Does not include events.
-     *
-     * @return array
-     */
-    public function toArray()
-    {
-        $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
-
-        return array(
-            'isPublic'     => $this->isPublic(),
-            'calendarname' => $this->getName(),
-            'id'           => $this->getId()
-        );
     }
 }

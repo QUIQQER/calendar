@@ -173,12 +173,22 @@ abstract class AbstractCalendar
      */
     abstract public function getEvents();
 
+    
     /**
      * Converts the calendars information to an array. Does not include events.
      *
      * @return array
      */
-    abstract public function toArray();
+    public function toArray()
+    {
+        $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
+
+        return array(
+            'isPublic'     => $this->isPublic(),
+            'calendarname' => $this->getName(),
+            'id'           => $this->getId()
+        );
+    }
 
 
     /**
@@ -239,6 +249,18 @@ abstract class AbstractCalendar
     public function isOwner($User)
     {
         return $User->getId() == $this->User->getId();
+    }
+
+
+    /**
+     * Converts a UNIX timestamp to the format for DHTMLX Scheduler
+     *
+     * @param $timestamp int - A unix timestamp
+     * @return false|string  - The converted timestamp or false on error
+     */
+    public function timestampToSchedulerFormat($timestamp)
+    {
+        return date("Y-m-d H:i", $timestamp);
     }
 
 
