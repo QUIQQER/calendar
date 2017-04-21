@@ -9,7 +9,7 @@
 QUI::$Ajax->registerFunction(
     'package_quiqqer_calendar_ajax_removeEvent',
     function ($calendarID, $eventID) {
-        $Calendar = new QUI\Calendar\Calendar($calendarID);
+        $Calendar = new QUI\Calendar\InternalCalendar($calendarID);
         $Calendar->removeCalendarEvent($eventID);
     },
     array('calendarID', 'eventID'),

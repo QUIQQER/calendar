@@ -10,7 +10,7 @@
 QUI::$Ajax->registerFunction(
     'package_quiqqer_calendar_ajax_editCalendar',
     function ($calendarID, $name, $isPublic) {
-        $calendar = new \QUI\Calendar\Calendar($calendarID);
+        $calendar = new \QUI\Calendar\InternalCalendar($calendarID);
         $calendar->editCalendar($name, $isPublic);
     },
     array('calendarID', 'name', 'isPublic'),

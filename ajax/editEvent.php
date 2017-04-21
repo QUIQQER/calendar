@@ -12,7 +12,7 @@
 QUI::$Ajax->registerFunction(
     'package_quiqqer_calendar_ajax_editEvent',
     function ($calendarID, $eventID, $title, $desc, $start, $end) {
-        $Calendar = new \QUI\Calendar\Calendar($calendarID);
+        $Calendar = new \QUI\Calendar\InternalCalendar($calendarID);
         $Calendar->editCalendarEvent($eventID, $title, $desc, $start, $end);
     },
     array('calendarID', 'eventID', 'title', 'desc', 'start', 'end'),

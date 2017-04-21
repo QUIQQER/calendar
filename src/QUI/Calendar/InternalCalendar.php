@@ -15,7 +15,7 @@ use QUI;
  *
  * @package QUI\Calendar
  */
-class Calendar extends AbstractCalendar
+class InternalCalendar extends AbstractCalendar
 {
     /**
      * Calendar constructor. Returns a calendar object for the given calendar id.

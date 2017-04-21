@@ -9,7 +9,7 @@ require_once $packagesDir . '/header.php';
 $calendarID = filter_var($_GET['calendar'], FILTER_SANITIZE_NUMBER_INT);
 
 try {
-    $Calendar = new \QUI\Calendar\Calendar($calendarID);
+    $Calendar = new \QUI\Calendar\InternalCalendar($calendarID);
 
     // Check if user is allowed to view ergo download the calendar
     $Calendar->checkPermission($Calendar::PERMISSION_VIEW_CALENDAR);

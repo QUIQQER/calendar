@@ -23,7 +23,7 @@ class Handler
      * @param User $User - Owner of the calendar
      * @param $isPublic - Is the calendar private or public?
      *
-     * @return Calendar - The created calendar
+     * @return InternalCalendar - The created calendar
      */
     public static function createCalendar($name, $User, $isPublic = false)
     {
@@ -34,7 +34,7 @@ class Handler
         ));
         $calendarID = QUI::getPDO()->lastInsertId();
 
-        return new Calendar($calendarID);
+        return new InternalCalendar($calendarID);
     }
 
     /**
@@ -43,7 +43,7 @@ class Handler
      * @param string $icalUrl - The iCal URL
      * @param User $User - The calendar owner
      *
-     * @return Calendar - The created calendar object
+     * @return InternalCalendar - The created calendar object
      */
     public static function createCalendarFromIcal($icalUrl, $User)
     {
@@ -102,7 +102,7 @@ class Handler
         foreach ($ids as $id) {
             $id = (int)$id;
 
-            $Calendar = new Calendar($id);
+            $Calendar = new InternalCalendar($id);
             $Calendar->checkPermission($Calendar::PERMISSION_DELETE_CALENDAR);
 
             $Database->delete(self::tableCalendars(), array(
@@ -127,7 +127,7 @@ class Handler
         ));
 
         foreach ($calendars as $key => $calendarData) {
-            $Calendar = new Calendar($calendarData['id']);
+            $Calendar = new InternalCalendar($calendarData['id']);
 
             // Only return calendars the user can edit
             try {

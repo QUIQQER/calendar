@@ -10,7 +10,7 @@
 QUI::$Ajax->registerFunction(
     'package_quiqqer_calendar_ajax_getCalendar',
     function ($calendarID) {
-        $Calendar = new \QUI\Calendar\Calendar($calendarID);
+        $Calendar = new \QUI\Calendar\InternalCalendar($calendarID);
         return $Calendar->toArray();
     },
     array('calendarID'),

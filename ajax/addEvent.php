@@ -17,7 +17,7 @@ QUI::$Ajax->registerFunction(
         if (is_null($calendarID) || empty($calendarID)) {
             return null;
         }
-        $Calendar = new \QUI\Calendar\Calendar((int)$calendarID);
+        $Calendar = new \QUI\Calendar\InternalCalendar((int)$calendarID);
         $eventID  = $Calendar->addCalendarEvent($title, $desc, $start, $end);
 
         return (int)$eventID;
