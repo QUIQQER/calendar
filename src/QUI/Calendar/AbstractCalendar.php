@@ -60,14 +60,26 @@ abstract class AbstractCalendar
             ));
         }
 
+        $this->id = $calendarId;
+
         $result = $result[0];
 
-        $this->id         = (int)$calendarId;
-        $this->name       = $result['name'];
-        $this->User       = QUI::getUsers()->get($result['userid']);
-        $this->isPublic   = $result['isPublic'] == 1 ? true : false;
-        $this->isExternal = $result['isExternal'] == 1 ? true : false;
+        $this->construct($result);
     }
+
+
+    /**
+     * Constructs the calendar from the given SQL result
+     *
+     * @param $data
+     */
+    protected function construct($data)
+    {
+        $this->name       = $data['name'];
+        $this->User       = QUI::getUsers()->get($data['userid']);
+        $this->isPublic   = $data['isPublic'] == 1 ? true : false;
+    }
+
 
     /**
      * Edits the calendars values
