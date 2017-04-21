@@ -82,7 +82,22 @@ abstract class AbstractCalendar
      * @param $name - The new calendar name
      * @param $isPublic - Is the calendar public?
      */
-    abstract public function editCalendar($name, $isPublic);
+    public function editCalendar($name, $isPublic)
+    {
+        $this->checkPermission(AbstractCalendar::PERMISSION_EDIT_CALENDAR);
+
+        $this->name     = $name;
+        $this->isPublic = $isPublic;
+
+        QUI::getDataBase()->update(
+            Handler::tableCalendars(),
+            [
+                'name'     => $name,
+                'isPublic' => $isPublic
+            ],
+            ['id' => $this->getId()]
+        );
+    }
 
     /**
      * Adds an event to the calendar.
