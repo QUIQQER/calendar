@@ -6,6 +6,7 @@
             <field type="VARCHAR( 60 ) NOT NULL">name</field>
             <field type="INT( 11 ) NOT NULL">userid</field>
             <field type="BOOLEAN NOT NULL DEFAULT FALSE">isPublic</field>
+            <field type="BOOLEAN NOT NULL DEFAULT FALSE">isExternal</field>
         </table>
 
         <table name="calendars_events">

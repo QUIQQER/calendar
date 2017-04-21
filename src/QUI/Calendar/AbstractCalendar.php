@@ -37,6 +37,13 @@ abstract class AbstractCalendar
     protected $isPublic;
 
     /**
+     * Is the calendar internal or external?
+     *
+     * @var boolean
+     */
+    protected $isExternal;
+
+    /**
      * Calendar constructor. Returns a calendar object for the given calendar id.
      *
      * @param int - $calendarId
@@ -66,6 +73,7 @@ abstract class AbstractCalendar
         $this->name       = $result['name'];
         $this->User       = QUI::getUsers()->get($result['userid']);
         $this->isPublic   = $result['isPublic'] == 1 ? true : false;
+        $this->isExternal = $result['isExternal'] == 1 ? true : false;
     }
 
     /**
@@ -169,6 +177,16 @@ abstract class AbstractCalendar
     public function isPublic()
     {
         return $this->isPublic;
+    }
+
+    /**
+     * Returns if the calendar is internal or external.
+     *
+     * @return bool
+     */
+    public function isExternal()
+    {
+        return $this->isExternal;
     }
 
     /**
