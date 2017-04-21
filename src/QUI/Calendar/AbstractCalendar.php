@@ -12,21 +12,21 @@ abstract class AbstractCalendar
      *
      * @var integer
      */
-    private $id;
+    protected $id;
 
     /**
      * The name of the calendar
      *
      * @var string
      */
-    private $name;
+    protected $name;
 
     /**
      * The owner of the calendar
      *
      * @var User
      */
-    private $User;
+    protected $User;
 
 
     /**
@@ -34,7 +34,7 @@ abstract class AbstractCalendar
      *
      * @var boolean
      */
-    private $isPublic;
+    protected $isPublic;
 
     /**
      * Calendar constructor. Returns a calendar object for the given calendar id.
