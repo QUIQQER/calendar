@@ -25,17 +25,31 @@ class Event
     public $end;
 
     /**
+     * @var int
+     */
+    private $id;
+
+    /**
+     * @var int
+     */
+    private $calendarid;
+
+    /**
      * Event constructor.
      * @param string $title
      * @param string $desc
      * @param int $start
      * @param int $end
+     * @param int $id
+     * @param int $calendarid
      */
-    public function __construct($title, $desc, $start, $end)
+    public function __construct($title, $desc, $start, $end, $id = -1, $calendarid = -1)
     {
-        $this->title = $title;
-        $this->desc  = $desc;
-        $this->start = $start;
-        $this->end   = $end;
+        $this->title      = $title;
+        $this->desc       = $desc;
+        $this->start      = $start;
+        $this->end        = $end;
+        $this->id         = $id;
+        $this->calendarid = $calendarid;
     }
 }
