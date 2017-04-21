@@ -37,13 +37,6 @@ abstract class AbstractCalendar
     protected $isPublic;
 
     /**
-     * Is the calendar internal or external?
-     *
-     * @var boolean
-     */
-    protected $isExternal;
-
-    /**
      * Calendar constructor. Returns a calendar object for the given calendar id.
      *
      * @param int - $calendarId
@@ -154,16 +147,6 @@ abstract class AbstractCalendar
     public function isPublic()
     {
         return $this->isPublic;
-    }
-
-    /**
-     * Returns if the calendar is internal or external.
-     *
-     * @return bool
-     */
-    public function isExternal()
-    {
-        return $this->isExternal;
     }
 
     /**
