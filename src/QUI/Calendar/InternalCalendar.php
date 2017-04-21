@@ -18,38 +18,6 @@ use QUI;
 class InternalCalendar extends AbstractCalendar
 {
     /**
-     * Calendar constructor. Returns a calendar object for the given calendar id.
-     *
-     * @param int - $calendarId
-     *
-     * @throws QUI\Calendar\Exception
-     */
-    public function __construct($calendarId)
-    {
-        $result = QUI::getDataBase()->fetch(array(
-            'from'  => Handler::tableCalendars(),
-            'where' => array(
-                'id' => (int)$calendarId
-            ),
-            'limit' => 1
-        ));
-
-        if (!isset($result[0])) {
-            throw new QUI\Calendar\Exception(array(
-                'quiqqer/calendar',
-                'exception.calendar.not_found'
-            ));
-        }
-
-        $result = $result[0];
-
-        $this->id       = (int)$calendarId;
-        $this->name     = $result['name'];
-        $this->User     = QUI::getUsers()->get($result['userid']);
-        $this->isPublic = $result['isPublic'] == 1 ? true : false;
-    }
-
-    /**
      * Edits the calendars values
      *
      * @param $name - The new calendar name

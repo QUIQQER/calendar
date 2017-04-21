@@ -41,9 +41,32 @@ abstract class AbstractCalendar
      *
      * @param int - $calendarId
      *
-     * @throws Exception
+     * @throws QUI\Calendar\Exception
      */
-    abstract public function __construct($calendarId);
+    public function __construct($calendarId)
+    {
+        $result = QUI::getDataBase()->fetch(array(
+            'from'  => Handler::tableCalendars(),
+            'where' => array(
+                'id' => (int)$calendarId
+            ),
+            'limit' => 1
+        ));
+
+        if (!isset($result[0])) {
+            throw new QUI\Calendar\Exception(array(
+                'quiqqer/calendar',
+                'exception.calendar.not_found'
+            ));
+        }
+
+        $result = $result[0];
+
+        $this->id         = (int)$calendarId;
+        $this->name       = $result['name'];
+        $this->User       = QUI::getUsers()->get($result['userid']);
+        $this->isPublic   = $result['isPublic'] == 1 ? true : false;
+    }
 
     /**
      * Edits the calendars values
