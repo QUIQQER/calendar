@@ -99,44 +99,6 @@ abstract class AbstractCalendar
         );
     }
 
-    /**
-     * Adds an event to the calendar.
-     *
-     * @param string $title - Event title
-     * @param string $desc - Event description
-     * @param int $start - Unix timestamp when the event starts
-     * @param int $end - Unix timestamp when the event ends
-     *
-     * @return int - The ID the event got assigned from the database
-     *
-     */
-    abstract public function addCalendarEvent($title, $desc, $start, $end);
-
-
-    /**
-     * Adds multiple events at once to the calendar.
-     *
-     * @param \QUI\Calendar\Event[] $events
-     */
-    abstract public function addCalendarEvents($events);
-
-    /**
-     * Edits an event in the calendar.
-     *
-     * @param int $eventID - ID of the event to edit
-     * @param string $title - Event title
-     * @param string $desc - Event description
-     * @param int $start - Unix timestamp when the event starts
-     * @param int $end - Unix timestamp when the event ends
-     */
-    abstract public function editCalendarEvent($eventID, $title, $desc, $start, $end);
-
-    /**
-     * Removes an event from the calendar.
-     *
-     * @param int $eventID - ID of the event to remove
-     */
-    abstract public function removeCalendarEvent($eventID);
 
     /**
      * Converts a calendar and all its' events to iCal format
