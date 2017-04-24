@@ -33,7 +33,7 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
         Extends: QUIControl,
         Type   : 'package/quiqqer/calendar/bin/controls/CalendarDisplay',
 
-        calIDs: Array,
+        calIDs: [],
 
         schedulerReady: Boolean,
 
@@ -54,6 +54,14 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
 
             this.schedulerReady = false;
 
+            if (options !== undefined) {
+                if (options.some(isNaN)) {
+                    console.error('Non numeric calendar ID(s)');
+                } else {
+                    this.calIDs = options;
+                }
+            }
+
             this.addEvents({
                 onInject: this.$onInject
             });
@@ -62,19 +70,21 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
 
         $onInject: function ()
         {
-            try {
-                this.calIDs = JSON.parse(this.getAttribute('calendarids'));
-            } catch (Exception) {
-                // TODO: show error invalid calendar IDs
-                console.error('Invalid calendar ID(s). Must be array in JSON format');
-                return;
-            }
+            if (this.calIDs.length < 1) {
+                try {
+                    this.calIDs = JSON.parse(this.getAttribute('calendarids'));
+                } catch (Exception) {
+                    // TODO: show error invalid calendar IDs
+                    console.error('Invalid calendar ID(s). Must be array in JSON format');
+                    return;
+                }
 
-            // All IDs numeric?
-            if (this.calIDs.some(isNaN)) {
-                // TODO: show error non numeric calendar IDs
-                console.error('Non numeric calendar ID(s)');
-                return;
+                // All IDs numeric?
+                if (this.calIDs.some(isNaN)) {
+                    // TODO: show error non numeric calendar IDs
+                    console.error('Non numeric calendar ID(s)');
+                    return;
+                }
             }
 
             this.initScheduler(this.getElm());
@@ -138,13 +148,42 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
                                 event.color = color;
                             });
                             self.Scheduler.parse(JSON.stringify(events), 'json');
-                        }).catch(function(error) {});
+                        }).catch(function (error)
+                        {
+                        });
                     });
 
                     self.schedulerReady = true;
                     resolve();
                 });
             });
+        },
+
+
+        /**
+         * Sets width and height of the display
+         *
+         * @param {Number} width
+         * @param {Number} height
+         */
+        setDimensions: function (width, height)
+        {
+            if (width < 0 || height < 0) {
+                return;
+            }
+            this.getElm().setAttribute('style', 'width: ' + width + 'px; height: ' + height + 'px;');
+        },
+
+
+        /**
+         * Updates the scheduler size when the window is resized
+         * event : on resize
+         */
+        $onResize: function ()
+        {
+            if (this.schedulerReady) {
+                this.Scheduler.update_view();
+            }
         },
 
         /**
