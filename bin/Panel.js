@@ -38,6 +38,7 @@ define('package/quiqqer/calendar/bin/Panel', [
             '$onButtonAddEventClick',
             '$onButtonEditCalendarClick',
             '$onButtonAddCalendarClick',
+            '$onButtonAddExternalCalendarClick',
             'deleteMarkedCalendars',
             'editCalendar',
             'importIcalClick'
@@ -75,6 +76,15 @@ define('package/quiqqer/calendar/bin/Panel', [
                 textimage: 'fa fa-plus',
                 events   : {
                     onClick: this.$onButtonAddCalendarClick
+                }
+            });
+
+            this.addButton({
+                name     : 'addExternalCalendar',
+                text     : QUILocale.get(lg, 'panel.button.add.calendar.external.text'),
+                textimage: 'fa fa-plus',
+                events   : {
+                    onClick: this.$onButtonAddExternalCalendarClick
                 }
             });
 
@@ -141,6 +151,11 @@ define('package/quiqqer/calendar/bin/Panel', [
                 }, {
                     header   : QUILocale.get(lg, 'calendar.is_public'),
                     dataIndex: 'isPublic',
+                    dataType : 'boolean',
+                    width    : 75
+                }, {
+                    header   : QUILocale.get(lg, 'calendar.is_external'),
+                    dataIndex: 'isExternal',
                     dataType : 'boolean',
                     width    : 75
                 }],
@@ -236,6 +251,36 @@ define('package/quiqqer/calendar/bin/Panel', [
                         onClose: function ()
                         {
                             self.loadCalendars();
+                        }
+                    }
+                }).open();
+            });
+        },
+
+
+        /**
+         * Adds an external calendar
+         */
+        $onButtonAddExternalCalendarClick: function()
+        {
+            var self = this;
+            require(['qui/controls/windows/Prompt'], function (Prompt)
+            {
+                new Prompt({
+                    title      : QUILocale.get(lg, 'panel.button.calendar.external.text'),
+                    icon       : 'fa fa-add',
+                    information: QUILocale.get(lg, 'calendar.external.import.info'),
+                    autoclose  : false,
+                    events     : {
+                        onSubmit: function (value, Win)
+                        {
+                            var url = value;
+                            Win.Loader.show();
+                            Calendars.addExternalCalendar(url).then(function ()
+                            {
+                                self.loadCalendars();
+                                Win.close();
+                            });
                         }
                     }
                 }).open();

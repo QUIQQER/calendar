@@ -70,6 +70,35 @@ class Handler
         return $Calendar;
     }
 
+
+    /**
+     * Adds an external calendar to the system.
+     *
+     * @param string $icalUrl - URL of the iCal (.ics) file
+     * @param QUI\Interfaces\Users\User $User - The owner of the calendar
+     * @return ExternalCalendar
+     */
+    public static function addExternalCalendar($icalUrl, $User = null)
+    {
+        if (is_null($User)) {
+            $User = QUI::getUserBySession();
+        }
+
+        // Translation of the word "Calendar"
+        $calendarTranslation = QUI::getLocale()->get('quiqqer/calendar', 'calendar');
+
+        QUI::getDataBase()->insert(self::tableCalendars(), array(
+            'name'        => $User->getName() . " " . $calendarTranslation,
+            'userid'      => $User->getId(),
+            'isPublic'    => false,
+            'isExternal'  => true,
+            'externalUrl' => $icalUrl
+        ));
+        $calendarID = QUI::getPDO()->lastInsertId();
+
+        return new ExternalCalendar($calendarID);
+    }
+
     /**
      * The name of the database table containing calendars
      *
@@ -137,7 +166,8 @@ class Handler
                 continue;
             }
 
-            $calendars[$key]['isPublic'] = $calendarData['isPublic'] == 1 ? true : false;
+            $calendars[$key]['isPublic']   = $calendarData['isPublic']   == 1 ? true : false;
+            $calendars[$key]['isExternal'] = $calendarData['isExternal'] == 1 ? true : false;
         }
 
         // Return array with new indexes starting at 0

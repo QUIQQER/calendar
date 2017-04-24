@@ -55,6 +55,25 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
 
 
         /**
+         * Adds an external calendar
+         *
+         * @param {string} icalUrl - The URL to an iCal (.ics) file
+         * @return {*}
+         */
+        addExternalCalendar: function(icalUrl)
+        {
+            return new Promise(function (resolve, reject)
+            {
+                QUIAjax.post('package_quiqqer_calendar_ajax_addExternalCalendar', resolve, {
+                    'package': 'quiqqer/calendar',
+                    'icalUrl': icalUrl,
+                    onError  : reject
+                });
+            });
+        },
+
+
+        /**
          * Creates a calendar from an iCal url
          *
          * @param {string} icalUrl - iCal data
