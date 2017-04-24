@@ -267,9 +267,9 @@ define('package/quiqqer/calendar/bin/Panel', [
             require(['qui/controls/windows/Prompt'], function (Prompt)
             {
                 new Prompt({
-                    title      : QUILocale.get(lg, 'panel.button.calendar.external.text'),
+                    title      : QUILocale.get(lg, 'panel.button.add.calendar.external.text'),
                     icon       : 'fa fa-add',
-                    information: QUILocale.get(lg, 'calendar.external.import.info'),
+                    information: QUILocale.get(lg, 'calendar.ical.import.info'),
                     autoclose  : false,
                     events     : {
                         onSubmit: function (value, Win)

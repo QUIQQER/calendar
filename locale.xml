@@ -105,6 +105,11 @@
             <en><![CDATA[The calendar was successfully created.]]></en>
         </locale>
 
+        <locale name="message.calendar.external.successful.added">
+            <de><![CDATA[Der externe Kalender wurde erfolgreich hinzugefügt.]]></de>
+            <en><![CDATA[The external calendar was successfully added.]]></en>
+        </locale>
+
         <locale name="message.calendar.successful.imported">
             <de><![CDATA[Der Kalender wurde erfolgreich importiert.]]></de>
             <en><![CDATA[The calendar was successfully imported.]]></en>
@@ -236,10 +241,21 @@
             <en><![CDATA[Add calendar]]></en>
         </locale>
 
+        <locale name="panel.button.add.calendar.external.text">
+            <de><![CDATA[Externen Kalender hinzufügen]]></de>
+            <en><![CDATA[Add external calendar]]></en>
+        </locale>
+
         <locale name="panel.button.edit.calendar.text">
             <de><![CDATA[Kalender bearbeiten]]></de>
             <en><![CDATA[Edit calendar]]></en>
         </locale>
+
+        <locale name="panel.button.ical.import.text">
+            <de><![CDATA[Kalender aus iCal importieren]]></de>
+            <en><![CDATA[Import calendar from iCal]]></en>
+        </locale>
+
 
         <locale name="panel.button.ical.export.text">
             <de><![CDATA[Kalender als iCal exportieren]]></de>
