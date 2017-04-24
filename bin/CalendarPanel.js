@@ -10,6 +10,8 @@
  * @require 'qui/controls/buttons/Seperator',
  * @require 'qui/utils/Functions',
  * @require 'package/quiqqer/calendar/bin/Calendars',
+ * @require 'package/quiqqer/calendar/bin/controls/CalendarDisplay',
+ * @require 'package/quiqqer/calendar/bin/controls/CalendarEditDisplay',
  * @require 'package/quiqqer/calendar-controls/bin/Scheduler',
  * @require 'Ajax',
  * @require 'Locale'
@@ -25,6 +27,7 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
     'qui/controls/buttons/Seperator',
     'qui/utils/Functions',
     'package/quiqqer/calendar/bin/Calendars',
+    'package/quiqqer/calendar/bin/controls/CalendarDisplay',
     'package/quiqqer/calendar/bin/controls/CalendarEditDisplay',
     'package/quiqqer/calendar-controls/bin/Scheduler',
     'Ajax',
@@ -33,7 +36,7 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
 
     'text!package/quiqqer/calendar/bin/CalendarPanel.html'
 
-], function (QUI, QUIConfirm, QUIPanel, QUIButtonSeperator, QUIFunctionUtils, Calendars, CalendarEditDisplay, Scheduler, QUIAjax, QUILocale, Mustache, template)
+], function (QUI, QUIConfirm, QUIPanel, QUIButtonSeperator, QUIFunctionUtils, Calendars, CalendarDisplay, CalendarEditDisplay, Scheduler, QUIAjax, QUILocale, Mustache, template)
 {
     "use strict";
 
@@ -151,7 +154,11 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
 
             var Content = this.getContent();
 
-            this.Scheduler = new CalendarEditDisplay(self.calendarData.id);
+            if(self.calendarData.isExternal) {
+                this.Scheduler = new CalendarDisplay([self.calendarData.id]);
+            } else {
+                this.Scheduler = new CalendarEditDisplay(self.calendarData.id);
+            }
             this.Scheduler.inject(Content);
         },
 
