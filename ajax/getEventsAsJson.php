@@ -10,7 +10,12 @@
 QUI::$Ajax->registerFunction(
     'package_quiqqer_calendar_ajax_getEventsAsJson',
     function ($calendarID) {
-        $Calendar = new \QUI\Calendar\InternalCalendar($calendarID);
+        if (\QUI\Calendar\Handler::isExternalCalendar($calendarID)) {
+            $Calendar = new \QUI\Calendar\ExternalCalendar($calendarID);
+        } else {
+            $Calendar = new \QUI\Calendar\InternalCalendar($calendarID);
+        }
+
         return $Calendar->toJSON();
     },
     array('calendarID'),
