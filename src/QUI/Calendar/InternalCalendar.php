@@ -18,6 +18,18 @@ use QUI;
 class InternalCalendar extends AbstractCalendar
 {
     /**
+     * @inheritdoc
+     */
+    protected function construct($data)
+    {
+        if ($data['isExternal'] == 1) {
+            throw new Exception('Calendar is external not internal');
+        }
+
+        parent::construct($data);
+    }
+
+    /**
      * Adds an event to the calendar.
      *
      * @param string $title - Event title

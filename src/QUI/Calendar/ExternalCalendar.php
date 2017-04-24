@@ -41,6 +41,10 @@ class ExternalCalendar extends AbstractCalendar
      */
     protected function construct($data)
     {
+        if ($data['isExternal'] == 0) {
+            throw new Exception('Calendar is not external');
+        }
+
         parent::construct($data);
         $this->externalUrl = $data['externalUrl'];
 
