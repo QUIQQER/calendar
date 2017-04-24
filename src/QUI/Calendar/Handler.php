@@ -99,6 +99,26 @@ class Handler
         return new ExternalCalendar($calendarID);
     }
 
+
+    public static function isExternalCalendar($calendarID)
+    {
+        $isExternal = QUI::getDataBase()->fetch(array(
+            'select' => 'isExternal',
+            'from'   => self::tableCalendars(),
+            'where'  => array(
+                'id' => $calendarID
+            ),
+            'limit'  => 1
+        ));
+
+        if (empty($isExternal)) {
+            throw new Exception('Calendar does not exist.');
+        }
+
+        return $isExternal[0]['isExternal'] == 1 ? true : false;
+    }
+
+
     /**
      * The name of the database table containing calendars
      *
@@ -166,7 +186,7 @@ class Handler
                 continue;
             }
 
-            $calendars[$key]['isPublic']   = $calendarData['isPublic']   == 1 ? true : false;
+            $calendars[$key]['isPublic']   = $calendarData['isPublic'] == 1 ? true : false;
             $calendars[$key]['isExternal'] = $calendarData['isExternal'] == 1 ? true : false;
         }
 
