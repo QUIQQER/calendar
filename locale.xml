@@ -303,6 +303,11 @@
             <de><![CDATA[Öffentlich?]]></de>
             <en><![CDATA[Public?]]></en>
         </locale>
+
+        <locale name="calendar.is_external">
+            <de><![CDATA[Extern?]]></de>
+            <en><![CDATA[External?]]></en>
+        </locale>
     </groups>
 
 </locales>
