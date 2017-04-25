@@ -82,17 +82,7 @@ class Handler
      */
     public static function addExternalCalendar($icalUrl, $User = null)
     {
-        $validUrl = false;
-        try {
-            list($status) = get_headers($icalUrl);
-            if (strpos($status, '200') !== false) {
-                // url returns HTTP code 200 -> everything is fine
-                $validUrl = true;
-            }
-        } catch (\Exception $exception) {
-        }
-
-        if (!$validUrl) {
+        if (!ExternalCalendar::isUrlReachable($icalUrl)) {
             $msg = QUI::getLocale()->get(
                 'quiqqer/calendar',
                 'message.calendar.external.error.url'

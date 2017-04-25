@@ -67,6 +67,29 @@ class ExternalCalendar extends AbstractCalendar
 
 
     /**
+     * Determines whether a URL is reachable or not
+     *
+     * @param string $url - An URL
+     *
+     * @return boolean
+     */
+    public static function isUrlReachable($url)
+    {
+        $validUrl = false;
+        try {
+            list($status) = get_headers($url);
+            if (strpos($status, '200') !== false) {
+                // url returns HTTP code 200 -> everything is fine
+                $validUrl = true;
+            }
+        } catch (\Exception $exception) {
+        }
+
+        return $validUrl;
+    }
+
+
+    /**
      * @inheritdoc
      */
     public function toICal()
