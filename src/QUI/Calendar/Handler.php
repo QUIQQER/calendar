@@ -77,9 +77,29 @@ class Handler
      * @param string $icalUrl - URL of the iCal (.ics) file
      * @param QUI\Interfaces\Users\User $User - The owner of the calendar
      * @return ExternalCalendar
+     *
+     * @throws Exception
      */
     public static function addExternalCalendar($icalUrl, $User = null)
     {
+        $validUrl = false;
+        try {
+            list($status) = get_headers($icalUrl);
+            if (strpos($status, '200') !== false) {
+                // url returns HTTP code 200 -> everything is fine
+                $validUrl = true;
+            }
+        } catch (\Exception $exception) {
+        }
+
+        if (!$validUrl) {
+            $msg = QUI::getLocale()->get(
+                'quiqqer/calendar',
+                'message.calendar.external.error.url'
+            );
+            throw new Exception($msg);
+        }
+
         if (is_null($User)) {
             $User = QUI::getUserBySession();
         }

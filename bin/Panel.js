@@ -261,7 +261,7 @@ define('package/quiqqer/calendar/bin/Panel', [
         /**
          * Adds an external calendar
          */
-        $onButtonAddExternalCalendarClick: function()
+        $onButtonAddExternalCalendarClick: function ()
         {
             var self = this;
             require(['qui/controls/windows/Prompt'], function (Prompt)
@@ -280,6 +280,9 @@ define('package/quiqqer/calendar/bin/Panel', [
                             {
                                 self.loadCalendars();
                                 Win.close();
+                            }, function ()
+                            {
+                                Win.Loader.hide();
                             });
                         }
                     }

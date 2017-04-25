@@ -110,6 +110,11 @@
             <en><![CDATA[The external calendar was successfully added.]]></en>
         </locale>
 
+        <locale name="message.calendar.external.error.url">
+            <de><![CDATA[Sie haben eine ungültige URL angegeben.]]></de>
+            <en><![CDATA[You entered an invalid URL.]]></en>
+        </locale>
+
         <locale name="message.calendar.successful.imported">
             <de><![CDATA[Der Kalender wurde erfolgreich importiert.]]></de>
             <en><![CDATA[The calendar was successfully imported.]]></en>
