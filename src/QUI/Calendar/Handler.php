@@ -176,7 +176,11 @@ class Handler
         ));
 
         foreach ($calendars as $key => $calendarData) {
-            $Calendar = new InternalCalendar($calendarData['id']);
+            if ($calendarData['isExternal'] == 1) {
+                $Calendar = new ExternalCalendar($calendarData['id']);
+            } else {
+                $Calendar = new InternalCalendar($calendarData['id']);
+            }
 
             // Only return calendars the user can edit
             try {
