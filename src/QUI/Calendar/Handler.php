@@ -85,7 +85,7 @@ class Handler
         if (!ExternalCalendar::isUrlReachable($icalUrl)) {
             $msg = QUI::getLocale()->get(
                 'quiqqer/calendar',
-                'message.calendar.external.error.url'
+                'message.calendar.external.error.url.invalid'
             );
             throw new Exception($msg);
         }
