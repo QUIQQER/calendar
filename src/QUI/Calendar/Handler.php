@@ -151,7 +151,12 @@ class Handler
         foreach ($ids as $id) {
             $id = (int)$id;
 
-            $Calendar = new InternalCalendar($id);
+            if (self::isExternalCalendar($id)) {
+                $Calendar = new ExternalCalendar($id);
+            } else {
+                $Calendar = new InternalCalendar($id);
+            }
+
             $Calendar->checkPermission($Calendar::PERMISSION_DELETE_CALENDAR);
 
             $Database->delete(self::tableCalendars(), array(
