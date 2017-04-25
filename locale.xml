@@ -115,6 +115,11 @@
             <en><![CDATA[You entered an invalid URL.]]></en>
         </locale>
 
+        <locale name="message.calendar.external.error.url.unreachable">
+            <de><![CDATA[Der Kalender kann nicht abgerufen werden. Versuchen Sie es später erneut.]]></de>
+            <en><![CDATA[The calendar is unreachable. Try again later.]]></en>
+        </locale>
+
         <locale name="message.calendar.successful.imported">
             <de><![CDATA[Der Kalender wurde erfolgreich importiert.]]></de>
             <en><![CDATA[The calendar was successfully imported.]]></en>

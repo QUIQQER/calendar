@@ -58,6 +58,13 @@ class ExternalCalendar extends AbstractCalendar
             return QUI\Cache\Manager::get($this->icalCacheKey);
         } catch (\Exception  $exception) {
             // No data cached
+            if (!self::isUrlReachable($this->externalUrl)) {
+                $msg = QUI::getLocale()->get(
+                    'quiqqer/calendar',
+                    'message.calendar.external.error.url.unreachable'
+                );
+                throw new Exception($msg);
+            }
             $icalData = file_get_contents($this->externalUrl);
             QUI\Cache\Manager::set($this->icalCacheKey, $icalData, 60 * 60);
 
