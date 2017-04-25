@@ -7,22 +7,22 @@ class Event
     /**
      * @var string - The events title
      */
-    public $title;
+    public $text;
 
     /**
      * @var string - The events description
      */
-    public $desc;
+    public $description;
 
     /**
      * @var int - The events start time/date as a UNIX timestamp
      */
-    public $start;
+    public $start_date;
 
     /**
      * @var int - The events end time/date as a UNIX timestamp
      */
-    public $end;
+    public $end_date;
 
     /**
      * @var int
@@ -32,7 +32,7 @@ class Event
     /**
      * @var int
      */
-    private $calendarid;
+    private $calendar_id;
 
     /**
      * Event constructor.
@@ -45,11 +45,11 @@ class Event
      */
     public function __construct($title, $desc, $start, $end, $id = -1, $calendarid = -1)
     {
-        $this->title      = $title;
-        $this->desc       = $desc;
-        $this->start      = $start;
-        $this->end        = $end;
-        $this->id         = $id;
-        $this->calendarid = $calendarid;
+        $this->text        = $title;
+        $this->description = $desc;
+        $this->start_date  = $start;
+        $this->end_date    = $end;
+        $this->id          = $id;
+        $this->calendar_id = $calendarid;
     }
 }

@@ -71,10 +71,10 @@ class InternalCalendar extends AbstractCalendar
         $lastElem = last($events);
         foreach ($events as $Event) {
             $data = implode(',', [
-                "'" . $Event->title . "'",
-                "'" . $Event->desc . "'",
-                $Event->start,
-                $Event->end,
+                "'" . $Event->text . "'",
+                "'" . $Event->description . "'",
+                $Event->start_date,
+                $Event->end_date,
                 $this->getId()
             ]);
             $sql  = $sql . "($data)";
