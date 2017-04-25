@@ -42,7 +42,7 @@ class ExternalCalendar extends AbstractCalendar
     protected function construct($data)
     {
         if ($data['isExternal'] == 0) {
-            throw new Exception('Calendar is not external');
+            throw new Exception('Calendar with ID '.$this->getId().' is internal but was created as external');
         }
 
         parent::construct($data);
