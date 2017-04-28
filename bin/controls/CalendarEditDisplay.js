@@ -18,11 +18,12 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
     'qui/controls/Control',
     'package/quiqqer/calendar/bin/Calendars',
     'package/quiqqer/calendar-controls/bin/Scheduler',
+    'qui/controls/loader/Loader',
 
     'package/bin/mustache/mustache',
     'text!package/quiqqer/calendar/bin/controls/CalendarDisplay.html'
 
-], function (QUI, QUIControl, Calendars, Scheduler, Mustache, displayTemplate)
+], function (QUI, QUIControl, Calendars, Scheduler, QUILoader, Mustache, displayTemplate)
 {
     "use strict";
 
@@ -39,13 +40,16 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
 
         Scheduler: Scheduler,
 
+        Loader: null,
+
         ChangeEventInCalendarEvent: null,
         AddEventToCalendarEvent   : null,
         DeleteEventFromCalendarEvent: null,
 
         Binds: [
             '$onInject',
-            '$onResize'
+            '$onResize',
+            'parseEventsIntoScheduler'
         ],
 
         /**
@@ -90,6 +94,8 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
             }
 
             this.calID = calID;
+
+            this.Loader = new QUILoader().inject(this.getElm().getParent());
 
             this.initScheduler(this.getElm());
         },
@@ -151,19 +157,39 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
 
                     self.attachEvents();
 
-                    Calendars.getEventsAsJson(self.calID).then(function (result)
+                    Calendars.getEventsAsJson(self.calID).then(function (events)
                     {
-                        var events = JSON.parse(result);
-                        self.Scheduler.parse(JSON.stringify(events), 'json');
-                        self.schedulerReady = true;
-                        resolve();
-                    }).catch(function ()
+                        self.Loader.show();
+                        self.parseEventsIntoScheduler(events).then(function() {
+                            self.schedulerReady = true;
+                            self.Loader.hide();
+                        });
+                    }).catch(function (error)
                     {
-                        console.error('Error getting events');
+                        console.error('Error getting events:', error);
                     });
                 });
             });
         },
+
+
+        /**
+         * Parses a JSON string of events into the scheduler.
+         * Resolves when parsing completed.
+         *
+         * @param {string} events - events as JSON string
+         * @return {Promise} - Resolves when parsing completed.
+         */
+        parseEventsIntoScheduler: function (events)
+        {
+            var self = this;
+            return new Promise(function (resolve)
+            {
+                self.Scheduler.parse(events, 'json');
+                resolve();
+            });
+        },
+
 
 
         /**

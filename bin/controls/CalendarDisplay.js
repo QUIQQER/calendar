@@ -18,11 +18,12 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
     'qui/controls/Control',
     'package/quiqqer/calendar/bin/Calendars',
     'package/quiqqer/calendar-controls/bin/Scheduler',
+    'qui/controls/loader/Loader',
 
     'package/bin/mustache/mustache',
     'text!package/quiqqer/calendar/bin/controls/CalendarDisplay.html'
 
-], function (QUI, QUIControl, Calendars, Scheduler, Mustache, displayTemplate)
+], function (QUI, QUIControl, Calendars, Scheduler, QUILoader, Mustache, displayTemplate)
 {
     "use strict";
 
@@ -40,7 +41,8 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
         Scheduler: Scheduler,
 
         Binds: [
-            '$onInject'
+            '$onInject',
+            'parseEventsIntoScheduler'
         ],
 
         /**
@@ -86,6 +88,8 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
                     return;
                 }
             }
+
+            this.Loader = new QUILoader().inject(this.getElm().getParent());
 
             this.initScheduler(this.getElm());
         },
@@ -139,6 +143,8 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
                     // Parse events from all calendars in Scheduler
                     self.calIDs.forEach(function (calID)
                     {
+                        self.Loader.show();
+
                         var color = self.getRandomColor();
                         Calendars.getEventsAsJson(calID).then(function (result)
                         {
@@ -147,7 +153,10 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
                             {
                                 event.color = color;
                             });
-                            self.Scheduler.parse(JSON.stringify(events), 'json');
+                            self.parseEventsIntoScheduler(JSON.stringify(events)).then(function ()
+                            {
+                                self.Loader.hide();
+                            });
                         }).catch(function (error)
                         {
                         });
@@ -156,6 +165,24 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
                     self.schedulerReady = true;
                     resolve();
                 });
+            });
+        },
+
+
+        /**
+         * Parses a JSON string of events into the scheduler.
+         * Resolves when parsing completed.
+         *
+         * @param {string} events - events as JSON string
+         * @return {Promise} - Resolves when parsing completed.
+         */
+        parseEventsIntoScheduler: function (events)
+        {
+            var self = this;
+            return new Promise(function (resolve)
+            {
+                self.Scheduler.parse(events, 'json');
+                resolve();
             });
         },
 
