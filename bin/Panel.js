@@ -158,6 +158,11 @@ define('package/quiqqer/calendar/bin/Panel', [
                     dataIndex: 'isExternal',
                     dataType : 'boolean',
                     width    : 75
+                }, {
+                    header   : QUILocale.get(lg, 'calendar.external_url'),
+                    dataIndex: 'externalUrl',
+                    dataType : 'string',
+                    width    : 400
                 }],
                 multipleSelection: true,
                 pagination       : true

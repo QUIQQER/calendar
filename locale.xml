@@ -318,6 +318,11 @@
             <de><![CDATA[Extern?]]></de>
             <en><![CDATA[External?]]></en>
         </locale>
+
+        <locale name="calendar.external_url">
+            <de><![CDATA[Externe URL]]></de>
+            <en><![CDATA[External URL]]></en>
+        </locale>
     </groups>
 
 </locales>

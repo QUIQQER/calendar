@@ -56,13 +56,16 @@ define('package/quiqqer/calendar/bin/AddEditCalendarWindow', [
             var calendar = this.getAttribute('calendar');
 
             var data = {
-                calendar_title   : QUILocale.get(lg, 'calendar.title'),
-                calendar_isPublic: QUILocale.get(lg, 'calendar.is_public')
+                calendar_title     : QUILocale.get(lg, 'calendar.title'),
+                calendar_isPublic  : QUILocale.get(lg, 'calendar.is_public'),
+                calendar_isExternal: QUILocale.get(lg, 'calendar.external_url')
             };
 
             if (calendar !== null) {
-                data.name     = calendar.name;
+                data.name = calendar.name;
                 data.isPublic = calendar.isPublic;
+                data.isExternal = calendar.isExternal;
+                data.externalUrl = calendar.externalUrl;
             }
 
             this.getContent().set({
@@ -86,13 +89,35 @@ define('package/quiqqer/calendar/bin/AddEditCalendarWindow', [
             // Do we edit or create a calendar?
             if (this.getAttribute('calendar')) {
                 // Editing a calendar
-                var calender = this.getAttribute('calendar');
-                Calendars.editCalendar(calender.id, calendarName, isPublic).then(function (result)
-                {
-                    this.close();
-                }.bind(this)).catch(function ()
+                var calendar = this.getAttribute('calendar');
+
+                var wasPromiseRejected = false;
+
+                var promises = [
+                    Calendars.editCalendar(calendar.id, calendarName, isPublic).catch(function (error)
+                    {
+                        wasPromiseRejected = true;
+                    })
+                ];
+
+                if (calendar.isExternal) {
+                    promises.append(
+                        Calendars.setExternalUrl(
+                            calendar.id,
+                            Content.getElement('[name=external_url]').value
+                        ).catch(function ()
+                        {
+                            wasPromiseRejected = true;
+                        })
+                    );
+                }
+
+                Promise.all(promises).then(function ()
                 {
                     this.Loader.hide();
+                    if (!wasPromiseRejected) {
+                        this.close();
+                    }
                 }.bind(this));
             } else {
                 // Creating a calendar

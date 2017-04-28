@@ -23,6 +23,18 @@
                 </label>
             </td>
         </tr>
+        {{#isExternal}}
+        <tr class="even">
+            <td>
+                <label class="field-container hasCheckbox">
+                    <span class="field-container-item">
+                        {{calendar_isExternal}}
+                    </span>
+                    <input type="text" name="external_url" value="{{externalUrl}}" class="field-container-field">
+                </label>
+            </td>
+        </tr>
+        {{/isExternal}}
         </tbody>
     </table>
 </form>

@@ -118,6 +118,26 @@ class ExternalCalendar extends AbstractCalendar
     }
 
 
+    public function setExternalUrl($externalUrl)
+    {
+        if (!self::isUrlReachable($externalUrl)) {
+            $msg = QUI::getLocale()->get(
+                'quiqqer/calendar',
+                'message.calendar.external.error.url.invalid'
+            );
+            throw new Exception($msg);
+        }
+
+        $this->externalUrl = $externalUrl;
+
+        QUI::getDataBase()->update(
+            Handler::tableCalendars(),
+            ['externalUrl' => $externalUrl],
+            ['id' => $this->getId()]
+        );
+    }
+
+
     /**
      * @inheritdoc
      */

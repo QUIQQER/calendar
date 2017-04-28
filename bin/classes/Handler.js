@@ -60,7 +60,7 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
          * @param {string} icalUrl - The URL to an iCal (.ics) file
          * @return {*}
          */
-        addExternalCalendar: function(icalUrl)
+        addExternalCalendar: function (icalUrl)
         {
             return new Promise(function (resolve, reject)
             {
@@ -113,6 +113,28 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
                     'name'      : calendarName,
                     'isPublic'  : isPublicAsBool,
                     onError     : reject
+                });
+            });
+        },
+
+
+        /**
+         * Sets a calendars external URL
+         *
+         * @param {int} calendarID      - The ID of the calendar to edit.
+         * @param {string} externalUrl - The URL to an external iCal (.ics) file
+         *
+         * @return {Promise} - Resolves when calendar was created, rejects on error
+         */
+        setExternalUrl: function (calendarID, externalUrl)
+        {
+            return new Promise(function (resolve, reject)
+            {
+                QUIAjax.post('package_quiqqer_calendar_ajax_setExternalUrl', resolve, {
+                    'package'    : 'quiqqer/calendar',
+                    'calendarID' : calendarID,
+                    'externalUrl': externalUrl,
+                    onError      : reject
                 });
             });
         },
