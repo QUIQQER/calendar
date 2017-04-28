@@ -127,10 +127,13 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
                     // Get the real Scheduler instance
                     self.Scheduler = Scheduler.getScheduler();
 
+                    self.Scheduler.config.readonly = false;
+
                     // Can the current User edit the calendar?
                     // Throws error if not editable
                     Calendars.canUserEditCalendar(self.calID).catch(function()
                     {
+                        console.log('User cant edit this calendar');
                         self.Scheduler.config.readonly = true;
                     });
 
