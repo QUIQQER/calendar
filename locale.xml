@@ -262,8 +262,8 @@
         </locale>
 
         <locale name="panel.button.ical.import.text">
-            <de><![CDATA[Kalender aus iCal importieren]]></de>
-            <en><![CDATA[Import calendar from iCal]]></en>
+            <de><![CDATA[iCal importieren]]></de>
+            <en><![CDATA[Import iCal]]></en>
         </locale>
 
 
@@ -272,24 +272,14 @@
             <en><![CDATA[Export calendar as iCal]]></en>
         </locale>
 
-        <locale name="panel.button.ical.import.text">
-            <de><![CDATA[Kalender aus iCal importieren]]></de>
-            <en><![CDATA[Import calendar from iCal]]></en>
-        </locale>
-
         <locale name="panel.button.edit.marked_calendars.text">
-            <de><![CDATA[Markierten Kalender bearbeiten]]></de>
-            <en><![CDATA[Edit marked calendar]]></en>
+            <de><![CDATA[Kalender bearbeiten]]></de>
+            <en><![CDATA[Edit calendar]]></en>
         </locale>
 
         <locale name="panel.button.delete.calendar.text">
             <de><![CDATA[Kalender löschen]]></de>
             <en><![CDATA[Delete calendar]]></en>
-        </locale>
-
-        <locale name="panel.button.delete.marked_calendars.text">
-            <de><![CDATA[Markierte Kalender löschen]]></de>
-            <en><![CDATA[Delete marked calendars]]></en>
         </locale>
 
         <locale name="panel.button.show_as_list.text">

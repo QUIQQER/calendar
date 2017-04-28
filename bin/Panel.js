@@ -113,7 +113,7 @@ define('package/quiqqer/calendar/bin/Panel', [
             // Button to delete selected calendars. Activated if more than one calendar is selected in grid
             this.addButton({
                 name     : 'deleteCalendar',
-                text     : QUILocale.get(lg, 'panel.button.delete.marked_calendars.text'),
+                text     : QUILocale.get(lg, 'panel.button.delete.calendar.text'),
                 textimage: 'fa fa-trash',
                 events   : {
                     onClick: this.deleteMarkedCalendars
