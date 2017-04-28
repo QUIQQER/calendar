@@ -128,13 +128,18 @@ class ExternalCalendar extends AbstractCalendar
             throw new Exception($msg);
         }
 
-        $this->externalUrl = $externalUrl;
+        if ($this->externalUrl !== $externalUrl) {
+            $this->externalUrl = $externalUrl;
 
-        QUI::getDataBase()->update(
-            Handler::tableCalendars(),
-            ['externalUrl' => $externalUrl],
-            ['id' => $this->getId()]
-        );
+            QUI::getDataBase()->update(
+                Handler::tableCalendars(),
+                ['externalUrl' => $externalUrl],
+                ['id' => $this->getId()]
+            );
+
+            // Clear cache entry since the URL has changed -> different data
+            QUI\Cache\Manager::clear($this->icalCacheKey);
+        }
     }
 
 
