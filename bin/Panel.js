@@ -5,7 +5,7 @@
  * @author www.pcsg.de (Jan Wennrich)
  *
  * @require 'qui/QUI'
- * @require 'qui/controls/buttons/Seperator',
+ * @require 'qui/controls/buttons/Separator',
  * @require 'qui/controls/desktop/Panel'
  * @require 'qui/controls/windows/Confirm'
  * @require 'Locale'
@@ -16,13 +16,13 @@ define('package/quiqqer/calendar/bin/Panel', [
     'qui/QUI',
     'qui/controls/desktop/Panel',
     'qui/controls/windows/Confirm',
-    'qui/controls/buttons/Seperator',
+    'qui/controls/buttons/Separator',
     'package/quiqqer/calendar/bin/Calendars',
     'Ajax',
     'Locale',
     'controls/grid/Grid'
 
-], function (QUI, QUIPanel, QUIConfirm, QUIButtonSeperator, Calendars, QUIAjax, QUILocale, Grid)
+], function (QUI, QUIPanel, QUIConfirm, QUIButtonSeparator, Calendars, QUIAjax, QUILocale, Grid)
 {
     "use strict";
 
@@ -97,7 +97,7 @@ define('package/quiqqer/calendar/bin/Panel', [
                 }
             });
 
-            this.addButton(new QUIButtonSeperator());
+            this.addButton(new QUIButtonSeparator());
 
             // Button to delete selected calendars. Activated if one calendar is selected in grid
             this.addButton({
