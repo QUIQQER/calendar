@@ -142,8 +142,8 @@
             <en><![CDATA[Kalender Einstellungen]]></en>
         </locale>
         <locale name="quiqqer.settings.calendar.ids">
-            <de><![CDATA[Kalender IDs]]></de>
-            <en><![CDATA[Kalender IDs]]></en>
+            <de><![CDATA[Wählen Sie die auf der Seite anzuzeigenden Kalender aus]]></de>
+            <en><![CDATA[Select the calendars that should be shown on the page]]></en>
         </locale>
 
         <locale name="calendarEdit.settings.title">
@@ -151,8 +151,8 @@
             <en><![CDATA[Kalender Einstellungen]]></en>
         </locale>
         <locale name="quiqqer.settings.calendarEdit.id">
-            <de><![CDATA[Kalender ID]]></de>
-            <en><![CDATA[Kalender ID]]></en>
+            <de><![CDATA[Wählen Sie den auf der Seite anzuzeigenden Kalender aus]]></de>
+            <en><![CDATA[Select the calendar that should be shown on the page]]></en>
         </locale>
     </groups>
 
@@ -307,6 +307,16 @@
         <locale name="calendar.external_url">
             <de><![CDATA[Externe URL]]></de>
             <en><![CDATA[External URL]]></en>
+        </locale>
+
+        <locale name="calendar.control.search.title">
+            <de><![CDATA[Kalender Auswählen]]></de>
+            <en><![CDATA[Select Calendars]]></en>
+        </locale>
+
+        <locale name="calendar.control.select.placeholder">
+            <de><![CDATA[Kalender zum Hinzufügen suchen...]]></de>
+            <en><![CDATA[Search calendar to add...]]></en>
         </locale>
     </groups>
 

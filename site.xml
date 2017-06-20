@@ -20,10 +20,15 @@
                             <locale group="quiqqer/calendar" var="calendar.settings.title"/>
                         </title>
 
-                        <input conf="calendar.settings.ids" type="text">
-                            <text>
+                        <input conf="calendar.settings.ids"
+                               type="hidden"
+                               disabled="disabled"
+                               data-qui="package/quiqqer/calendar/bin/controls/Select"
+                               data-qui-options-is-edit-calendar="false"
+                               label="false">
+                            <description>
                                 <locale group="quiqqer/calendar" var="quiqqer.settings.calendar.ids"/>
-                            </text>
+                            </description>
                         </input>
                     </settings>
                 </category>
@@ -50,10 +55,16 @@
                             <locale group="quiqqer/calendar" var="calendarEdit.settings.title"/>
                         </title>
 
-                        <input conf="calendarEdit.settings.id" type="number">
-                            <text>
+                        <input conf="calendarEdit.settings.id"
+                               type="hidden"
+                               disabled="disabled"
+
+                               data-qui="package/quiqqer/calendar/bin/controls/Select"
+                               data-qui-options-is-edit-calendar="true"
+                               label="false">
+                            <description>
                                 <locale group="quiqqer/calendar" var="quiqqer.settings.calendarEdit.id"/>
-                            </text>
+                            </description>
                         </input>
                     </settings>
                 </category>
