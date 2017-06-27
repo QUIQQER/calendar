@@ -318,6 +318,12 @@
             <de><![CDATA[Kalender zum Hinzufügen suchen...]]></de>
             <en><![CDATA[Search calendar to add...]]></en>
         </locale>
+
+
+        <locale name="time_confirm_button">
+            <de><![CDATA[OK]]></de>
+            <en><![CDATA[OK]]></en>
+        </locale>
     </groups>
 
 </locales>
