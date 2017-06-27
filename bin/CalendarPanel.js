@@ -7,7 +7,7 @@
  * @require 'qui/QUI'
  * @require 'qui/controls/windows/Confirm'
  * @require 'qui/controls/desktop/Panel',
- * @require 'qui/controls/buttons/Seperator',
+ * @require 'qui/controls/buttons/Separator',
  * @require 'qui/utils/Functions',
  * @require 'package/quiqqer/calendar/bin/Calendars',
  * @require 'package/quiqqer/calendar/bin/controls/CalendarDisplay',
@@ -24,7 +24,7 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
     'qui/QUI',
     'qui/controls/windows/Confirm',
     'qui/controls/desktop/Panel',
-    'qui/controls/buttons/Seperator',
+    'qui/controls/buttons/Separator',
     'qui/utils/Functions',
     'package/quiqqer/calendar/bin/Calendars',
     'package/quiqqer/calendar/bin/controls/CalendarDisplay',
@@ -36,7 +36,7 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
 
     'text!package/quiqqer/calendar/bin/CalendarPanel.html'
 
-], function (QUI, QUIConfirm, QUIPanel, QUIButtonSeperator, QUIFunctionUtils, Calendars, CalendarDisplay, CalendarEditDisplay, Scheduler, QUIAjax, QUILocale, Mustache, template)
+], function (QUI, QUIConfirm, QUIPanel, QUIButtonSeparator, QUIFunctionUtils, Calendars, CalendarDisplay, CalendarEditDisplay, Scheduler, QUIAjax, QUILocale, Mustache, template)
 {
     "use strict";
 
@@ -122,7 +122,7 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
                 }
             });
 
-            this.addButton(new QUIButtonSeperator());
+            this.addButton(new QUIButtonSeparator());
 
             this.addButton({
                 name     : 'editCalendar',
@@ -133,7 +133,7 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
                 }
             });
 
-            this.addButton(new QUIButtonSeperator());
+            this.addButton(new QUIButtonSeparator());
 
             this.addButton({
                 name     : 'exportIcal',
