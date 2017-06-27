@@ -154,6 +154,23 @@
             <de><![CDATA[Wählen Sie den auf der Seite anzuzeigenden Kalender aus]]></de>
             <en><![CDATA[Select the calendar that should be shown on the page]]></en>
         </locale>
+
+
+        <!-- Settings -->
+        <locale name="settings.general.title">
+            <de><![CDATA[Allgemein]]></de>
+            <en><![CDATA[General]]></en>
+        </locale>
+
+        <locale name="settings.general.cachingTime.text">
+            <de><![CDATA[Cache Zeit (in Sekunden)]]></de>
+            <en><![CDATA[Caching Time (in seconds)]]></en>
+        </locale>
+
+        <locale name="settings.general.cachingTime.description">
+            <de><![CDATA[Wie lange sollen externe Kalender zwischengespeichert werden?]]></de>
+            <en><![CDATA[How long shall external calendars be cached?]]></en>
+        </locale>
     </groups>
 
 

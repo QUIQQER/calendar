@@ -66,7 +66,12 @@ class ExternalCalendar extends AbstractCalendar
                 throw new Exception($msg);
             }
             $icalData = file_get_contents($this->externalUrl);
-            QUI\Cache\Manager::set($this->icalCacheKey, $icalData, 60 * 60);
+
+            $Package = QUI::getPackage('quiqqer/calendar');
+            $Config  = $Package->getConfig();
+            $cachingTime = $Config->getValue('general', 'caching_time');
+
+            QUI\Cache\Manager::set($this->icalCacheKey, $icalData, $cachingTime);
 
             return $icalData;
         }

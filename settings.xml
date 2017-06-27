@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quiqqer>
+    <settings>
+        <config>
+            <section name="general">
+                <conf name="caching_time">
+                    <type><![CDATA[integer]]></type>
+                    <defaultvalue>3600</defaultvalue>
+                </conf>
+            </section>
+        </config>
+
+        <window>
+            <categories>
+                <category name="general">
+                    <text>
+                        <locale group="quiqqer/calendar" var="settings.general.title"/>
+                    </text>
+                    <icon>fa fa-calendar</icon>
+
+                    <settings title="general" name="settings.general">
+
+                        <title>
+                            <locale group="quiqqer/calendar" var="menu.apps.calendar.title"/>
+                        </title>
+
+                        <input conf="general.caching_time" type="number">
+                            <text>
+                                <locale group="quiqqer/calendar" var="settings.general.cachingTime.text"/>
+                            </text>
+                            <description>
+                                <locale group="quiqqer/calendar" var="settings.general.cachingTime.description"/>
+                            </description>
+                        </input>
+                    </settings>
+                </category>
+            </categories>
+        </window>
+    </settings>
+</quiqqer>

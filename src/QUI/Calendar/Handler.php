@@ -100,8 +100,8 @@ class Handler
         QUI::getDataBase()->insert(self::tableCalendars(), array(
             'name'        => $User->getName() . " " . $calendarTranslation,
             'userid'      => $User->getId(),
-            'isPublic'    => false,
-            'isExternal'  => true,
+            'isPublic'    => 0,
+            'isExternal'  => 1,
             'externalUrl' => $icalUrl
         ));
         $calendarID = QUI::getPDO()->lastInsertId();
