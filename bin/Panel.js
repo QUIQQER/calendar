@@ -117,6 +117,9 @@ define('package/quiqqer/calendar/bin/Panel', [
                 textimage: 'fa fa-trash',
                 events   : {
                     onClick: this.deleteMarkedCalendars
+                },
+                styles: {
+                    float: 'right'
                 }
             });
             this.getButtons('deleteCalendar').disable();

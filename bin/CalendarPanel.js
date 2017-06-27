@@ -149,6 +149,9 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
                 icon  : 'fa fa-trash',
                 events: {
                     onClick: this.deleteCalendarClick
+                },
+                styles: {
+                    float: 'right'
                 }
             });
 
