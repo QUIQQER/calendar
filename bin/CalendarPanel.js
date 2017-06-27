@@ -113,16 +113,18 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
         {
             var self = this;
 
-            this.addButton({
-                name     : 'addEvent',
-                text     : QUILocale.get(lg, 'panel.button.add.event.text'),
-                textimage: 'fa fa-plus',
-                events   : {
-                    onClick: this.addEventClick
-                }
-            });
+            if (!self.calendarData.isExternal) {
+                this.addButton({
+                    name     : 'addEvent',
+                    text     : QUILocale.get(lg, 'panel.button.add.event.text'),
+                    textimage: 'fa fa-plus',
+                    events   : {
+                        onClick: this.addEventClick
+                    }
+                });
 
-            this.addButton(new QUIButtonSeparator());
+                this.addButton(new QUIButtonSeparator());
+            }
 
             this.addButton({
                 name     : 'editCalendar',
