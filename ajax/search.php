@@ -22,7 +22,7 @@ QUI::$Ajax->registerFunction(
         $calendarTableName = \QUI\Calendar\Handler::tableCalendars();
 
         $statement = $PDO->prepare("
-          SELECT `id`, `name` AS `title`, 'fa fa-calendar' AS `icon` 
+          SELECT `id`, `name` AS `title`, `isExternal`, 'fa fa-calendar' AS `icon` 
           FROM {$calendarTableName}
           WHERE `name` LIKE :freeText
         ");

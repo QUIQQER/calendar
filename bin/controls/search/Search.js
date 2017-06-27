@@ -154,8 +154,17 @@ define('package/quiqqer/calendar/bin/controls/search/Search', [
                     return;
                 }
 
+                var calendars = result;
+
+                if (!self.getAttribute('multiple')) {
+                    calendars = result.filter(function (calendar)
+                    {
+                        return calendar.isExternal == false;
+                    });
+                }
+
                 self.$Grid.setData({
-                    data: result
+                    data: calendars
                 });
             }, {
                 'package': 'quiqqer/calendar'

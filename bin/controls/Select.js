@@ -82,9 +82,22 @@ define('package/quiqqer/calendar/bin/controls/Select', [
          */
         calendarSearch: function (value)
         {
+            var self = this;
             return new Promise(function (resolve, reject)
             {
-                QUIAjax.get('package_quiqqer_calendar_ajax_search', resolve, {
+                QUIAjax.get('package_quiqqer_calendar_ajax_search', function (result)
+                {
+                    var calendars = result;
+
+                    if (!self.getAttribute('multiple')) {
+                        calendars = result.filter(function (calendar)
+                        {
+                            return calendar.isExternal == false;
+                        });
+                    }
+
+                    resolve(calendars);
+                }, {
                     'package': 'quiqqer/calendar',
                     onError  : reject,
                     freeText : value
