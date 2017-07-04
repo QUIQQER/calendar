@@ -202,4 +202,46 @@ class InternalCalendar extends AbstractCalendar
 
         return $events;
     }
+
+
+    /**
+     * @inheritdoc
+     */
+    public function getUpcomingEvents($amount = -1)
+    {
+        $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
+
+        $table = Handler::tableCalendarsEvents();
+
+        $sql = "
+            SELECT * 
+            FROM {$table}
+            WHERE 
+              calendarid = :calendarID AND 
+              start >= :startDate
+            ORDER BY start ASC
+        ";
+
+        $parameters = array(
+            ':calendarID' => (int)$this->getId(),
+            ':startDate'  => time()
+        );
+
+        if (is_numeric($amount) && $amount > -1) {
+            $limit = (int)$amount;
+            $sql   .= "LIMIT {$limit}";
+        }
+
+        $Statement = QUI::getDataBase()->getPDO()->prepare($sql);
+        $Statement->execute($parameters);
+
+        $eventsRaw = $Statement->fetchAll(\PDO::FETCH_ASSOC);
+
+        $events = array();
+        foreach ($eventsRaw as $event) {
+            $events[] = \QUI\Calendar\Event::fromDatabaseArray($event);
+        }
+
+        return $events;
+    }
 }

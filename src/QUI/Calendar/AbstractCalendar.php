@@ -75,9 +75,9 @@ abstract class AbstractCalendar
      */
     protected function construct($data)
     {
-        $this->name       = $data['name'];
-        $this->User       = QUI::getUsers()->get($data['userid']);
-        $this->isPublic   = $data['isPublic'] == 1 ? true : false;
+        $this->name     = $data['name'];
+        $this->User     = QUI::getUsers()->get($data['userid']);
+        $this->isPublic = $data['isPublic'] == 1 ? true : false;
     }
 
 
@@ -168,7 +168,16 @@ abstract class AbstractCalendar
      */
     abstract public function getEvents();
 
-    
+
+    /**
+     * Returns the specified amount of upcoming events
+     *
+     * @param int - Amount of upcoming events to get. Leave empty or set to -1 to get all upcoming events.
+     *
+     * @return Event[] - Array of upcoming events
+     */
+    abstract public function getUpcomingEvents($amount = -1);
+
     /**
      * Converts the calendars information to an array. Does not include events.
      *

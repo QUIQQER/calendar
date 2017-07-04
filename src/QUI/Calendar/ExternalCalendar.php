@@ -67,8 +67,8 @@ class ExternalCalendar extends AbstractCalendar
             }
             $icalData = file_get_contents($this->externalUrl);
 
-            $Package = QUI::getPackage('quiqqer/calendar');
-            $Config  = $Package->getConfig();
+            $Package     = QUI::getPackage('quiqqer/calendar');
+            $Config      = $Package->getConfig();
             $cachingTime = $Config->getValue('general', 'caching_time');
 
             QUI\Cache\Manager::set($this->icalCacheKey, $icalData, $cachingTime);
@@ -166,6 +166,40 @@ class ExternalCalendar extends AbstractCalendar
             $end   = $this->timestampToSchedulerFormat((int)$ICal->iCalDateToUnixTimestamp($Event->dtend));
 
             $events[] = new Event($Event->summary, $Event->description, $start, $end, $Event->uid, $this->getId());
+        }
+
+        return $events;
+    }
+
+
+    /**
+     * @inheritdoc
+     */
+    public function getUpcomingEvents($amount = -1)
+    {
+        $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
+
+        $ICal = new ICal();
+        $ICal->initString($this->getIcalData());
+
+        $eventsRaw = $ICal->eventsFromRange();  // gets event from now on
+        $events    = array();
+
+        if ($amount == -1) {
+            $amount = PHP_INT_MAX;
+        }
+
+        $count = 0;
+        foreach ($eventsRaw as $key => $Event) {
+            if ($count >= $amount) {
+                break;
+            }
+
+            $start = $this->timestampToSchedulerFormat((int)$ICal->iCalDateToUnixTimestamp($Event->dtstart));
+            $end   = $this->timestampToSchedulerFormat((int)$ICal->iCalDateToUnixTimestamp($Event->dtend));
+
+            $events[] = new Event($Event->summary, $Event->description, $start, $end, $Event->uid, $this->getId());
+            $count++;
         }
 
         return $events;
