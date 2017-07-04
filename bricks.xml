@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quiqqer>
+    <bricks>
+        <!-- Calendar Display -->
+        <brick control="\QUI\Calendar\Bricks\CalendarDisplay">
+            <title>
+                <locale group="quiqqer/calendar" var="brick.calendarDisplay.title"/>
+            </title>
+            <description>
+                <locale group="quiqqer/calendar" var="brick.calendarDisplay.description"/>
+            </description>
+
+            <settings>
+                <setting name="calendarIDs"
+                         data-qui="package/quiqqer/calendar/bin/controls/Select"
+                         data-qui-options-is-edit-calendar="false">
+                    <locale group="quiqqer/calendar" var="brick.calendarDisplay.setting.calendarIDs"/>
+                </setting>
+            </settings>
+        </brick>
+
+        <!-- Next n Events List -->
+        <!--<brick control="\QUI\Calendar\Bricks\EventList">-->
+            <!--<title>-->
+                <!--<locale group="quiqqer/calendar"-->
+                        <!--var="brick.eventList.title"/>-->
+            <!--</title>-->
+            <!--<description>-->
+                <!--<locale group="quiqqer/calendar"-->
+                        <!--var="brick.eventList.description"/>-->
+            <!--</description>-->
+
+            <!--<settings>-->
+                <!--<setting name="amount" type="number">-->
+                    <!--<locale group="quiqqer/calendar" var="brick.eventList.setting.amount"/>-->
+                <!--</setting>-->
+            <!--</settings>-->
+        <!--</brick>-->
+    </bricks>
+</quiqqer>

@@ -171,6 +171,14 @@
             <de><![CDATA[Wie lange sollen externe Kalender zwischengespeichert werden?]]></de>
             <en><![CDATA[How long shall external calendars be cached?]]></en>
         </locale>
+
+
+        <!-- Bricks -->
+        <locale name="brick.calendarDisplay.setting.calendarIDs">
+            <de><![CDATA[Anzuzeigende Kalender]]></de>
+            <en><![CDATA[Displayed Calendars]]></en>
+        </locale>
+
     </groups>
 
 
