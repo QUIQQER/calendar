@@ -52,4 +52,16 @@ class Event
         $this->id          = $id;
         $this->calendar_id = $calendarid;
     }
+
+    public static function fromDatabaseArray($data)
+    {
+        return new self(
+            $data['title'],
+            $data['desc'],
+            $data['start'],
+            $data['end'],
+            $data['eventid'],
+            $data['calendarid']
+        );
+    }
 }
