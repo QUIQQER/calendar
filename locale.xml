@@ -125,7 +125,7 @@
             <en><![CDATA[The calendar was successfully imported.]]></en>
         </locale>
 
-        
+
         <!-- Sitetypes -->
         <locale name="admin.types.calendar.title">
             <de><![CDATA[Kalender Anzeige]]></de>
@@ -174,11 +174,15 @@
 
 
         <!-- Bricks -->
-        <locale name="brick.calendarDisplay.setting.calendarIDs">
+        <locale name="brick.setting.calendarIDs">
             <de><![CDATA[Anzuzeigende Kalender]]></de>
             <en><![CDATA[Displayed Calendars]]></en>
         </locale>
 
+        <locale name="brick.eventList.setting.amount">
+            <de><![CDATA[Anzahl anzuzeigender Termine]]></de>
+            <en><![CDATA[Amount of displayed Events]]></en>
+        </locale>
     </groups>
 
 
