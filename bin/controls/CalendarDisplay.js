@@ -77,7 +77,7 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
                     this.calIDs = this.$Elm.getProperty('data-qui-options-calendarids').split(',');
                 } catch (Exception) {
                     // TODO: show error invalid calendar IDs
-                    console.error('Invalid calendar ID(s). Must be array in JSON format');
+                    console.error('Invalid calendar ID(s). Must be comma separated list of IDs');
                     return;
                 }
 
