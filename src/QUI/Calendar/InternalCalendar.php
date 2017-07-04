@@ -23,7 +23,7 @@ class InternalCalendar extends AbstractCalendar
     protected function construct($data)
     {
         if ($data['isExternal'] == 1) {
-            throw new Exception('Calendar with ID '.$this->getId().' is external but was created as internal');
+            throw new Exception("Calendar with ID {$this->getId()} is external but was created as internal");
         }
 
         parent::construct($data);
@@ -139,18 +139,18 @@ class InternalCalendar extends AbstractCalendar
 
         foreach ($Events as $event) {
             $start = new \DateTime();
-            $start->setTimestamp($event['start']);
+            $start->setTimestamp($event->start_date);
 
             $end = new \DateTime();
-            $end->setTimestamp($event['end']);
+            $end->setTimestamp($event->end_date);
 
             $CalendarEvent = new Event();
 
             $CalendarEvent->setDtStart($start)
                 ->setDtEnd($end)
-                ->setSummary($event['title'])
-                ->setDescription($event['desc'])
-                ->setUniqueId($event['eventid']);
+                ->setSummary($event->text)
+                ->setDescription($event->description)
+                ->setUniqueId($event->id);
 
             $Calendar->addComponent($CalendarEvent);
         }
@@ -168,36 +168,38 @@ class InternalCalendar extends AbstractCalendar
     {
         $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
 
-        $eventsRaw       = $this->getEvents();
-        $eventsFormatted = array();
+        $events = $this->getEvents();
 
-        foreach ($eventsRaw as $key => $event) {
-            $eventsFormatted[$key]['id']          = (int)$event['eventid'];
-            $eventsFormatted[$key]['text']        = $event['title'];
-            $eventsFormatted[$key]['description'] = $event['desc'];
-            $eventsFormatted[$key]['start_date']  = $this->timestampToSchedulerFormat($event['start']);
-            $eventsFormatted[$key]['end_date']    = $this->timestampToSchedulerFormat($event['end']);
-            $eventsFormatted[$key]['calendar_id'] = $event['calendarid'];
+        foreach ($events as $Event) {
+            $Event->start_date = $this->timestampToSchedulerFormat($Event->start_date);
+            $Event->end_date   = $this->timestampToSchedulerFormat($Event->end_date);
         }
 
-        return json_encode($eventsFormatted);
+        return json_encode($events);
     }
 
 
     /**
      * Returns all events in a calendar as an array
      *
-     * @return array - array of events
+     * @return \QUI\Calendar\Event[] - array of events
      */
     public function getEvents()
     {
         $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
 
-        return QUI::getDataBase()->fetch(array(
+        $eventsRaw = QUI::getDataBase()->fetch(array(
             'from'  => Handler::tableCalendarsEvents(),
             'where' => array(
                 'calendarid' => (int)$this->getId()
             )
         ));
+
+        $events = array();
+        foreach ($eventsRaw as $event) {
+            $events[] = \QUI\Calendar\Event::fromDatabaseArray($event);
+        }
+
+        return $events;
     }
 }
