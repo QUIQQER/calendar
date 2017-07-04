@@ -27,12 +27,12 @@ class Event
     /**
      * @var int
      */
-    private $id;
+    public $id;
 
     /**
      * @var int
      */
-    private $calendar_id;
+    public $calendar_id;
 
     /**
      * Event constructor.
