@@ -170,11 +170,6 @@ class InternalCalendar extends AbstractCalendar
 
         $events = $this->getEvents();
 
-        foreach ($events as $Event) {
-            $Event->start_date = $this->timestampToSchedulerFormat($Event->start_date);
-            $Event->end_date   = $this->timestampToSchedulerFormat($Event->end_date);
-        }
-
         return json_encode($events);
     }
 

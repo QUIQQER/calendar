@@ -65,8 +65,8 @@ class Event
         return new self(
             $data['title'],
             $data['desc'],
-            $data['start'],
-            $data['end'],
+            self::timestampToSchedulerFormat($data['start']),
+            self::timestampToSchedulerFormat($data['end']),
             $data['eventid'],
             $data['calendarid']
         );
