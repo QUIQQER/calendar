@@ -32,6 +32,7 @@ class EventList extends QUI\Control
         $calendarIDs = $this->getAttribute('calendarIDs');
         $amount      = $this->getAttribute('amount');
 
+        // Collect all events
         $events = array();
         foreach (explode(',', $calendarIDs) as $calendarID) {
             if (QUI\Calendar\Handler::isExternalCalendar($calendarID)) {
@@ -51,6 +52,11 @@ class EventList extends QUI\Control
 
             return ($event1->start_date < $event2->start_date) ? -1 : 1;
         });
+
+        // Only return requested amount of events
+        if (isset($amount) && $amount != false && $amount > -1) {
+            $events = array_slice($events, 0, $amount);
+        }
 
         $Engine = QUI::getTemplateManager()->getEngine();
         $Engine->assign('events', $events);
