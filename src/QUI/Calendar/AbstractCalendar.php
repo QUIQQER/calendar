@@ -256,18 +256,6 @@ abstract class AbstractCalendar
     }
 
 
-    /**
-     * Converts a UNIX timestamp to the format for DHTMLX Scheduler
-     *
-     * @param $timestamp int - A unix timestamp
-     * @return false|string  - The converted timestamp or false on error
-     */
-    public function timestampToSchedulerFormat($timestamp)
-    {
-        return date("Y-m-d H:i", $timestamp);
-    }
-
-
     const PERMISSION_VIEW_CALENDAR = 'viewCalendar';
     const PERMISSION_EDIT_CALENDAR = 'editCalendar';
     const PERMISSION_DELETE_CALENDAR = 'deleteCalendar';

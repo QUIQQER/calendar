@@ -71,4 +71,16 @@ class Event
             $data['calendarid']
         );
     }
+
+
+    /**
+     * Converts a UNIX timestamp to the format for DHTMLX Scheduler
+     *
+     * @param $timestamp int - A unix timestamp
+     * @return false|string  - The converted timestamp or false on error
+     */
+    public static function timestampToSchedulerFormat($timestamp)
+    {
+        return date("Y-m-d H:i", $timestamp);
+    }
 }

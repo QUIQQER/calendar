@@ -162,8 +162,8 @@ class ExternalCalendar extends AbstractCalendar
         $events    = array();
 
         foreach ($eventsRaw as $key => $Event) {
-            $start = $this->timestampToSchedulerFormat((int)$ICal->iCalDateToUnixTimestamp($Event->dtstart));
-            $end   = $this->timestampToSchedulerFormat((int)$ICal->iCalDateToUnixTimestamp($Event->dtend));
+            $start = Event::timestampToSchedulerFormat((int)$ICal->iCalDateToUnixTimestamp($Event->dtstart));
+            $end   = Event::timestampToSchedulerFormat((int)$ICal->iCalDateToUnixTimestamp($Event->dtend));
 
             $events[] = new Event($Event->summary, $Event->description, $start, $end, $Event->uid, $this->getId());
         }
@@ -195,8 +195,8 @@ class ExternalCalendar extends AbstractCalendar
                 break;
             }
 
-            $start = $this->timestampToSchedulerFormat((int)$ICal->iCalDateToUnixTimestamp($Event->dtstart));
-            $end   = $this->timestampToSchedulerFormat((int)$ICal->iCalDateToUnixTimestamp($Event->dtend));
+            $start = Event::timestampToSchedulerFormat((int)$ICal->iCalDateToUnixTimestamp($Event->dtstart));
+            $end   = Event::timestampToSchedulerFormat((int)$ICal->iCalDateToUnixTimestamp($Event->dtend));
 
             $events[] = new Event($Event->summary, $Event->description, $start, $end, $Event->uid, $this->getId());
             $count++;
