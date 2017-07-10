@@ -29,7 +29,6 @@ class EventList extends QUI\Control
 
     public function getBody()
     {
-        // TODO: get calendar ID from Brick setting
         $calendarIDs = $this->getAttribute('calendarIDs');
         $amount      = $this->getAttribute('amount');
 
@@ -43,6 +42,15 @@ class EventList extends QUI\Control
 
             $events = array_merge($events, $Calendar->getUpcomingEvents($amount));
         }
+
+        // Sort all events by start date
+        uasort($events, function ($event1, $event2) {
+            if ($event1->start_date == $event2->start_date) {
+                return 0;
+            }
+
+            return ($event1->start_date < $event2->start_date) ? -1 : 1;
+        });
 
         $Engine = QUI::getTemplateManager()->getEngine();
         $Engine->assign('events', $events);
