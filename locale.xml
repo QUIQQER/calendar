@@ -353,6 +353,13 @@
             <de><![CDATA[OK]]></de>
             <en><![CDATA[OK]]></en>
         </locale>
+
+
+        <!-- Error -->
+        <locale name="error.missing.start">
+            <de><![CDATA[Sie müssen einen Startzeitpunkt für das Event angeben.]]></de>
+            <en><![CDATA[You have to enter a start time for the event.]]></en>
+        </locale>
     </groups>
 
 </locales>

@@ -159,7 +159,7 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
 
             var Content = this.getContent();
 
-            if(self.calendarData.isExternal) {
+            if (self.calendarData.isExternal) {
                 this.Scheduler = new CalendarDisplay([self.calendarData.id]);
             } else {
                 this.Scheduler = new CalendarEditDisplay(self.calendarData.id);
@@ -249,12 +249,32 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
                     var start = Content.getElement('[name=eventstart]').value;
                     var end = Content.getElement('[name=eventend]').value;
                     this.Loader.show();
+
+                    if (!start) {
+                        this.Loader.hide();
+
+                        QUI.getMessageHandler().then(function (MH) {
+                            MH.addError( QUILocale.get(lg, 'error.missing.start'));
+                        });
+
+                        return;
+                    }
+
+                    // If no end set, set to end of start day
+                    if (!end) {
+                        // Cant parse to Date Object cause of german date format of start date
+                        // -> we just replace the end time of the start date
+                        end = start;
+                        end = end.split(' ')[0];
+                        end += ' 23:59';
+                    }
+
                     self.Scheduler.addEventToScheduler({
                         start_date: start,
                         end_date  : end,
                         text      : title
                     });
-                    self.Loader.hide();
+                    this.Loader.hide();
                     aeWindow.close();
                 });
                 aeWindow.open();
