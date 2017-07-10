@@ -53,6 +53,13 @@ class Event
         $this->calendar_id = $calendarid;
     }
 
+    /**
+     * Creates an event object from an array of database data. See param for required field names.
+     *
+     * @param array $data - Array of data with the following field names: title, desc, start, end, eventid, calendarid
+     *
+     * @return Event
+     */
     public static function fromDatabaseArray($data)
     {
         return new self(
