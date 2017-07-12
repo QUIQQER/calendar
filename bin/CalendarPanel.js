@@ -175,7 +175,7 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
          */
         $onDestroy: function ()
         {
-            // Does nothing
+            this.Scheduler.detachEvents();
         },
 
 
