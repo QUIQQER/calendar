@@ -65,15 +65,15 @@ define('package/quiqqer/calendar/bin/AddEditCalendarWindow', [
                 calendar_isExternal: QUILocale.get(lg, 'calendar.external_url')
             };
 
+            if (isExternal !== null) {
+                data.isExternal = isExternal;
+            }
+
             if (calendar !== null) {
                 data.name = calendar.name;
                 data.isPublic = calendar.isPublic;
                 data.isExternal = calendar.isExternal;
                 data.externalUrl = calendar.externalUrl;
-            }
-
-            if(isExternal !== null) {
-                data.isExternal = isExternal;
             }
 
             this.getContent().set({
@@ -84,7 +84,7 @@ define('package/quiqqer/calendar/bin/AddEditCalendarWindow', [
             require(['qui/controls/elements/ColorPicker'], function (ColorPicker)
             {
                 var color = '#2F8FC6';
-                if(calendar !== null && calendar.color !== null) {
+                if (calendar !== null && calendar.color !== null) {
                     color = calendar.color;
                 }
 
@@ -106,9 +106,9 @@ define('package/quiqqer/calendar/bin/AddEditCalendarWindow', [
             var Content = this.getContent();
 
             var calendarName = Content.getElement('[name=calendarname]').value,
-                userid = USER.id,
-                isPublic = Content.getElement('[name=isPublic]').checked,
-                color = this.ColorPicker.getValue();
+                userid       = USER.id,
+                isPublic     = Content.getElement('[name=isPublic]').checked,
+                color        = this.ColorPicker.getValue();
 
             this.Loader.show();
 
@@ -149,7 +149,7 @@ define('package/quiqqer/calendar/bin/AddEditCalendarWindow', [
 
                 // Create internal or external calendar
                 var AddCalendarPromise;
-                if(this.getAttribute('isExternal')) {
+                if (this.getAttribute('isExternal')) {
                     var url = Content.getElement('[name=external_url]').value;
                     AddCalendarPromise = Calendars.addExternalCalendar(url, color);
                 } else {
