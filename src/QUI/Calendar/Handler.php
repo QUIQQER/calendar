@@ -76,14 +76,22 @@ class Handler
     /**
      * Adds an external calendar to the system.
      *
+     * @param string $calendarName - Name of the calendar
      * @param string $icalUrl - URL of the iCal (.ics) file
+     * @param User $User - Owner of the calendar
+     * @param bool $isPublic - Is the calendar private or public?
      * @param string $color - The calendars color in hex format (leading #)
-     * @param QUI\Interfaces\Users\User $User - The owner of the calendar
+     *
      * @return ExternalCalendar
      * @throws Exception
      */
-    public static function addExternalCalendar($icalUrl, $color = '#2F8FC6', $User = null)
-    {
+    public static function addExternalCalendar(
+        $calendarName,
+        $icalUrl,
+        $User = null,
+        $isPublic = false,
+        $color = '#2F8FC6'
+    ) {
         if (!ExternalCalendar::isUrlReachable($icalUrl)) {
             $msg = QUI::getLocale()->get(
                 'quiqqer/calendar',
@@ -96,13 +104,10 @@ class Handler
             $User = QUI::getUserBySession();
         }
 
-        // Translation of the word "Calendar"
-        $calendarTranslation = QUI::getLocale()->get('quiqqer/calendar', 'calendar');
-
         QUI::getDataBase()->insert(self::tableCalendars(), array(
-            'name'        => $User->getName() . " " . $calendarTranslation,
+            'name'        => $calendarName,
             'userid'      => $User->getId(),
-            'isPublic'    => 0,
+            'isPublic'    => $isPublic,
             'isExternal'  => 1,
             'externalUrl' => $icalUrl,
             'color'       => $color

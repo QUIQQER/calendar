@@ -151,7 +151,7 @@ define('package/quiqqer/calendar/bin/AddEditCalendarWindow', [
                 var AddCalendarPromise;
                 if (this.getAttribute('isExternal')) {
                     var url = Content.getElement('[name=external_url]').value;
-                    AddCalendarPromise = Calendars.addExternalCalendar(url, color);
+                    AddCalendarPromise = Calendars.addExternalCalendar(calendarName, url, userid, isPublic, color);
                 } else {
                     AddCalendarPromise = Calendars.addCalendar(userid, calendarName, isPublic, color);
                 }

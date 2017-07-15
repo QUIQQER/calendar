@@ -59,19 +59,27 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
         /**
          * Adds an external calendar
          *
-         * @param {string} icalUrl - The URL to an iCal (.ics) file
-         * @param {string} color - The calendar color in hex format (leading #)
+         * @param {string} calendarName - Name of the calendar
+         * @param {string} icalUrl - URL of the iCal (.ics) file
+         * @param {int} userid - Owner of the calendar
+         * @param {boolean} isPublic - Is the calendar private or public?
+         * @param {string} color - The calendars color in hex format (leading #)
+         *
          * @return {*}
          */
-        addExternalCalendar: function (icalUrl, color)
+        addExternalCalendar: function (calendarName, icalUrl, userid, isPublic, color)
         {
+            var isPublicAsBool = isPublic == true ? 1 : 0;
             return new Promise(function (resolve, reject)
             {
                 QUIAjax.post('package_quiqqer_calendar_ajax_addExternalCalendar', resolve, {
-                    'package': 'quiqqer/calendar',
-                    'icalUrl': icalUrl,
-                    'color'  : color,
-                    onError  : reject
+                    'package'     : 'quiqqer/calendar',
+                    'icalUrl'     : icalUrl,
+                    'color'       : color,
+                    'userid'      : userid,
+                    'calendarName': calendarName,
+                    'isPublic'    : isPublicAsBool,
+                    onError       : reject
                 });
             });
         },
