@@ -31,12 +31,9 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
     'package/quiqqer/calendar/bin/controls/CalendarEditDisplay',
     'package/quiqqer/calendar-controls/bin/Scheduler',
     'Ajax',
-    'Locale',
-    'Mustache',
+    'Locale'
 
-    'text!package/quiqqer/calendar/bin/CalendarPanel.html'
-
-], function (QUI, QUIConfirm, QUIPanel, QUIButtonSeparator, QUIFunctionUtils, Calendars, CalendarDisplay, CalendarEditDisplay, Scheduler, QUIAjax, QUILocale, Mustache, template)
+], function (QUI, QUIConfirm, QUIPanel, QUIButtonSeparator, QUIFunctionUtils, Calendars, CalendarDisplay, CalendarEditDisplay, Scheduler, QUIAjax, QUILocale)
 {
     "use strict";
 
@@ -50,6 +47,7 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
 
         schedulerReady: false,
 
+        // Instance of Calendar(Edit)Display
         Scheduler: null,
 
         Binds: [
