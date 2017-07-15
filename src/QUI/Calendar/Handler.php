@@ -21,16 +21,18 @@ class Handler
      *
      * @param string $name - Calendar name
      * @param User $User - Owner of the calendar
-     * @param $isPublic - Is the calendar private or public?
+     * @param bool $isPublic - Is the calendar private or public?
+     * @param string $color - The calendars color in hex format (leading #)
      *
      * @return InternalCalendar - The created calendar
      */
-    public static function createCalendar($name, $User, $isPublic = false)
+    public static function createCalendar($name, $User, $isPublic = false, $color = '#2F8FC6')
     {
         QUI::getDataBase()->insert(self::tableCalendars(), array(
             'name'     => $name,
             'userid'   => $User->getId(),
-            'isPublic' => $isPublic
+            'isPublic' => $isPublic,
+            'color'    => $color
         ));
         $calendarID = QUI::getPDO()->lastInsertId();
 
@@ -75,12 +77,12 @@ class Handler
      * Adds an external calendar to the system.
      *
      * @param string $icalUrl - URL of the iCal (.ics) file
+     * @param string $color - The calendars color in hex format (leading #)
      * @param QUI\Interfaces\Users\User $User - The owner of the calendar
      * @return ExternalCalendar
-     *
      * @throws Exception
      */
-    public static function addExternalCalendar($icalUrl, $User = null)
+    public static function addExternalCalendar($icalUrl, $color = '#2F8FC6', $User = null)
     {
         if (!ExternalCalendar::isUrlReachable($icalUrl)) {
             $msg = QUI::getLocale()->get(
@@ -102,7 +104,8 @@ class Handler
             'userid'      => $User->getId(),
             'isPublic'    => 0,
             'isExternal'  => 1,
-            'externalUrl' => $icalUrl
+            'externalUrl' => $icalUrl,
+            'color'       => $color
         ));
         $calendarID = QUI::getPDO()->lastInsertId();
 

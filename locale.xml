@@ -323,6 +323,11 @@
             <en><![CDATA[Owner]]></en>
         </locale>
 
+        <locale name="calendar.color">
+            <de><![CDATA[Kalender Farbe]]></de>
+            <en><![CDATA[Calendar Color]]></en>
+        </locale>
+
         <locale name="calendar.is_public">
             <de><![CDATA[Öffentlich?]]></de>
             <en><![CDATA[Public?]]></en>

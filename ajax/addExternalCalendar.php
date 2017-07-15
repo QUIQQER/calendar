@@ -7,8 +7,8 @@
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_calendar_ajax_addExternalCalendar',
-    function ($icalUrl) {
-        \QUI\Calendar\Handler::addExternalCalendar($icalUrl);
+    function ($icalUrl, $color) {
+        \QUI\Calendar\Handler::addExternalCalendar($icalUrl, $color);
 
         QUI::getMessagesHandler()->addSuccess(
             QUI::getLocale()->get(
@@ -17,6 +17,6 @@ QUI::$Ajax->registerFunction(
             )
         );
     },
-    array('icalUrl'),
+    array('icalUrl', 'color'),
     'quiqqer.calendar.create'
 );

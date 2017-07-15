@@ -38,6 +38,8 @@ define('package/quiqqer/calendar/bin/AddEditCalendarWindow', [
             'initialize'
         ],
 
+        ColorPicker: null,
+
         options: {
             icon     : 'fa fa-calendar',
             calendar : null,
@@ -54,9 +56,11 @@ define('package/quiqqer/calendar/bin/AddEditCalendarWindow', [
             this.parent();
 
             var calendar = this.getAttribute('calendar');
+            var isExternal = this.getAttribute('isExternal');
 
             var data = {
                 calendar_title     : QUILocale.get(lg, 'calendar.title'),
+                calendar_color     : QUILocale.get(lg, 'calendar.color'),
                 calendar_isPublic  : QUILocale.get(lg, 'calendar.is_public'),
                 calendar_isExternal: QUILocale.get(lg, 'calendar.external_url')
             };
@@ -68,21 +72,43 @@ define('package/quiqqer/calendar/bin/AddEditCalendarWindow', [
                 data.externalUrl = calendar.externalUrl;
             }
 
+            if(isExternal !== null) {
+                data.isExternal = isExternal;
+            }
+
             this.getContent().set({
                 html: Mustache.render(template, data)
+            });
+
+            var self = this;
+            require(['qui/controls/elements/ColorPicker'], function (ColorPicker)
+            {
+                var color = '#2F8FC6';
+                if(calendar !== null && calendar.color !== null) {
+                    color = calendar.color;
+                }
+
+                self.ColorPicker = new ColorPicker({
+                    defaultcolor: color
+                });
+
+                self.ColorPicker.setStyle('width', '100%');
+                self.ColorPicker.reset(); // Fix to show the default color
+                self.getContent().getElementById('calendar-color-picker').appendChild(self.ColorPicker.getElm());
             });
         },
 
         /**
          * event: fired when the window (form) is submitted
          */
-        submit: function (values)
+        submit: function ()
         {
             var Content = this.getContent();
 
-            var calendarName = Content.getElement('[name=calendarname]').value;
-            var userid = USER.id;
-            var isPublic = Content.getElement('[name=isPublic]').checked;
+            var calendarName = Content.getElement('[name=calendarname]').value,
+                userid = USER.id,
+                isPublic = Content.getElement('[name=isPublic]').checked,
+                color = this.ColorPicker.getValue();
 
             this.Loader.show();
 
@@ -94,7 +120,7 @@ define('package/quiqqer/calendar/bin/AddEditCalendarWindow', [
                 var wasPromiseRejected = false;
 
                 var promises = [
-                    Calendars.editCalendar(calendar.id, calendarName, isPublic).catch(function (error)
+                    Calendars.editCalendar(calendar.id, calendarName, isPublic, color).catch(function ()
                     {
                         wasPromiseRejected = true;
                     })
@@ -120,8 +146,18 @@ define('package/quiqqer/calendar/bin/AddEditCalendarWindow', [
                     }
                 }.bind(this));
             } else {
-                // Creating a calendar
-                Calendars.addCalendar(userid, calendarName, isPublic).then(function ()
+
+                // Create internal or external calendar
+                var AddCalendarPromise;
+                if(this.getAttribute('isExternal')) {
+                    var url = Content.getElement('[name=external_url]').value;
+                    AddCalendarPromise = Calendars.addExternalCalendar(url, color);
+                } else {
+                    AddCalendarPromise = Calendars.addCalendar(userid, calendarName, isPublic, color);
+                }
+
+                // After Creating the calendar
+                AddCalendarPromise.then(function ()
                 {
                     this.close();
                 }.bind(this)).catch(function ()

@@ -36,14 +36,16 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
 
         calID: Number,
 
+        calendarData: Object,
+
         schedulerReady: Boolean,
 
         Scheduler: Scheduler,
 
         Loader: null,
 
-        ChangeEventInCalendarEvent: null,
-        AddEventToCalendarEvent   : null,
+        ChangeEventInCalendarEvent  : null,
+        AddEventToCalendarEvent     : null,
         DeleteEventFromCalendarEvent: null,
 
         Binds: [
@@ -137,7 +139,7 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
 
                     // Can the current User edit the calendar?
                     // Throws error if not editable
-                    Calendars.canUserEditCalendar(self.calID).catch(function()
+                    Calendars.canUserEditCalendar(self.calID).catch(function ()
                     {
                         console.log('User cant edit this calendar');
                         self.Scheduler.config.readonly = true;
@@ -157,16 +159,34 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
 
                     self.attachEvents();
 
-                    Calendars.getEventsAsJson(self.calID).then(function (events)
+                    self.Loader.show();
+
+                    Calendars.getCalendar(self.calID).then(function (calendarData)
                     {
-                        self.Loader.show();
-                        self.parseEventsIntoScheduler(events).then(function() {
-                            self.schedulerReady = true;
-                            self.Loader.hide();
+                        self.calendarData = calendarData;
+
+                        Calendars.getEventsAsJson(self.calID).then(function (events)
+                        {
+                            // Set events colors
+                            events = JSON.parse(events);
+                            events.forEach(function (event)
+                            {
+                                event.color = calendarData.color;
+                            });
+                            events = JSON.stringify(events);
+
+                            self.parseEventsIntoScheduler(events).then(function ()
+                            {
+                                self.schedulerReady = true;
+                                self.Loader.hide();
+                            });
+                        }).catch(function (error)
+                        {
+                            console.error('Error getting events:', error);
                         });
                     }).catch(function (error)
                     {
-                        console.error('Error getting events:', error);
+                        console.error('Error getting calendar data:', error);
                     });
                 });
             });
@@ -191,14 +211,13 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
         },
 
 
-
         /**
          * Updates the scheduler size when the window is resized
          * event : on resize
          */
         $onResize: function ()
         {
-            if(this.schedulerReady) {
+            if (this.schedulerReady) {
                 this.Scheduler.update_view();
             }
         },
@@ -210,7 +229,7 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
          * @param {Number} width
          * @param {Number} height
          */
-        setDimensions: function(width, height)
+        setDimensions: function (width, height)
         {
             if (width < 0 || height < 0) {
                 return;
@@ -267,7 +286,13 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
                     if (result == null) {
                         return;
                     }
+
+                    // Change color of event to calendar defined color
+                    ev.color = self.calendarData.color;
+                    self.Scheduler.updateEvent(id);
+
                     self.Scheduler.changeEventId(id, parseInt(result));
+
                 });
             });
 
@@ -279,9 +304,9 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
         },
 
 
-        detachEvents: function()
+        detachEvents: function ()
         {
-            if(this.schedulerReady) {
+            if (this.schedulerReady) {
                 this.Scheduler.detachEvent(this.AddEventToCalendarEvent);
                 this.Scheduler.detachEvent(this.ChangeEventInCalendarEvent);
                 this.Scheduler.detachEvent(this.DeleteEventFromCalendarEvent);

@@ -36,6 +36,14 @@ abstract class AbstractCalendar
      */
     protected $isPublic;
 
+
+    /**
+     * The calendars color as hex value
+     *
+     * @var string
+     */
+    protected $color;
+
     /**
      * Calendar constructor. Returns a calendar object for the given calendar id.
      *
@@ -78,6 +86,7 @@ abstract class AbstractCalendar
         $this->name     = $data['name'];
         $this->User     = QUI::getUsers()->get($data['userid']);
         $this->isPublic = $data['isPublic'] == 1 ? true : false;
+        $this->color    = $data['color'];
     }
 
 
@@ -86,19 +95,22 @@ abstract class AbstractCalendar
      *
      * @param $name - The new calendar name
      * @param $isPublic - Is the calendar public?
+     * @param $color - The calendars color
      */
-    public function editCalendar($name, $isPublic)
+    public function editCalendar($name, $isPublic, $color)
     {
         $this->checkPermission(AbstractCalendar::PERMISSION_EDIT_CALENDAR);
 
         $this->name     = $name;
         $this->isPublic = $isPublic;
+        $this->color    = $color;
 
         QUI::getDataBase()->update(
             Handler::tableCalendars(),
             [
                 'name'     => $name,
-                'isPublic' => $isPublic
+                'isPublic' => $isPublic,
+                'color'    => $color
             ],
             ['id' => $this->getId()]
         );
@@ -168,6 +180,15 @@ abstract class AbstractCalendar
      */
     abstract public function getEvents();
 
+    /**
+     * Returns the calendars color in hex format.
+     *
+     * @return string
+     */
+    public function getColor()
+    {
+        return $this->color;
+    }
 
     /**
      * Returns the specified amount of upcoming events
@@ -190,7 +211,8 @@ abstract class AbstractCalendar
         return array(
             'isPublic'     => $this->isPublic(),
             'calendarname' => $this->getName(),
-            'id'           => $this->getId()
+            'id'           => $this->getId(),
+            'color'        => $this->getColor(),
         );
     }
 

@@ -1,7 +1,7 @@
 <form>
     <table class="data-table data-table-flexbox">
         <tbody>
-        <tr>
+        <tr class="even">
             <td>
                 <label class="field-container">
                     <span class="field-container-item">
@@ -11,7 +11,7 @@
                 </label>
             </td>
         </tr>
-        <tr class="even">
+        <tr class="odd">
             <td>
                 <label class="field-container hasCheckbox">
                     <span class="field-container-item">
@@ -23,8 +23,20 @@
                 </label>
             </td>
         </tr>
-        {{#isExternal}}
         <tr class="even">
+            <td>
+                <div class="field-container">
+                    <span class="field-container-item">
+                        {{calendar_color}}
+                    </span>
+                    <div class="field-container-field" id="calendar-color-picker">
+                        <!-- ColorPicker is inserted via JS here -->
+                    </div>
+                </div>
+            </td>
+        </tr>
+        {{#isExternal}}
+        <tr class="odd">
             <td>
                 <label class="field-container hasCheckbox">
                     <span class="field-container-item">

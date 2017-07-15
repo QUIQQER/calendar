@@ -35,10 +35,11 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
          * @param {int} userid - The ID of the owner.
          * @param {String} calendarName - The name of the calendar
          * @param {boolean} isPublic - Is the calendar private or public?
+         * @param {String} color - The calendars color in hex format (leading #)
          *
          * @return {Promise} - Resolves when calendar was created, rejects on error
          */
-        addCalendar: function (userid, calendarName, isPublic)
+        addCalendar: function (userid, calendarName, isPublic, color)
         {
             var isPublicAsBool = isPublic == true ? 1 : 0;
             return new Promise(function (resolve, reject)
@@ -48,6 +49,7 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
                     'userid'  : userid,
                     'name'    : calendarName,
                     'isPublic': isPublicAsBool,
+                    'color'   : color,
                     onError   : reject
                 });
             });
@@ -58,15 +60,17 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
          * Adds an external calendar
          *
          * @param {string} icalUrl - The URL to an iCal (.ics) file
+         * @param {string} color - The calendar color in hex format (leading #)
          * @return {*}
          */
-        addExternalCalendar: function (icalUrl)
+        addExternalCalendar: function (icalUrl, color)
         {
             return new Promise(function (resolve, reject)
             {
                 QUIAjax.post('package_quiqqer_calendar_ajax_addExternalCalendar', resolve, {
                     'package': 'quiqqer/calendar',
                     'icalUrl': icalUrl,
+                    'color'  : color,
                     onError  : reject
                 });
             });
@@ -98,12 +102,15 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
          *
          * @param {int} calendarID      - The ID of the calendar to edit.
          * @param {String} calendarName - The new name of the calendar.
-         * @param {boolean} isPublic - Is the calendar public or private?.
+         * @param {boolean} isPublic - Is the calendar public or private?
+         * @param {string} color - The calendars color in hex format (leading #)
          *
          * @return {Promise} - Resolves when calendar was created, rejects on error
          */
-        editCalendar: function (calendarID, calendarName, isPublic)
+        editCalendar: function (calendarID, calendarName, isPublic, color)
         {
+            color = color || '#2F8FC6';
+
             var isPublicAsBool = isPublic == true ? 1 : 0;
             return new Promise(function (resolve, reject)
             {
@@ -112,6 +119,7 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
                     'calendarID': calendarID,
                     'name'      : calendarName,
                     'isPublic'  : isPublicAsBool,
+                    'color'     : color,
                     onError     : reject
                 });
             });
@@ -306,6 +314,29 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
                 });
             });
         },
+
+
+        /**
+         * Resolves with calendar information
+         *
+         * @param {int} calendarID
+         * @return {Promise<T>}
+         */
+        getCalendar: function (calendarID)
+        {
+            return new Promise(function (resolve, reject)
+            {
+                QUIAjax.get('package_quiqqer_calendar_ajax_getCalendar', function (result)
+                {
+                    resolve(result);
+                }, {
+                    'package'   : 'quiqqer/calendar',
+                    'calendarID': calendarID,
+                    onError     : reject
+                });
+            });
+        },
+
 
         /**
          * Opens a calendar in a new panel

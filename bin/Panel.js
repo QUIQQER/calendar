@@ -157,6 +157,11 @@ define('package/quiqqer/calendar/bin/Panel', [
                     dataType : 'boolean',
                     width    : 75
                 }, {
+                    header   : QUILocale.get(lg, 'calendar.color'),
+                    dataIndex: 'color',
+                    dataType : 'string',
+                    width    : 100
+                }, {
                     header   : QUILocale.get(lg, 'calendar.is_external'),
                     dataIndex: 'isExternal',
                     dataType : 'boolean',
@@ -272,26 +277,15 @@ define('package/quiqqer/calendar/bin/Panel', [
         $onButtonAddExternalCalendarClick: function ()
         {
             var self = this;
-            require(['qui/controls/windows/Prompt'], function (Prompt)
+            require(['package/quiqqer/calendar/bin/AddEditCalendarWindow'], function (CalendarWindow)
             {
-                new Prompt({
-                    title      : QUILocale.get(lg, 'panel.button.add.calendar.external.text'),
-                    icon       : 'fa fa-add',
-                    information: QUILocale.get(lg, 'calendar.ical.import.info'),
-                    autoclose  : false,
-                    events     : {
-                        onSubmit: function (value, Win)
+                new CalendarWindow({
+                    isExternal: true,
+                    title : QUILocale.get(lg, 'calendar.window.add.calendar.title'),
+                    events: {
+                        onClose: function ()
                         {
-                            var url = value;
-                            Win.Loader.show();
-                            Calendars.addExternalCalendar(url).then(function ()
-                            {
-                                self.loadCalendars();
-                                Win.close();
-                            }, function ()
-                            {
-                                Win.Loader.hide();
-                            });
+                            self.loadCalendars();
                         }
                     }
                 }).open();

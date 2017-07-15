@@ -145,19 +145,23 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
                     {
                         self.Loader.show();
 
-                        var color = self.getRandomColor();
-                        Calendars.getEventsAsJson(calID).then(function (result)
+                        Calendars.getCalendar(calID).then(function (calendarData)
                         {
-                            var events = JSON.parse(result);
-                            events.forEach(function (event)
+                            Calendars.getEventsAsJson(calID).then(function (result)
                             {
-                                event.color = color;
-                            });
-                            self.parseEventsIntoScheduler(JSON.stringify(events)).then(function ()
+                                var events = JSON.parse(result);
+                                events.forEach(function (event)
+                                {
+                                    event.color = calendarData.color;
+                                });
+                                self.parseEventsIntoScheduler(JSON.stringify(events)).then(function ()
+                                {
+                                    self.Loader.hide();
+                                });
+                            }).catch(function ()
                             {
-                                self.Loader.hide();
                             });
-                        }).catch(function (error)
+                        }).catch(function ()
                         {
                         });
                     });
@@ -213,19 +217,7 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
             }
         },
 
-        /**
-         * Generates a random rgb(X, Y, Z) string
-         * @return {string} - The random color string
-         */
-        getRandomColor: function ()
-        {
-            var color_r = Math.floor(Math.random() * 255),
-                color_g = Math.floor(Math.random() * 255),
-                color_b = Math.floor(Math.random() * 255);
-            return 'rgb(' + color_r + ',' + color_g + ',' + color_b + ')';
-        },
 
-        
         /**
          * Detach events from Scheduler
          */
