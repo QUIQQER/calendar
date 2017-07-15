@@ -84,6 +84,12 @@ define('package/quiqqer/calendar/bin/controls/search/Search', [
                 onRefresh: function ()
                 {
                     self.loadCalendars();
+                },
+
+                onDblClick: function ()
+                {
+                    // Fire event for whole control, so Window.js can notice the double click
+                    self.fireEvent('onDblClick');
                 }
             });
 

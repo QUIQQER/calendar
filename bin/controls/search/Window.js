@@ -83,6 +83,9 @@ define('package/quiqqer/calendar/bin/controls/search/Window', [
                 self.$Search = new Search({
                     multiple: self.getAttribute('multiple')
                 }).inject(self.getContent());
+
+                // If item of Search is double clicked submit this window
+                self.$Search.addEvent('onDblClick', self.submit.bind(self));
             });
 
             Win.Loader.hide();
