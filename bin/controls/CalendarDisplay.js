@@ -223,7 +223,15 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
                 color_g = Math.floor(Math.random() * 255),
                 color_b = Math.floor(Math.random() * 255);
             return 'rgb(' + color_r + ',' + color_g + ',' + color_b + ')';
-        }
+        },
 
+        
+        /**
+         * Detach events from Scheduler
+         */
+        detachEvents: function ()
+        {
+            // No events attached since the Scheduler is read-only, so nothing to do here
+        }
     });
 });
