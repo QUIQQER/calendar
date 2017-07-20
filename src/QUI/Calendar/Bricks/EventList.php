@@ -41,7 +41,15 @@ class EventList extends QUI\Control
                 $Calendar = new QUI\Calendar\InternalCalendar($calendarID);
             }
 
-            $events = array_merge($events, $Calendar->getUpcomingEvents($amount));
+            $calendarEvents = $Calendar->getUpcomingEvents($amount);
+            foreach ($calendarEvents as $Event) {
+                $Date                  = new \DateTime($Event->start_date);
+                $Event->formattedDate  = $Date->format('d');
+                $Event->formattedMonth = $Date->format('M');
+                $Event->formattedTime  = $Date->format('H:i');
+            }
+
+            $events = array_merge($events, $calendarEvents);
         }
 
         // Sort all events by start date

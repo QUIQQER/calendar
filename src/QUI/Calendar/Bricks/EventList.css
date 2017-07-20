@@ -1,0 +1,72 @@
+.event-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.event-wrapper {
+    padding: 0;
+}
+
+.event {
+    height: 100px;
+    width: 100%;
+    max-width: 500px;
+
+    margin-bottom: 20px;
+    padding: 0;
+
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}
+
+.event-date {
+    float: left;
+    width: 100px;
+    height: 100px;
+    color: white;
+    text-align: center;
+
+    padding: 10px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.event-wrapper:nth-child(even) .event-date {
+    background-color: #79b51c;
+}
+
+.event-wrapper:nth-child(odd) .event-date {
+    background-color: #2F8FC6;
+}
+
+.event-date .event-date-day,
+.event-date .event-date-month {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.event-date .event-date-day {
+    flex: 1.3 1.3;
+
+    font-size: 46px;
+}
+
+.event-date .event-date-month {
+    flex: 1 1;
+
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.event-info {
+    float: left;
+    padding: 20px;
+    height: 100%;
+}
+
+.event-info .event-title {
+    font-weight: bold;
+}
