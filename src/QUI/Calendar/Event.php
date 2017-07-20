@@ -15,12 +15,12 @@ class Event
     public $description;
 
     /**
-     * @var int - The events start time/date as a UNIX timestamp
+     * @var int - The events start time/date in Scheduler format
      */
     public $start_date;
 
     /**
-     * @var int - The events end time/date as a UNIX timestamp
+     * @var int - The events end time/date in Scheduler format
      */
     public $end_date;
 
@@ -38,8 +38,8 @@ class Event
      * Event constructor.
      * @param string $title
      * @param string $desc
-     * @param int $start
-     * @param int $end
+     * @param string $start
+     * @param string $end
      * @param int $id
      * @param int $calendarid
      */
