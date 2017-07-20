@@ -29,6 +29,7 @@ class CalendarDisplay extends QUI\Control
 
         $this->setJavaScriptControl('package/quiqqer/calendar/bin/controls/CalendarDisplay');
         $this->setJavaScriptControlOption('calendarids', $this->getAttribute('calendarIDs'));
+        $this->setJavaScriptControlOption('view', $this->getAttribute('view'));
 
         $this->setAttribute('class', 'quiqqer-calendar-brick-calendar-display');
 

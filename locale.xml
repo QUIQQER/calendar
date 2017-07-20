@@ -179,6 +179,28 @@
             <en><![CDATA[Displayed Calendars]]></en>
         </locale>
 
+        <locale name="brick.setting.view">
+            <de><![CDATA[Ansicht]]></de>
+            <en><![CDATA[View]]></en>
+        </locale>
+
+        <locale name="brick.setting.view.day">
+            <de><![CDATA[Tag]]></de>
+            <en><![CDATA[Day]]></en>
+        </locale>
+        <locale name="brick.setting.view.week">
+            <de><![CDATA[Woche]]></de>
+            <en><![CDATA[Week]]></en>
+        </locale>
+        <locale name="brick.setting.view.month">
+            <de><![CDATA[Monat]]></de>
+            <en><![CDATA[Month]]></en>
+        </locale>
+        <locale name="brick.setting.view.agenda">
+            <de><![CDATA[Agenda]]></de>
+            <en><![CDATA[Agenda]]></en>
+        </locale>
+
         <locale name="brick.eventList.setting.amount">
             <de><![CDATA[Anzahl anzuzeigender Termine]]></de>
             <en><![CDATA[Amount of displayed Events]]></en>

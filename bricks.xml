@@ -16,6 +16,23 @@
                          data-qui-options-is-edit-calendar="false">
                     <locale group="quiqqer/calendar" var="brick.setting.calendarIDs"/>
                 </setting>
+
+                <setting name="view" type="select">
+                    <locale group="quiqqer/calendar" var="brick.setting.view"/>
+
+                    <option value="day">
+                        <locale group="quiqqer/calendar" var="brick.setting.view.day"/>
+                    </option>
+                    <option value="week">
+                        <locale group="quiqqer/calendar" var="brick.setting.view.week"/>
+                    </option>
+                    <option value="month">
+                        <locale group="quiqqer/calendar" var="brick.setting.view.month"/>
+                    </option>
+                    <option value="agenda">
+                        <locale group="quiqqer/calendar" var="brick.setting.view.agenda"/>
+                    </option>
+                </setting>
             </settings>
         </brick>
 

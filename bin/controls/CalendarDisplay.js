@@ -166,6 +166,11 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
                         });
                     });
 
+                    var view = self.getAttribute('view');
+                    if(view) {
+                        self.Scheduler.updateView(null, view);
+                    }
+
                     self.schedulerReady = true;
                     resolve();
                 });
