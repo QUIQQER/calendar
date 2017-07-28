@@ -26,36 +26,16 @@ class EventList extends QUI\Control
         $this->setAttribute('class', 'quiqqer-calendar-brick-event-list');
     }
 
-    // TODO: Refactor so that Events are retrieved directly from DB -> no sorting and trimming needed
+
     public function getBody()
     {
-        $calendarIDs = $this->getAttribute('calendarIDs');
+        $calendarIDs = explode(',', $this->getAttribute('calendarIDs'));
         $amount      = $this->getAttribute('amount');
 
-        // Collect all events
-        $events = array();
-        foreach (explode(',', $calendarIDs) as $calendarID) {
-            if (QUI\Calendar\Handler::isExternalCalendar($calendarID)) {
-                $Calendar = new QUI\Calendar\ExternalCalendar($calendarID);
-            } else {
-                $Calendar = new QUI\Calendar\InternalCalendar($calendarID);
-            }
+        $events = QUI\Calendar\EventManager::getUpcomingEventsForCalendarIds($calendarIDs, $amount);
 
-            $events = array_merge($events, $Calendar->getUpcomingEvents($amount));
-        }
-
-        // Sort all events by start date
-        uasort($events, function ($event1, $event2) {
-            if ($event1->start_date == $event2->start_date) {
-                return 0;
-            }
-
-            return ($event1->start_date < $event2->start_date) ? -1 : 1;
-        });
-
-        // Only return requested amount of events
-        if (isset($amount) && $amount != false && $amount > -1) {
-            $events = array_slice($events, 0, $amount);
+        if (is_null($events)) {
+            $events = array();
         }
 
         // Simple or modern display style?
