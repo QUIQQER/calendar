@@ -179,6 +179,20 @@
             <en><![CDATA[Displayed Calendars]]></en>
         </locale>
 
+        <locale name="brick.setting.displayStyle">
+            <de><![CDATA[Style]]></de>
+            <en><![CDATA[Style]]></en>
+        </locale>
+        <locale name="brick.setting.displayStyle.simple">
+            <de><![CDATA[Simpel]]></de>
+            <en><![CDATA[Simpel]]></en>
+        </locale>
+        <locale name="brick.setting.displayStyle.modern">
+            <de><![CDATA[Modern]]></de>
+            <en><![CDATA[Modern]]></en>
+        </locale>
+
+
         <locale name="brick.setting.view">
             <de><![CDATA[Ansicht]]></de>
             <en><![CDATA[View]]></en>

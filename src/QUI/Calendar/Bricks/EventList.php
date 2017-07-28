@@ -41,15 +41,7 @@ class EventList extends QUI\Control
                 $Calendar = new QUI\Calendar\InternalCalendar($calendarID);
             }
 
-            $calendarEvents = $Calendar->getUpcomingEvents($amount);
-            foreach ($calendarEvents as $Event) {
-                $Date                  = new \DateTime($Event->start_date);
-                $Event->formattedDate  = $Date->format('d');
-                $Event->formattedMonth = $Date->format('M');
-                $Event->formattedTime  = $Date->format('H:i');
-            }
-
-            $events = array_merge($events, $calendarEvents);
+            $events = array_merge($events, $Calendar->getUpcomingEvents($amount));
         }
 
         // Sort all events by start date
@@ -66,11 +58,25 @@ class EventList extends QUI\Control
             $events = array_slice($events, 0, $amount);
         }
 
+        // Simple or modern display style?
+        if ($this->getAttribute('displayStyle') == "simple") {
+            $template = dirname(__FILE__) . '/EventListSimple.html';
+            $cssFile  = dirname(__FILE__) . '/EventListSimple.css';
+        } else {
+            // Format dates for modern display
+            foreach ($events as $Event) {
+                $Date                  = new \DateTime($Event->start_date);
+                $Event->formattedDate  = $Date->format('d');
+                $Event->formattedMonth = $Date->format('M');
+                $Event->formattedTime  = $Date->format('H:i');
+            }
+
+            $template = dirname(__FILE__) . '/EventList.html';
+            $cssFile  = dirname(__FILE__) . '/EventList.css';
+        }
+
         $Engine = QUI::getTemplateManager()->getEngine();
         $Engine->assign('events', $events);
-
-        $template = dirname(__FILE__) . '/EventList.html';
-        $cssFile  = dirname(__FILE__) . '/EventList.css';
 
         $this->addCSSFile($cssFile);
         $html = $Engine->fetch($template);
