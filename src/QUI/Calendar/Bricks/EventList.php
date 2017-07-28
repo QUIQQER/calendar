@@ -26,7 +26,7 @@ class EventList extends QUI\Control
         $this->setAttribute('class', 'quiqqer-calendar-brick-event-list');
     }
 
-
+    // TODO: Refactor so that Events are retrieved directly from DB -> no sorting and trimming needed
     public function getBody()
     {
         $calendarIDs = $this->getAttribute('calendarIDs');
