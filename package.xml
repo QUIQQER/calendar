@@ -7,5 +7,7 @@
         <description>
             <locale group="quiqqer/calendar" var="package.description"/>
         </description>
+
+        <image src="URL_OPT_DIR/quiqqer/calendar/bin/package.png"/>
     </package>
 </quiqqer>
