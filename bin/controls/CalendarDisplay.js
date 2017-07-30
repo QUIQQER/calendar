@@ -134,6 +134,9 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
                     // Default event length 60 minutes
                     self.Scheduler.config.event_duration = 60;
 
+                    // Always use UTC since we store unix timestamps (UTC)
+                    self.Scheduler.config.server_utc = true;
+
                     // Remove all events from calendar (if another scheduler was opened previously)
                     self.Scheduler.clearAll();
 
