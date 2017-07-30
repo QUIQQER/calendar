@@ -33,8 +33,7 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
     'Ajax',
     'Locale'
 
-], function (QUI, QUIConfirm, QUIPanel, QUIButtonSeparator, QUIFunctionUtils, Calendars, CalendarDisplay, CalendarEditDisplay, Scheduler, QUIAjax, QUILocale)
-{
+], function (QUI, QUIConfirm, QUIPanel, QUIButtonSeparator, QUIFunctionUtils, Calendars, CalendarDisplay, CalendarEditDisplay, Scheduler, QUIAjax, QUILocale) {
     "use strict";
 
     var lg = 'quiqqer/calendar';
@@ -66,8 +65,7 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
          *
          * @param options - constructor options
          */
-        initialize: function (options)
-        {
+        initialize: function (options) {
             this.parent(options);
 
             if (this.calendarData === null) {
@@ -84,8 +82,7 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
         /**
          * Event: Fired when Panel gets resized
          */
-        $onResize: function ()
-        {
+        $onResize: function () {
             if (!this.Scheduler) {
                 return;
             }
@@ -107,8 +104,7 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
         /**
          * Event: fired when the window is added to DOM
          */
-        $onCreate: function ()
-        {
+        $onCreate: function () {
             var self = this;
 
             if (!self.calendarData.isExternal) {
@@ -171,8 +167,7 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
          *
          * Event : fired when panel is closed/destroyed
          */
-        $onDestroy: function ()
-        {
+        $onDestroy: function () {
             this.Scheduler.detachEvents();
         },
 
@@ -182,8 +177,7 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
          * Stores the data of the current panel in the workspace so the panel can be displayed after page reload.
          * @return {{type, attributes, calendarData: *}}
          */
-        serialize: function ()
-        {
+        serialize: function () {
             return {
                 type        : this.getType(),
                 attributes  : this.getAttributes(),
@@ -198,8 +192,7 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
          * @param {Object} data
          * @return {Object} this (package/quiqqer/calendar/bin/CalendarPanel)
          */
-        unserialize: function (data)
-        {
+        unserialize: function (data) {
             this.setAttributes(data.attributes);
             this.calendarData = data.calendarData;
             return this;
@@ -210,17 +203,14 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
          * Event: fired when edit calendar button is clicked
          * Opens the edit calendar window
          */
-        editCalendarClick: function ()
-        {
+        editCalendarClick: function () {
             var self = this;
-            require(['package/quiqqer/calendar/bin/AddEditCalendarWindow'], function (CalendarWindow)
-            {
+            require(['package/quiqqer/calendar/bin/AddEditCalendarWindow'], function (CalendarWindow) {
                 new CalendarWindow({
                     calendar: self.calendarData,
                     title   : QUILocale.get(lg, 'calendar.window.edit.calendar.title'),
                     events  : {
-                        onClose: function ()
-                        {
+                        onClose: function () {
                             // TODO: Refresh panel title
                         }
                     }
@@ -233,43 +223,50 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
          * Event: Fired when the add event button is clicked
          * Opens the dialog to add an event
          */
-        addEventClick: function ()
-        {
+        addEventClick: function () {
             var self = this;
-            require(['package/quiqqer/calendar/bin/AddEventWindow'], function (AddEventWindow)
-            {
+            require(['package/quiqqer/calendar/bin/AddEventWindow'], function (AddEventWindow) {
                 var aeWindow = new AddEventWindow();
-                aeWindow.addEvent('onSubmit', function (Window)
-                {
-                    var Content = Window.getContent();
-                    var title = Content.getElement('[name=eventtitle]').value;
-                    var desc = Content.getElement('[name=eventdesc]').value;
-                    var start = Content.getElement('[name=eventstart]').value;
-                    var end = Content.getElement('[name=eventend]').value;
+                aeWindow.addEvent('onSubmit', function (Window) {
+                    var Content    = Window.getContent(),
+
+                        title      = Content.getElement('[name=eventtitle]').value,
+                        desc       = Content.getElement('[name=eventdesc]').value,
+
+                        startRaw   = Content.getElement('[name=eventstart]').value,
+                        Start      = new Date(startRaw),
+
+                        endRaw     = Content.getElement('[name=eventend]').value,
+
+                        isWholeDay = Content.getElementById('whole-day').getElementsByTagName('input')[0].value === 1;
                     this.Loader.show();
 
-                    if (!start) {
+                    if (!startRaw) {
                         this.Loader.hide();
 
                         QUI.getMessageHandler().then(function (MH) {
-                            MH.addError( QUILocale.get(lg, 'error.missing.start'));
+                            MH.addError(QUILocale.get(lg, 'error.missing.start'));
                         });
 
                         return;
                     }
 
-                    // If no end set, set to end of start day
-                    if (!end) {
-                        // Cant parse to Date Object cause of german date format of start date
-                        // -> we just replace the end time of the start date
-                        end = start;
-                        end = end.split(' ')[0];
-                        end += ' 23:59';
+                    if (isWholeDay) {
+                        Start.setHours(0);
+                        Start.setMinutes(0);
+                    }
+
+                    var End;
+                    if (!endRaw || isWholeDay) {
+                        End = new Date(startRaw);
+                        End.setDate(Start.getDate() + 1);
+                    } else {
+                        End = new Date(endRaw);
                     }
 
                     self.Scheduler.addEventToScheduler({
-                        start_date: start,
-                        end_date  : end,
+                        start_date: Start,
+                        end_date  : End,
                         text      : title
                     });
                     this.Loader.hide();
@@ -283,8 +280,7 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
         /**
          * Downloads the calendar as an iCal file
          */
-        exportIcalClick: function ()
-        {
+        exportIcalClick: function () {
             var downloadFile = URL_OPT_DIR + 'quiqqer/calendar/bin/iCalExport.php?calendar=' + this.calendarData.id,
                 iframeId     = Math.floor(Date.now() / 1000),
                 Frame        = new Element('iframe', {
@@ -305,8 +301,7 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
         /**
          * Opens the dialog to remove a calendar
          */
-        deleteCalendarClick: function ()
-        {
+        deleteCalendarClick: function () {
             var self = this;
             var ids = [self.calendarData.id];
             new QUIConfirm({
@@ -317,11 +312,9 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
                     ids: ids
                 }),
                 events     : {
-                    onSubmit: function (Win)
-                    {
+                    onSubmit: function (Win) {
                         Win.Loader.show();
-                        Calendars.deleteCalendars(ids).then(function ()
-                        {
+                        Calendars.deleteCalendars(ids).then(function () {
                             Win.close();
                             self.destroy();
                         });

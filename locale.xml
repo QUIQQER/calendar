@@ -252,6 +252,11 @@
             <en><![CDATA[Description]]></en>
         </locale>
 
+        <locale name="calendar.window.addevent.event.wholeDay">
+            <de><![CDATA[Ganztägig?]]></de>
+            <en><![CDATA[All-Day?]]></en>
+        </locale>
+
         <locale name="calendar.window.addevent.event.start">
             <de><![CDATA[Start]]></de>
             <en><![CDATA[Start]]></en>
