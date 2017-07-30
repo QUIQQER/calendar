@@ -246,8 +246,8 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
          *
          * @param {Object} data            - Object with the parameters text, start_date, end_date
          * @param {String} data.text       - Description of the event
-         * @param {String} data.start_date - Start date and time of the event in format '%d-%m-%Y %H:%i'
-         * @param {String} data.end_date   - End date and time of the event in format '%d-%m-%Y %H:%i'
+         * @param {Date|string} data.start_date - Start date and time of the event, if string in format '%Y-%m-%d %H:%i'
+         * @param {Date|string} data.end_date   - End date and time of the event, if string in format '%Y-%m-%d %H:%i'
          */
         addEventToScheduler: function (data)
         {
