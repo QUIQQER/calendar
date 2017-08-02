@@ -1,0 +1,49 @@
+.event-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.event-wrapper {
+    padding: 0;
+}
+
+.event {
+    height: 50px;
+    width: 100%;
+    max-width: 500px;
+
+    margin-bottom: 10px;
+    padding: 0;
+
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}
+
+.event-index {
+    float: left;
+    width: 50px;
+    height: 50px;
+    color: white;
+    text-align: center;
+
+    padding: 10px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.event-wrapper:nth-child(even) .event-index {
+    background-color: #79b51c;
+}
+
+.event-wrapper:nth-child(odd) .event-index {
+    background-color: #2F8FC6;
+}
+
+.event-title {
+    float: left;
+    padding-left: 20px;
+    line-height: 50px;
+    height: 100%;
+}
