@@ -220,4 +220,37 @@ class Handler
         // Return array with new indexes starting at 0
         return array_values($calendars);
     }
+
+
+    /**
+     * Returns all external calendars from database.
+     *
+     * @return ExternalCalendar[] - All external calendars in the database
+     */
+    public static function getExternalCalendars()
+    {
+        $calendarsRaw = QUI::getDataBase()->fetch(array(
+            'from'  => self::tableCalendars(),
+            'where' => array(
+                'isExternal' => 1
+            )
+        ));
+
+        $calendars = array();
+        foreach ($calendarsRaw as $calendarData) {
+            $Calendar = new ExternalCalendar($calendarData['id']);
+
+            // Only return calendars the user can edit
+            try {
+                $Calendar->checkPermission($Calendar::PERMISSION_EDIT_CALENDAR);
+            } catch (QUI\Calendar\Exception $ex) {
+                continue;
+            }
+
+            $calendars[] = $Calendar;
+        }
+
+        // Return array with new indexes starting at 0
+        return $calendars;
+    }
 }
