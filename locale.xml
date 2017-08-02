@@ -80,6 +80,18 @@
         </locale>
 
 
+        <!-- Cron -->
+        <locale name="cron.external_calendar_sync.title">
+            <de><![CDATA[Externe Kalender synchronisieren]]></de>
+            <en><![CDATA[Sync External Calendars]]></en>
+        </locale>
+
+        <locale name="cron.external_calendar_sync.description">
+            <de><![CDATA[Synchronisiert alle externen Kalender aus ihrer Quelle mit dem QUIQQER System]]></de>
+            <en><![CDATA[Syncs all external calendars from their origin with the QUIQQER system]]></en>
+        </locale>
+
+
         <!-- Exceptions -->
         <locale name="exception.calendar.permission.view">
             <de><![CDATA[Du hast keine Berechtigung einen dieser Kalender anzusehen.]]></de>
