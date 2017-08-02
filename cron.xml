@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<crons>
+    <cron exec="\QUI\Calendar\Cron::syncExternalCalendars">
+        <title>Sync External Calendars</title>
+        <description>Syncs all external calendars from their origin with the QUIQQER system</description>
+    </cron>
+</crons>
