@@ -11,6 +11,9 @@
         </config>
 
         <window>
+            <params>
+                <icon>fa fa-calendar</icon>
+            </params>
             <categories>
                 <category name="general">
                     <text>
