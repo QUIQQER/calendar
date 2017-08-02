@@ -31,7 +31,7 @@ class Handler
         QUI::getDataBase()->insert(self::tableCalendars(), array(
             'name'     => $name,
             'userid'   => $User->getId(),
-            'isPublic' => $isPublic,
+            'isPublic' => $isPublic ? 1 : 0,
             'color'    => $color
         ));
         $calendarID = QUI::getPDO()->lastInsertId();
