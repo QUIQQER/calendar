@@ -100,6 +100,15 @@ class Handler
             throw new Exception($msg);
         }
 
+        // TODO: Issue #21
+        if (!ExternalCalendar::isValidIcal(file_get_contents($icalUrl))) {
+            $msg = QUI::getLocale()->get(
+                'quiqqer/calendar',
+                'exception.ical.invalid'
+            );
+            throw new Exception($msg);
+        }
+
         if (is_null($User)) {
             $User = QUI::getUserBySession();
         }

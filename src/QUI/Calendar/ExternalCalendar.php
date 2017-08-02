@@ -65,7 +65,17 @@ class ExternalCalendar extends AbstractCalendar
                 );
                 throw new Exception($msg);
             }
+
+            // TODO: Issue #21
             $icalData = file_get_contents($this->externalUrl);
+
+            if (!self::isValidIcal($icalData)) {
+                $msg = QUI::getLocale()->get(
+                    'quiqqer/calendar',
+                    'exception.ical.invalid'
+                );
+                throw new Exception($msg);
+            }
 
             $Package     = QUI::getPackage('quiqqer/calendar');
             $Config      = $Package->getConfig();
@@ -203,5 +213,24 @@ class ExternalCalendar extends AbstractCalendar
         }
 
         return $events;
+    }
+
+    /**
+     * Checks if an iCal string is valid
+     *
+     * @param string $icalString - The iCal string to check
+     * @return boolean - Is the iCal string valid
+     */
+    public static function isValidIcal($icalString)
+    {
+        $icalString = trim($icalString);
+
+        // Does file start with "BEGIN:VCALENDAR" and end with "END:VCALENDAR"?
+        $isValid = (
+            strpos($icalString, "BEGIN:VCALENDAR") === 0 &&
+            strpos($icalString, "END:VCALENDAR") === strlen($icalString) - strlen("END:VCALENDAR")
+        );
+
+        return $isValid;
     }
 }

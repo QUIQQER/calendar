@@ -107,6 +107,11 @@
             <de><![CDATA[Dieser Kalender existiert nicht.]]></de>
             <en><![CDATA[This calendar doesn't exist.]]></en>
         </locale>
+
+        <locale name="exception.ical.invalid">
+            <de><![CDATA[iCal-Datei ist ungültig.]]></de>
+            <en><![CDATA[iCal-file is invalid.]]></en>
+        </locale>
     </groups>
 
 
