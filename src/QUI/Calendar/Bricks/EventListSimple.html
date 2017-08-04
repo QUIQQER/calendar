@@ -1,7 +1,12 @@
 <ol class="event-list">
-    {foreach from=$events item=Event}
-        <li class="event">
-            {$Event->text}
-        </li>
+    {foreach from=$events key=k item=Event}
+    <li class="event-wrapper">
+        <div class="event">
+            <div class="event-index"></div>
+            <div class="event-title">
+                {$Event->text}
+            </div>
+        </div>
+    </li>
     {/foreach}
 </ol>
