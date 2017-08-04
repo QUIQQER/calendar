@@ -1,28 +1,28 @@
 {
-  "name": "quiqqer/calendar",
-  "type": "quiqqer-module",
-  "description": "",
-  "version": "dev-dev",
-  "authors": [
-    {
-      "name": "Henning Leutz",
-      "email": "leutz@pcsg.de",
-      "homepage": "http://www.pcsg.de",
-      "role": "Developer"
+    "name": "quiqqer\/calendar",
+    "type": "quiqqer-module",
+    "description": "",
+    "version": "new_simple_list_design",
+    "authors": [
+        {
+            "name": "Henning Leutz",
+            "email": "leutz@pcsg.de",
+            "homepage": "http:\/\/www.pcsg.de",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "mail": "support@pcsg.de"
+    },
+    "require": {
+        "quiqqer\/quiqqer": "*",
+        "quiqqer\/calendar-controls": "dev-dev",
+        "eluceo\/ical": "0.11.0",
+        "johngrogg\/ics-parser": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "QUI\\Calendar\\": "src\/QUI\/Calendar"
+        }
     }
-  ],
-  "support": {
-    "mail": "support@pcsg.de"
-  },
-  "require": {
-    "quiqqer/quiqqer": "*",
-    "quiqqer/calendar-controls": "dev-dev",
-    "eluceo/ical": "0.11.0",
-    "johngrogg/ics-parser": "dev-master"
-  },
-  "autoload": {
-    "psr-4": {
-      "QUI\\Calendar\\": "src/QUI/Calendar"
-    }
-  }
 }
