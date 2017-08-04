@@ -24,7 +24,7 @@ class EventManager
             return null;
         }
 
-        $Event = Event::fromDatabaseArray($data);
+        $Event = Event::fromDatabaseArray($data[0]);
 
         return $Event;
     }
