@@ -20,7 +20,7 @@ class EventManager
             'limit' => 1
         ));
 
-        if (is_null($data)) {
+        if (empty($data)) {
             return null;
         }
 
