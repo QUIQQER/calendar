@@ -1,6 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
     <types>
+        <!-- Event -->
+        <type type="sitetypes/event" icon="fa fa-clock-o" template="sitetypes/event.html">
+            <locale group="quiqqer/calendar" var="sitetypes.event.title"/>
+
+            <desc>
+                <locale group="quiqqer/calendar" var="sitetypes.event.desc"/>
+            </desc>
+
+            <attributes>
+                <attribute>event.settings.id</attribute>
+                <attribute>event.settings.image</attribute>
+                <attribute>event.settings.details</attribute>
+            </attributes>
+
+            <settings>
+                <category name="event-settings">
+                    <settings>
+                        <title>
+                            <locale group="quiqqer/calendar" var="sitetypes.event.settings"/>
+                        </title>
+
+                        <input conf="event.settings.id"
+                               type="hidden"
+                               disabled="disabled"
+                               data-qui="package/quiqqer/calendar/bin/controls/eventSelect/EventSelect"
+                               label="false">
+                            <description>
+                                <locale group="quiqqer/calendar" var="sitetypes.event.settings.id"/>
+                            </description>
+                        </input>
+
+                        <input conf="event.settings.image" class="media-image">
+                            <text>
+                                <locale group="quiqqer/calendar" var="sitetypes.event.settings.image"/>
+                            </text>
+                            <description>
+                                <locale group="quiqqer/calendar" var="sitetypes.event.settings.image.description"/>
+                            </description>
+                        </input>
+
+                        <textarea conf="event.settings.details">
+                            <text>
+                                <locale group="quiqqer/calendar" var="sitetypes.event.settings.details"/>
+                            </text>
+                        </textarea>
+                    </settings>
+                </category>
+            </settings>
+        </type>
+
+
         <!-- Calendar Full Page -->
         <type type="sitetypes/calendar" icon="fa fa-calendar" template="sitetypes/calendar.html">
             <locale group="quiqqer/calendar" var="admin.types.calendar.title"/>

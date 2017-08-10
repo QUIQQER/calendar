@@ -173,6 +173,40 @@
         </locale>
 
 
+
+        <locale name="sitetypes.event.settings">
+            <de><![CDATA[Event Einstellungen]]></de>
+            <en><![CDATA[Event Settings]]></en>
+        </locale>
+
+        <locale name="sitetypes.event.settings.id">
+            <de><![CDATA[Direkt nach einem Event suchen, oder über den Button rechts auswählen.]]></de>
+            <en><![CDATA[Search directly for an event or select one using the button on the right.]]></en>
+        </locale>
+
+        <locale name="sitetypes.event.settings.image">
+            <de><![CDATA[Wählen Sie ein Bild für das Event aus:]]></de>
+            <en><![CDATA[Select an image for the event:]]></en>
+        </locale>
+
+        <locale name="sitetypes.event.settings.image.description">
+            <de><![CDATA[700x300px]]></de>
+            <en><![CDATA[700x300px]]></en>
+        </locale>
+
+        <locale name="sitetypes.event.details">
+            <de><![CDATA[Details]]></de>
+            <en><![CDATA[Details]]></en>
+        </locale>
+
+        <locale name="sitetypes.event.error.notFound">
+            <de><![CDATA[Dieses Event konnte nicht gefunden werden.]]></de>
+            <en><![CDATA[This event could not be found.]]></en>
+        </locale>
+
+
+
+
         <!-- Settings -->
         <locale name="settings.general.title">
             <de><![CDATA[Allgemein]]></de>
@@ -409,6 +443,21 @@
         <locale name="calendar.control.select.placeholder">
             <de><![CDATA[Kalender zum Hinzufügen suchen...]]></de>
             <en><![CDATA[Search calendar to add...]]></en>
+        </locale>
+
+        <locale name="calendar.control.eventSearch.title">
+            <de><![CDATA[Event Auswählen]]></de>
+            <en><![CDATA[Select Event]]></en>
+        </locale>
+
+        <locale name="calendar.control.eventSelect.placeholder">
+            <de><![CDATA[Anzuzeigendes Event suchen...]]></de>
+            <en><![CDATA[Search event to show...]]></en>
+        </locale>
+
+        <locale name="event.title">
+            <de><![CDATA[Event]]></de>
+            <en><![CDATA[Event]]></en>
         </locale>
 
 
