@@ -135,4 +135,25 @@ class EventManager
 
         return self::getUpcomingEventsForCalendarIds($ids);
     }
+
+
+    /**
+     * Returns all events from the database
+     *
+     * @return array
+     */
+    public static function getAllEvents()
+    {
+        $eventsDataRaw = \QUI::getDataBase()->fetch(array(
+            'from' => Handler::tableCalendarsEvents()
+        ));
+
+        $events = array();
+        foreach ($eventsDataRaw as $key => $eventData) {
+            $events[] = Event::fromDatabaseArray($eventData);
+        }
+
+        // Return array with new indexes starting at 0
+        return array_values($events);
+    }
 }
