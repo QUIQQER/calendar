@@ -83,4 +83,10 @@ class Event
     {
         return date("Y-m-d H:i", $timestamp);
     }
+
+
+    public function toArray()
+    {
+        return get_object_vars($this);
+    }
 }
