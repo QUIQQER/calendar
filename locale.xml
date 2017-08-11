@@ -43,6 +43,15 @@
             <en><![CDATA[Displays an editable calendar on a page.]]></en>
         </locale>
 
+        <locale name="quiqqer/calendar:sitetypes/event.title">
+            <de><![CDATA[Event-Seite]]></de>
+            <en><![CDATA[Event-Page]]></en>
+        </locale>
+        <locale name="quiqqer/calendar:sitetypes/event.description">
+            <de><![CDATA[Eine Seite, die sämtliche Informationen zu einem Event darstellt.]]></de>
+            <en><![CDATA[A page displaying all information about an event.]]></en>
+        </locale>
+
 
         <!-- Permissions -->
         <locale name="permission.quiqqer.calendar._header">
@@ -173,6 +182,11 @@
         </locale>
 
 
+
+        <locale name="sitetypes.event.title">
+            <de><![CDATA[Event-Seite]]></de>
+            <en><![CDATA[Event-Page]]></en>
+        </locale>
 
         <locale name="sitetypes.event.settings">
             <de><![CDATA[Event Einstellungen]]></de>
