@@ -1,0 +1,41 @@
+.event {
+    height: 50px;
+    width: 100%;
+    max-width: 500px;
+
+    margin-bottom: 10px;
+    padding: 0;
+
+    background-color: #F5F5F5;
+
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}
+
+.event-index {
+    float: left;
+    width: 10px;
+    height: 50px;
+    color: white;
+    text-align: center;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#event-list article:nth-child(even) .event-index {
+    background-color: #79b51c;
+}
+
+#event-list article:nth-child(odd) .event-index {
+    background-color: #2F8FC6;
+}
+
+.event-title {
+    float: left;
+    padding-left: 20px;
+    line-height: 50px;
+    height: 100%;
+    width: 100%;
+    max-width: 490px;
+}

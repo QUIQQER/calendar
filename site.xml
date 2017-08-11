@@ -52,6 +52,58 @@
         </type>
 
 
+        <!-- Event-Liste -->
+        <type type="sitetypes/eventList" icon="fa fa-list">
+            <locale group="quiqqer/calendar" var="sitetypes.eventList.title"/>
+
+            <desc>
+                <locale group="quiqqer/calendar" var="sitetypes.eventList.desc"/>
+            </desc>
+
+            <!-- Event-Liste attributes -->
+            <attributes>
+                <attribute>eventList.settings.max</attribute>
+                <attribute default="modern">eventList.settings.displayStyle</attribute>
+                <attribute default="1">eventList.settings.showPagination</attribute>
+            </attributes>
+
+            <!-- Event-Liste settings -->
+            <settings>
+                <category name="event-list-settings">
+                    <settings>
+                        <title>
+                            <locale group="quiqqer/calendar" var="sitetypes.eventList.settings"/>
+                        </title>
+
+                        <select conf="eventList.settings.displayStyle">
+                            <text>
+                                <locale group="quiqqer/calendar" var="sitetypes.eventList.settings.displayStyle"/>
+                            </text>
+                            <option value="modern">
+                                <locale group="quiqqer/calendar" var="sitetypes.eventList.settings.displayStyle.modern"/>
+                            </option>
+                            <option value="simple">
+                                <locale group="quiqqer/calendar" var="sitetypes.eventList.settings.displayStyle.simple"/>
+                            </option>
+                        </select>
+
+                        <input conf="eventList.settings.max" type="number">
+                            <text>
+                                <locale group="quiqqer/calendar" var="sitetypes.eventList.settings.max"/>
+                            </text>
+                        </input>
+
+                        <input conf="eventList.settings.showPagination" type="checkbox">
+                            <text>
+                                <locale group="quiqqer/calendar" var="sitetypes.eventList.settings.showPagination"/>
+                            </text>
+                        </input>
+                    </settings>
+                </category>
+            </settings>
+        </type>
+
+
         <!-- Calendar Full Page -->
         <type type="sitetypes/calendar" icon="fa fa-calendar" template="sitetypes/calendar.html">
             <locale group="quiqqer/calendar" var="admin.types.calendar.title"/>

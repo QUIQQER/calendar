@@ -52,6 +52,14 @@
             <en><![CDATA[A page displaying all information about an event.]]></en>
         </locale>
 
+        <locale name="quiqqer/calendar:sitetypes/eventList.title">
+            <de><![CDATA[Event-Liste]]></de>
+            <en><![CDATA[Event-List]]></en>
+        </locale>
+        <locale name="quiqqer/calendar:sitetypes/eventList.description">
+            <de><![CDATA[Zeigt alle Event-Unterseiten als Liste an.]]></de>
+            <en><![CDATA[Shows all Event-Subpages as a list.]]></en>
+        </locale>
 
         <!-- Permissions -->
         <locale name="permission.quiqqer.calendar._header">
@@ -218,6 +226,45 @@
             <en><![CDATA[This event could not be found.]]></en>
         </locale>
 
+
+
+        <locale name="sitetypes.eventList.title">
+            <de><![CDATA[Event-Liste]]></de>
+            <en><![CDATA[Event-List]]></en>
+        </locale>
+
+        <locale name="sitetypes.eventList.desc">
+            <de><![CDATA[Zeigt alle Event-Unterseiten als Liste an.]]></de>
+            <en><![CDATA[Shows all Event-Subpages as a list.]]></en>
+        </locale>
+
+        <locale name="eventList.settings">
+            <de><![CDATA[Event-Listen Einstellungen]]></de>
+            <en><![CDATA[Event-List Settings]]></en>
+        </locale>
+
+        <locale name="sitetypes.eventList.settings.displayStyle">
+            <de><![CDATA[Stil]]></de>
+            <en><![CDATA[Style]]></en>
+        </locale>
+        <locale name="sitetypes.eventList.settings.displayStyle.modern">
+            <de><![CDATA[Modern]]></de>
+            <en><![CDATA[Modern]]></en>
+        </locale>
+        <locale name="sitetypes.eventList.settings.displayStyle.simple">
+            <de><![CDATA[Simpel]]></de>
+            <en><![CDATA[Simple]]></en>
+        </locale>
+
+        <locale name="sitetypes.eventList.settings.max">
+            <de><![CDATA[Anzahl Kindseiten pro Seite]]></de>
+            <en><![CDATA[Amount of Subpages per page]]></en>
+        </locale>
+
+        <locale name="sitetypes.eventList.settings.showPagination">
+            <de><![CDATA[Blätterfunktion anzeigen]]></de>
+            <en><![CDATA[Show Pagination]]></en>
+        </locale>
 
 
 

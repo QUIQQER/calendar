@@ -1,0 +1,40 @@
+<section itemscope itemtype="{$this->getAttribute('itemtype')}"
+         class="qui-control-childrenlist-default control-template">
+
+    <link property="mainEntityOfPage" href="{url site=$Site}">
+
+    {assign var=counter value=1}
+
+    <div id="event-list">
+        {foreach from=$children item=Child}
+            {assign var=_Child value=$Child->load()}
+
+            {assign var=Event value=\QUI\Calendar\EventManager::getEventById($Child->getAttribute('event.settings.id'))}
+
+            {if $Event}
+            <article itemscope
+                     itemprop="itemListElement"
+                     itemtype="{$this->getAttribute('child-itemtype')}"
+                     class="qui-control-childrenlist-default-entry"
+            >
+                <meta itemprop="position" content="{$counter}"/>
+                {assign var=counter value=$counter+1}
+
+                <!-- entry content -->
+                    <div class="event">
+                        <a itemprop="url" href="{url site=$Child}" title="{$Child->getAttribute('title')}">
+                            <div class="event-index"></div>
+                            <div class="event-title">
+                                {$Event->text}
+                            </div>
+                        </a>
+                    </div>
+            </article>
+            {/if}
+        {/foreach}
+    </div>
+</section>
+
+{if $this->getAttribute('showPagination') && $sheets > 1}
+{$Pagination->create()}
+{/if}
