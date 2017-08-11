@@ -208,7 +208,7 @@
             <en><![CDATA[700x300px]]></en>
         </locale>
 
-        <locale name="sitetypes.event.details">
+        <locale name="sitetypes.event.settings.details">
             <de><![CDATA[Details]]></de>
             <en><![CDATA[Details]]></en>
         </locale>
