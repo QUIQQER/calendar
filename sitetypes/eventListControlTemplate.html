@@ -20,15 +20,40 @@
                 <meta itemprop="position" content="{$counter}"/>
                 {assign var=counter value=$counter+1}
 
-                <!-- entry content -->
-                    <div class="event">
-                        <a itemprop="url" href="{url site=$Child}" title="{$Child->getAttribute('title')}">
+                {if $this->getAttribute('display') == 'simple'}
+                    <div class="event event-style-simple">
+                        <a itemprop="url" href="{url site=$Child}" title="{$Event->text}">
                             <div class="event-index"></div>
                             <div class="event-title">
                                 {$Event->text}
                             </div>
                         </a>
                     </div>
+                {/if}
+
+                {if $this->getAttribute('display') == 'modern'}
+                    <div class="event event-style-modern">
+                        <a itemprop="url" href="{url site=$Child}" title="{$Event->text}">
+                            <div class="event-header">
+                                <div class="event-date">
+                                    <div class="event-date-day">{$Event->start_date|date_format:"%d"}.</div>
+                                    <div class="event-date-month">{$Event->start_date|date_format:"%B"}</div>
+                                </div>
+
+                                <div class="event-info">
+                                    <div class="event-title">{$Event->text}</div>
+                                    <div class="event-time">
+                                        {$Event->start_date|date_format:"%d.%m.%Y, %H:%M"} –
+                                        {$Event->end_date|date_format:"%d.%m.%Y, %H:%M"}
+                                    </div>
+                                    <div class="event-link">
+                                        <i class="fa fa-external-link" aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                {/if}
             </article>
             {/if}
         {/foreach}

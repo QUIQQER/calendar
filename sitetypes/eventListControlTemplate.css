@@ -1,4 +1,7 @@
-.event {
+/* * * * * * * * * * * * *
+ * Simple Display Style  *
+ * * * * * * * * * * * * */
+.event-style-simple.event {
     height: 50px;
     width: 100%;
     max-width: 500px;
@@ -11,7 +14,7 @@
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 }
 
-.event-index {
+.event-style-simple .event-index {
     float: left;
     width: 10px;
     height: 50px;
@@ -23,19 +26,87 @@
     justify-content: center;
 }
 
-#event-list article:nth-child(even) .event-index {
+#event-list article:nth-child(even) .event-style-simple .event-index {
     background-color: #79b51c;
 }
 
-#event-list article:nth-child(odd) .event-index {
+#event-list article:nth-child(odd) .event-style-simple .event-index {
     background-color: #2F8FC6;
 }
 
-.event-title {
+.event-style-simple .event-title {
     float: left;
     padding-left: 20px;
     line-height: 50px;
     height: 100%;
     width: 100%;
     max-width: 490px;
+}
+
+/* * * * * * * * * * * * *
+ * Modern Display Style  *
+ * * * * * * * * * * * * */
+.event.event-style-modern {
+    margin-bottom: 20px;
+    height: 150px;
+    max-width: 700px;
+
+    box-shadow: none;
+    transition: box-shadow 0.5s ease-in-out;
+}
+
+.event.event-style-modern:hover {
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}
+
+.event-style-modern .event-header {
+    line-height: normal;
+    max-width: 700px;
+}
+
+.event-style-modern .event-date {
+    height: 150px;
+    width: 150px;
+    padding-left: 20px;
+    float: left;
+    background-color: #2d4d88;
+    color: white;
+}
+
+.event-style-modern .event-date-day {
+    font-size: 64px;
+    font-weight: bold;
+}
+
+.event-style-modern .event-date-month {
+    font-size: 26px;
+}
+
+.event-style-modern .event-title {
+    border-bottom: 1px solid white;
+}
+
+.event-style-modern .event-info {
+    float: left;
+    width: 100%;
+    max-width: 550px;
+    padding: 20px;
+    font-size: 36px;
+    height: 150px;
+    background-color: #EEEEEE;
+    color: #2d4d88;
+    position: relative;
+}
+
+.event-style-modern .event-time {
+    font-size: 16px;
+    margin-top: 20px;
+}
+
+.event-style-modern .event-link {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    font-size: 20px;
+    padding: 5px;
 }

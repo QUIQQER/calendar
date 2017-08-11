@@ -11,6 +11,7 @@ $ChildrenList = new QUI\Controls\ChildrenList(array(
     'showContent'     => false,
     'itemtype'        => 'http://schema.org/ItemList',
     'child-itemtype'  => 'http://schema.org/ListItem',
+    'display'         => $Site->getAttribute('eventList.settings.displayStyle'),
     'displayTemplate' => dirname(__FILE__) . '/eventListControlTemplate.html',
     'displayCss'      => dirname(__FILE__) . '/eventListControlTemplate.css'
 ));
