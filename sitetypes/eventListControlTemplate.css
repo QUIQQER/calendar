@@ -73,6 +73,19 @@
     color: white;
 }
 
+@media (max-width: 760px) {
+    .event-style-modern .event-date {
+        width: 3%;
+        color: #2d4d88;
+        padding: 0;
+    }
+
+    .event-style-modern .event-info {
+        max-width: none;
+        width: 97%;
+    }
+}
+
 .event-style-modern .event-date-day {
     font-size: 64px;
     font-weight: bold;
@@ -96,6 +109,13 @@
     background-color: #EEEEEE;
     color: #2d4d88;
     position: relative;
+}
+
+@media (max-width: 760px) {
+    .event-style-modern .event-info {
+        max-width: none;
+        width: 97%;
+    }
 }
 
 .event-style-modern .event-time {
