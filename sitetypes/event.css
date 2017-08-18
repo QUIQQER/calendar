@@ -39,7 +39,7 @@
 
 .event-info {
     float: left;
-    width: 100%;
+    width: calc(100% - 150px);
     max-width: 550px;
     padding: 20px;
     font-size: 36px;
@@ -72,4 +72,24 @@
 .event-text-content {
     padding: 20px;
     color: #505050;
+}
+
+@media (max-width: 520px) {
+
+    .event-header {
+        height: 350px;
+    }
+
+    .event-image {
+        height: 200px;
+    }
+
+    .event-date {
+        display: none;
+    }
+
+    .event-info {
+        border-top: 5px solid #2d4d88;
+        width: 100%;
+    }
 }
