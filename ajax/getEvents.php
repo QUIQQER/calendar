@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Return all calendars as an Array.
+ * Returns all events as an Array.
  *
  * @return array
  */
