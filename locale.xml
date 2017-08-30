@@ -222,8 +222,8 @@
         </locale>
 
         <locale name="sitetypes.event.error.notFound">
-            <de><![CDATA[Dieses Event konnte nicht gefunden werden.]]></de>
-            <en><![CDATA[This event could not be found.]]></en>
+            <de><![CDATA[Dieses Event konnte nicht gefunden werden, oder Sie besitzen nicht die nötigen Rechte um es zu sehen.]]></de>
+            <en><![CDATA[This event could not be found or you don't have the proper permissions to view it.]]></en>
         </locale>
 
 
