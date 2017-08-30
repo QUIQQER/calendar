@@ -153,7 +153,7 @@ class EventManager
             $ids[] = $Calendar->getId();
         }
 
-        return self::getUpcomingEventsForCalendarIds($ids);
+        return self::getUpcomingEventsForCalendarIds($ids, $limit);
     }
 
 
