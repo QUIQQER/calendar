@@ -262,4 +262,42 @@ class Handler
         // Return array with new indexes starting at 0
         return $calendars;
     }
+
+
+    /**
+     * Returns the calendar with the given ID
+     *
+     * @param int $calendarID
+     *
+     * @return ExternalCalendar|InternalCalendar - internal or external calendar
+     *
+     * @throws Exception - If calendar not found
+     */
+    public static function getCalendar($calendarID)
+    {
+        $calendarRaw = QUI::getDataBase()->fetch(array(
+            'from'  => self::tableCalendars(),
+            'where' => array(
+                'id' => $calendarID
+            ),
+            'limit' => 1
+        ));
+
+        if (!isset($calendarRaw[0])) {
+            throw new QUI\Calendar\Exception(array(
+                'quiqqer/calendar',
+                'exception.calendar.not_found'
+            ));
+        }
+
+        $calendarRaw = $calendarRaw[0];
+
+        if ($calendarRaw['isExternal'] == 1) {
+            $Calendar = new ExternalCalendar($calendarID);
+        } else {
+            $Calendar = new InternalCalendar($calendarID);
+        }
+
+        return $Calendar;
+    }
 }
