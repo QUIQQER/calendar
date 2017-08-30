@@ -47,6 +47,8 @@ class EventManager
      */
     public static function getUpcomingEventsForCalendarId($id, $limit = false)
     {
+        Handler::getCalendar($id)->checkPermission(AbstractCalendar::PERMISSION_VIEW_CALENDAR);
+
         $eventsRaw = \QUI::getDataBase()->fetch(array(
             'from'  => Handler::tableCalendarsEvents(),
             'where' => array(
@@ -91,6 +93,16 @@ class EventManager
      */
     public static function getUpcomingEventsForCalendarIds(array $ids, $limit = false)
     {
+        foreach ($ids as $key => $calendarID) {
+            try {
+                Handler::getCalendar($calendarID)->checkPermission(AbstractCalendar::PERMISSION_VIEW_CALENDAR);
+            } catch (Exception $exception) {
+                // The calendar does not exist or user doesn't have permission to view it -> remove calendar ID
+                unset($ids[$key]);
+                continue;
+            }
+        }
+
         $table = Handler::tableCalendarsEvents();
 
         $ids = implode(', ', $ids);
