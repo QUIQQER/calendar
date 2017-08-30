@@ -8,7 +8,7 @@ class EventManager
      * Returns the event for a given ID or null if not found
      *
      * @param int $id - An event id
-     * @return null|Event The event or null
+     * @return null|Event The event or null if event not found or no permission to view the events calendar
      */
     public static function getEventById($id)
     {
@@ -25,6 +25,14 @@ class EventManager
         }
 
         $Event = Event::fromDatabaseArray($data[0]);
+
+        $Calendar = Handler::getCalendar($Event->calendar_id);
+
+        try {
+            $Calendar->checkPermission($Calendar::PERMISSION_VIEW_CALENDAR);
+        } catch (Exception $ex) {
+            return null;
+        }
 
         return $Event;
     }
