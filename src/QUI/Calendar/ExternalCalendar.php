@@ -233,4 +233,13 @@ class ExternalCalendar extends AbstractCalendar
 
         return $isValid;
     }
+
+
+    /**
+     * @inheritdoc
+     */
+    public function isInternal()
+    {
+        return false;
+    }
 }

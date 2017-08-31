@@ -239,4 +239,13 @@ class InternalCalendar extends AbstractCalendar
 
         return $events;
     }
+
+
+    /**
+     * @inheritdoc
+     */
+    public function isInternal()
+    {
+        return true;
+    }
 }

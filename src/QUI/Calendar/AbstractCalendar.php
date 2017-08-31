@@ -278,6 +278,46 @@ abstract class AbstractCalendar
     }
 
 
+    /**
+     * Returns true if the Calendar is internal, or false if something else (e.g. external)
+     *
+     * @return boolean
+     */
+    abstract public function isInternal();
+
+
+    /**
+     * Checks if the calendar is internal, throws Exception if not
+     *
+     * @throws Exception
+     */
+    public function checkInternal()
+    {
+        if (!$this->isInternal()) {
+            throw new Exception(array(
+                'quiqqer/calendar',
+                'exception.calendar.notInternal'
+            ));
+        }
+    }
+
+
+    /**
+     * Checks if the calendar is external, throws Exception if not
+     *
+     * @throws Exception
+     */
+    public function checkExternal()
+    {
+        if ($this->isInternal()) {
+            throw new Exception(array(
+                'quiqqer/calendar',
+                'exception.calendar.notExternal'
+            ));
+        }
+    }
+
+
     const PERMISSION_VIEW_CALENDAR = 'viewCalendar';
     const PERMISSION_EDIT_CALENDAR = 'editCalendar';
     const PERMISSION_DELETE_CALENDAR = 'deleteCalendar';

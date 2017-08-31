@@ -125,6 +125,16 @@
             <en><![CDATA[This calendar doesn't exist.]]></en>
         </locale>
 
+        <locale name="exception.calendar.notInternal">
+            <de><![CDATA[Operation nicht möglich, Kalender ist nicht intern.]]></de>
+            <en><![CDATA[Operation not possible, calendar is not internal.]]></en>
+        </locale>
+
+        <locale name="exception.calendar.notExternal">
+            <de><![CDATA[Operation nicht möglich, Kalender ist nicht extern.]]></de>
+            <en><![CDATA[Operation not possible, calendar is not external.]]></en>
+        </locale>
+
         <locale name="exception.ical.invalid">
             <de><![CDATA[iCal-Datei ist ungültig.]]></de>
             <en><![CDATA[iCal-file is invalid.]]></en>
