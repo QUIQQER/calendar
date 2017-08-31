@@ -10,13 +10,7 @@
 QUI::$Ajax->registerFunction(
     'package_quiqqer_calendar_ajax_getCalendar',
     function ($calendarID) {
-        if (\QUI\Calendar\Handler::isExternalCalendar($calendarID)) {
-            $Calendar = new \QUI\Calendar\ExternalCalendar($calendarID);
-        } else {
-            $Calendar = new \QUI\Calendar\InternalCalendar($calendarID);
-        }
-        
-        return $Calendar->toArray();
+        return \QUI\Calendar\Handler::getCalendar($calendarID)->toArray();
     },
     array('calendarID'),
     'Permission::checkAdminUser'

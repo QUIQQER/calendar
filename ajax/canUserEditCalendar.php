@@ -8,8 +8,9 @@
 QUI::$Ajax->registerFunction(
     'package_quiqqer_calendar_ajax_canUserEditCalendar',
     function ($calendarID) {
-        $Calendar = new \QUI\Calendar\InternalCalendar($calendarID);
-        return $Calendar->checkPermission($Calendar::PERMISSION_EDIT_CALENDAR);
+        $Calendar = \QUI\Calendar\Handler::getCalendar($calendarID);
+
+        return $Calendar->checkPermission(\QUI\Calendar\AbstractCalendar::PERMISSION_EDIT_CALENDAR);
     },
     array('calendarID'),
     'quiqqer.calendar.edit'

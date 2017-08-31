@@ -129,20 +129,7 @@ class Handler
 
     public static function isExternalCalendar($calendarID)
     {
-        $isExternal = QUI::getDataBase()->fetch(array(
-            'select' => 'isExternal',
-            'from'   => self::tableCalendars(),
-            'where'  => array(
-                'id' => $calendarID
-            ),
-            'limit'  => 1
-        ));
-
-        if (empty($isExternal)) {
-            throw new Exception('Calendar does not exist.');
-        }
-
-        return $isExternal[0]['isExternal'] == 1 ? true : false;
+        return !self::getCalendar($calendarID)->isInternal();
     }
 
 
@@ -178,11 +165,7 @@ class Handler
         foreach ($ids as $id) {
             $id = (int)$id;
 
-            if (self::isExternalCalendar($id)) {
-                $Calendar = new ExternalCalendar($id);
-            } else {
-                $Calendar = new InternalCalendar($id);
-            }
+            $Calendar = Handler::getCalendar($id);
 
             $Calendar->checkPermission($Calendar::PERMISSION_DELETE_CALENDAR);
 
@@ -208,11 +191,7 @@ class Handler
         ));
 
         foreach ($calendars as $key => $calendarData) {
-            if ($calendarData['isExternal'] == 1) {
-                $Calendar = new ExternalCalendar($calendarData['id']);
-            } else {
-                $Calendar = new InternalCalendar($calendarData['id']);
-            }
+            $Calendar = Handler::getCalendar($calendarData['id']);
 
             // Only return calendars the user can edit
             try {

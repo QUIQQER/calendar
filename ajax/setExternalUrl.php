@@ -9,7 +9,9 @@
 QUI::$Ajax->registerFunction(
     'package_quiqqer_calendar_ajax_setExternalUrl',
     function ($calendarID, $externalUrl) {
-        $Calendar = new \QUI\Calendar\ExternalCalendar($calendarID);
+        $Calendar = \QUI\Calendar\Handler::getCalendar($calendarID);
+        $Calendar->checkExternal();
+
         $Calendar->setExternalUrl($externalUrl);
     },
     array('calendarID', 'externalUrl'),
