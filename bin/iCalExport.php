@@ -16,9 +16,12 @@ try {
 
     $iCal = $Calendar->toICal();
 
+    $calendarID   = $Calendar->getId();
+    $calendarName = str_replace(' ', '_', $Calendar->getName());
+
     // Return file download
     header("Content-Type: text/calendar; charset=utf-8");
-    header("Content-Disposition: attachment; filename=\"$calendarID.ics\"");
+    header("Content-Disposition: attachment; filename=\"$calendarID-$calendarName.ics\"");
     header("Content-Length: " . strlen($iCal));
 
     echo $iCal;
