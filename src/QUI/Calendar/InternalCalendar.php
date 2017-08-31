@@ -6,6 +6,7 @@
 namespace QUI\Calendar;
 
 use function DusanKasan\Knapsack\last;
+use Eluceo\iCal\Component\Calendar;
 use Eluceo\iCal\Component\Event;
 use QUI;
 
@@ -134,23 +135,23 @@ class InternalCalendar extends AbstractCalendar
     {
         $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
 
-        $Calendar = new \Eluceo\iCal\Component\Calendar($this->getId());
-        $Events   = $this->getEvents();
+        $Calendar = new Calendar($this->getId());
+        $events   = $this->getEvents();
 
-        foreach ($Events as $event) {
+        foreach ($events as $Event) {
             $start = new \DateTime();
-            $start->setTimestamp($event->start_date);
+            $start->setTimestamp(strtotime($Event->start_date));
 
             $end = new \DateTime();
-            $end->setTimestamp($event->end_date);
+            $end->setTimestamp(strtotime($Event->end_date));
 
             $CalendarEvent = new Event();
 
             $CalendarEvent->setDtStart($start)
                 ->setDtEnd($end)
-                ->setSummary($event->text)
-                ->setDescription($event->description)
-                ->setUniqueId($event->id);
+                ->setSummary($Event->text)
+                ->setDescription($Event->description)
+                ->setUniqueId($Event->id);
 
             $Calendar->addComponent($CalendarEvent);
         }
