@@ -16,7 +16,7 @@
     },
     "require": {
         "quiqqer\/quiqqer": "*",
-        "quiqqer\/calendar-controls": "dev-dev",
+        "quiqqer\/calendar-controls": "*@dev",
         "eluceo\/ical": "0.11.0",
         "johngrogg\/ics-parser": "dev-master"
     },
