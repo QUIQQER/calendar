@@ -36,9 +36,6 @@
                             <text>
                                 <locale group="quiqqer/calendar" var="sitetypes.event.settings.image"/>
                             </text>
-                            <description>
-                                <locale group="quiqqer/calendar" var="sitetypes.event.settings.image.description"/>
-                            </description>
                         </input>
 
                         <textarea conf="event.settings.details">

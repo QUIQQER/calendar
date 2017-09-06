@@ -217,13 +217,8 @@
         </locale>
 
         <locale name="sitetypes.event.settings.image">
-            <de><![CDATA[Wählen Sie ein Bild für das Event aus:]]></de>
-            <en><![CDATA[Select an image for the event:]]></en>
-        </locale>
-
-        <locale name="sitetypes.event.settings.image.description">
-            <de><![CDATA[700x300px]]></de>
-            <en><![CDATA[700x300px]]></en>
+            <de><![CDATA[Event-Bild (700x300px):]]></de>
+            <en><![CDATA[Event-Image (700x300px):]]></en>
         </locale>
 
         <locale name="sitetypes.event.settings.details">
