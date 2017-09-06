@@ -10,7 +10,13 @@
 QUI::$Ajax->registerFunction(
     'package_quiqqer_calendar_ajax_getEvent',
     function ($eventID) {
-        return \QUI\Calendar\EventManager::getEventById($eventID)->toArray();
+        $Event = \QUI\Calendar\EventManager::getEventById($eventID);
+
+        if(!is_null($Event)) {
+            return $Event->toArray();
+        }
+
+        return null;
     },
     array('eventID'),
     'Permission::checkAdminUser'
