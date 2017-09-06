@@ -142,6 +142,13 @@ define('package/quiqqer/calendar/bin/AddEditCalendarWindow', [
                 {
                     this.Loader.hide();
                     if (!wasPromiseRejected) {
+                        // Apply changes to calendar attribute, so changes can be accessed from the outside
+                        calendar.externalUrl = Content.getElement('[name=external_url]').value;
+                        calendar.isPublic = isPublic;
+                        calendar.name = calendarName;
+                        calendar.color = color;
+                        this.setAttribute('calendar', calendar);
+
                         this.close();
                     }
                 }.bind(this));
