@@ -10,9 +10,10 @@ define('package/quiqqer/calendar/bin/controls/eventSelect/EventSelectItem', [
 
     'qui/QUI',
     'qui/controls/elements/SelectItem',
-    'Ajax'
+    'Ajax',
+    'Locale'
 
-], function (QUI, QUIElementSelectItem, QUIAjax) {
+], function (QUI, QUIElementSelectItem, QUIAjax, QUILocale) {
     "use strict";
 
     return new Class({
@@ -38,13 +39,21 @@ define('package/quiqqer/calendar/bin/controls/eventSelect/EventSelectItem', [
         refresh: function () {
             return new Promise(function (resolve) {
                 QUIAjax.get('package_quiqqer_calendar_ajax_getEvent', function (result) {
-
-                    this.$Text.set({
-                        html: result.text
-                    });
-
+                    if (result) {
+                        this.$Text.set({
+                            html: result.text
+                        });
+                    } else {
+                        QUI.getMessageHandler().then(function (MessageHandler) {
+                            MessageHandler.addError(
+                                QUILocale.get(
+                                    'quiqqer/calendar',
+                                    'sitetypes.event.error.notFound.simple'
+                                )
+                            );
+                        });
+                    }
                     resolve();
-
                 }.bind(this), {
                     'package': 'quiqqer/calendar',
                     eventID  : this.getAttribute('id')

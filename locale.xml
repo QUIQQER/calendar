@@ -236,6 +236,11 @@
             <en><![CDATA[This event could not be found or you don't have the proper permissions to view it.]]></en>
         </locale>
 
+        <locale name="sitetypes.event.error.notFound.simple">
+            <de><![CDATA[Event Einstellungen: Event konnte nicht gefunden werden.]]></de>
+            <en><![CDATA[Event Settings: Event could not be found]]></en>
+        </locale>
+
 
 
         <locale name="sitetypes.eventList.title">
