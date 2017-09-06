@@ -12,7 +12,7 @@ QUI::$Ajax->registerFunction(
     function ($eventID) {
         $Event = \QUI\Calendar\EventManager::getEventById($eventID);
 
-        if(!is_null($Event)) {
+        if (!is_null($Event)) {
             return $Event->toArray();
         }
 
