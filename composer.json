@@ -1,7 +1,7 @@
 {
     "name": "quiqqer\/calendar",
     "type": "quiqqer-module",
-    "description": "",
+    "description": "QUIQQER calendar extension. Manage events and calendars and display them on your website.",
     "version": "dev-dev",
     "authors": [
         {
