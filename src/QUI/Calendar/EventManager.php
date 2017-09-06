@@ -26,9 +26,8 @@ class EventManager
 
         $Event = Event::fromDatabaseArray($data[0]);
 
-        $Calendar = Handler::getCalendar($Event->calendar_id);
-
         try {
+            $Calendar = Handler::getCalendar($Event->calendar_id);
             $Calendar->checkPermission($Calendar::PERMISSION_VIEW_CALENDAR);
         } catch (Exception $ex) {
             return null;
