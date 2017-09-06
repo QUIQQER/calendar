@@ -59,7 +59,8 @@ define('package/quiqqer/calendar/bin/Panel', [
 
             this.addEvents({
                 onCreate: this.$onCreate,
-                onResize: this.$onResize
+                onResize: this.$onResize,
+                onShow: this.$onShow
             });
         },
 
@@ -403,6 +404,16 @@ define('package/quiqqer/calendar/bin/Panel', [
                     }
                 }
             }).open();
+        },
+
+
+        /**
+         * event: fired when panel is viewed
+         */
+        $onShow: function()
+        {
+            // Reload calendars, so we get changes from other panels
+            this.loadCalendars();
         }
     });
 });
