@@ -205,13 +205,20 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
          */
         editCalendarClick: function () {
             var self = this;
+
             require(['package/quiqqer/calendar/bin/AddEditCalendarWindow'], function (CalendarWindow) {
                 new CalendarWindow({
                     calendar: self.calendarData,
                     title   : QUILocale.get(lg, 'calendar.window.edit.calendar.title'),
                     events  : {
-                        onClose: function () {
-                            // TODO: Refresh panel title
+                        onClose: function (data) {
+                            var calendarData = data.options.calendar;
+
+                            // If calendar name was changed update the panel title
+                            if (self.getAttribute('title') !== calendarData.name) {
+                                self.setAttribute('title', calendarData.name);
+                                self.refresh();
+                            }
                         }
                     }
                 }).open();
