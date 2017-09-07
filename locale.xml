@@ -232,8 +232,8 @@
         </locale>
 
         <locale name="sitetypes.event.error.notFound.simple">
-            <de><![CDATA[Event Einstellungen: Event konnte nicht gefunden werden.]]></de>
-            <en><![CDATA[Event Settings: Event could not be found]]></en>
+            <de><![CDATA[Kalender-Event Einstellungen: Event konnte nicht gefunden werden.]]></de>
+            <en><![CDATA[Calendar-Event Settings: Event could not be found]]></en>
         </locale>
 
 
