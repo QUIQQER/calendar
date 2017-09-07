@@ -44,14 +44,7 @@ define('package/quiqqer/calendar/bin/controls/eventSelect/EventSelectItem', [
                             html: result.text
                         });
                     } else {
-                        QUI.getMessageHandler().then(function (MessageHandler) {
-                            MessageHandler.addError(
-                                QUILocale.get(
-                                    'quiqqer/calendar',
-                                    'sitetypes.event.error.notFound.simple'
-                                )
-                            );
-                        });
+                        this.destroy();
                     }
                     resolve();
                 }.bind(this), {
