@@ -10,6 +10,12 @@
 
         <image src="URL_OPT_DIR/quiqqer/calendar/bin/images/package.png"/>
 
+        <preview>
+            <image src="URL_OPT_DIR/quiqqer/calendar/bin/images/preview/1.png"/>
+            <image src="URL_OPT_DIR/quiqqer/calendar/bin/images/preview/2.png"/>
+            <image src="URL_OPT_DIR/quiqqer/calendar/bin/images/preview/3.png"/>
+        </preview>
+
         <support>
             <email>support@pcsg.de</email>
             <forum>https://community.quiqqer.com</forum>
