@@ -8,7 +8,11 @@
 
                 <div class="event-date">
                     <div class="event-date-day">{$EventStart->format('d')}.</div>
-                    <div class="event-date-month">{$EventLocale['months'][$EventStart->format('n')-1]}</div>
+
+                    {assign var="monthIndex" value=$EventStart->format('n')-1}
+                    <div class="event-date-month" data-month-index="{$monthIndex}">
+                        {$EventLocale['months'][$monthIndex]}
+                    </div>
                 </div>
 
                 <div class="event-info">

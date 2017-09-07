@@ -37,6 +37,14 @@
     font-size: 26px;
 }
 
+
+/* On September, November, December */
+.event-date-month[data-month-index="8"],
+.event-date-month[data-month-index="10"],
+.event-date-month[data-month-index="11"] {
+    font-size: 23px;
+}
+
 .event-info {
     float: left;
     width: calc(100% - 150px);
