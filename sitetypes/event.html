@@ -37,7 +37,7 @@
                     {$EventLocale['details']}
                 </div>
                 <div class="event-text-content">
-                    {$Site->getAttribute('event.settings.details')}
+                    {$Site->getAttribute('content')}
                 </div>
             </div>
         </div>
@@ -47,10 +47,3 @@
         </div>
     {/if}
 </section>
-
-
-{if $Template->getAttribute('content-body') && $Site->getAttribute('content')}
-<section class="content-body grid-100 mobile-grid-100">
-    {$Site->getAttribute('content')}
-</section>
-{/if}

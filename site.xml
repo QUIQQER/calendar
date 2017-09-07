@@ -12,7 +12,6 @@
             <attributes>
                 <attribute>event.settings.id</attribute>
                 <attribute>event.settings.image</attribute>
-                <attribute>event.settings.details</attribute>
             </attributes>
 
             <settings>
@@ -37,12 +36,6 @@
                                 <locale group="quiqqer/calendar" var="sitetypes.event.settings.image"/>
                             </text>
                         </input>
-
-                        <textarea conf="event.settings.details">
-                            <text>
-                                <locale group="quiqqer/calendar" var="sitetypes.event.settings.details"/>
-                            </text>
-                        </textarea>
                     </settings>
                 </category>
             </settings>
