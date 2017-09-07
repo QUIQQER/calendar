@@ -8,7 +8,7 @@
             <locale group="quiqqer/calendar" var="package.description"/>
         </description>
 
-        <image src="URL_OPT_DIR/quiqqer/calendar/bin/package.png"/>
+        <image src="URL_OPT_DIR/quiqqer/calendar/bin/images/package.png"/>
 
         <support>
             <email>support@pcsg.de</email>
