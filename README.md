@@ -1,3 +1,4 @@
+![QUIQQER Calendar](bin/images/Readme.jpg)
 
 QUIQQER Kalender
 ========
