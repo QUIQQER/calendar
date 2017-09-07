@@ -9,8 +9,8 @@
             <en><![CDATA[QUIQQER - Calendar & Event Management]]></en>
         </locale>
         <locale name="package.description">
-            <de><![CDATA[QUIQQER Kalender Erweiterungen. Verwalten Sie Termine und Kalender und lassen Sie diese auf Ihrer Webseite anzeigen.]]></de>
-            <en><![CDATA[QUIQQER calendar extension. Manage events and calendars and display them on your website.]]></en>
+            <de><![CDATA[Ermöglicht die Verwaltung von Terminen und Kalendern, sowie deren Präsentation auf Ihrer Webseite.]]></de>
+            <en><![CDATA[Adds the functionality to manage events and calendars, as well as their presentation on your website.]]></en>
         </locale>
 
 
