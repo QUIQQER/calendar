@@ -5,8 +5,8 @@
     <groups name="quiqqer/calendar" datatype="js,php">
         <!-- Package -->
         <locale name="package.title">
-            <de><![CDATA[QUIQQER - Kalender / Termin Verwaltung]]></de>
-            <en><![CDATA[QUIQQER - Calendar management]]></en>
+            <de><![CDATA[QUIQQER - Kalender & Termin Verwaltung]]></de>
+            <en><![CDATA[QUIQQER - Calendar & Event Management]]></en>
         </locale>
         <locale name="package.description">
             <de><![CDATA[QUIQQER Kalender Erweiterungen. Verwalten Sie Termine und Kalender und lassen Sie diese auf Ihrer Webseite anzeigen.]]></de>
