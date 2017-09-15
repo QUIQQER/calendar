@@ -200,84 +200,6 @@
         </locale>
 
 
-
-        <locale name="sitetypes.event.title">
-            <de><![CDATA[Event-Seite]]></de>
-            <en><![CDATA[Event-Page]]></en>
-        </locale>
-
-        <locale name="sitetypes.event.settings">
-            <de><![CDATA[Event Einstellungen]]></de>
-            <en><![CDATA[Event Settings]]></en>
-        </locale>
-
-        <locale name="sitetypes.event.settings.id">
-            <de><![CDATA[Direkt nach einem Event suchen, oder über den Button rechts auswählen.]]></de>
-            <en><![CDATA[Search directly for an event or select one using the button on the right.]]></en>
-        </locale>
-
-        <locale name="sitetypes.event.settings.image">
-            <de><![CDATA[Event-Bild (700x300px):]]></de>
-            <en><![CDATA[Event-Image (700x300px):]]></en>
-        </locale>
-
-        <locale name="sitetypes.event.settings.details">
-            <de><![CDATA[Details]]></de>
-            <en><![CDATA[Details]]></en>
-        </locale>
-
-        <locale name="sitetypes.event.error.notFound">
-            <de><![CDATA[Dieses Event konnte nicht gefunden werden, oder Sie besitzen nicht die nötigen Rechte um es zu sehen.]]></de>
-            <en><![CDATA[This event could not be found or you don't have the proper permissions to view it.]]></en>
-        </locale>
-
-        <locale name="sitetypes.event.error.notFound.simple">
-            <de><![CDATA[Kalender-Event Einstellungen: Event konnte nicht gefunden werden.]]></de>
-            <en><![CDATA[Calendar-Event Settings: Event could not be found]]></en>
-        </locale>
-
-
-
-        <locale name="sitetypes.eventList.title">
-            <de><![CDATA[Event-Liste]]></de>
-            <en><![CDATA[Event-List]]></en>
-        </locale>
-
-        <locale name="sitetypes.eventList.desc">
-            <de><![CDATA[Zeigt alle Event-Unterseiten als Liste an.]]></de>
-            <en><![CDATA[Shows all Event-Subpages as a list.]]></en>
-        </locale>
-
-        <locale name="eventList.settings">
-            <de><![CDATA[Event-Listen Einstellungen]]></de>
-            <en><![CDATA[Event-List Settings]]></en>
-        </locale>
-
-        <locale name="sitetypes.eventList.settings.displayStyle">
-            <de><![CDATA[Stil]]></de>
-            <en><![CDATA[Style]]></en>
-        </locale>
-        <locale name="sitetypes.eventList.settings.displayStyle.modern">
-            <de><![CDATA[Modern]]></de>
-            <en><![CDATA[Modern]]></en>
-        </locale>
-        <locale name="sitetypes.eventList.settings.displayStyle.simple">
-            <de><![CDATA[Simpel]]></de>
-            <en><![CDATA[Simple]]></en>
-        </locale>
-
-        <locale name="sitetypes.eventList.settings.max">
-            <de><![CDATA[Anzahl Kindseiten pro Seite]]></de>
-            <en><![CDATA[Amount of Subpages per page]]></en>
-        </locale>
-
-        <locale name="sitetypes.eventList.settings.showPagination">
-            <de><![CDATA[Blätterfunktion anzeigen]]></de>
-            <en><![CDATA[Show Pagination]]></en>
-        </locale>
-
-
-
         <!-- Settings -->
         <locale name="settings.general.title">
             <de><![CDATA[Allgemein]]></de>
@@ -301,20 +223,6 @@
             <en><![CDATA[Displayed Calendars]]></en>
         </locale>
 
-        <locale name="brick.setting.displayStyle">
-            <de><![CDATA[Style]]></de>
-            <en><![CDATA[Style]]></en>
-        </locale>
-        <locale name="brick.setting.displayStyle.simple">
-            <de><![CDATA[Simpel]]></de>
-            <en><![CDATA[Simpel]]></en>
-        </locale>
-        <locale name="brick.setting.displayStyle.modern">
-            <de><![CDATA[Modern]]></de>
-            <en><![CDATA[Modern]]></en>
-        </locale>
-
-
         <locale name="brick.setting.view">
             <de><![CDATA[Ansicht]]></de>
             <en><![CDATA[View]]></en>
@@ -335,11 +243,6 @@
         <locale name="brick.setting.view.agenda">
             <de><![CDATA[Agenda]]></de>
             <en><![CDATA[Agenda]]></en>
-        </locale>
-
-        <locale name="brick.eventList.setting.amount">
-            <de><![CDATA[Anzahl anzuzeigender Termine]]></de>
-            <en><![CDATA[Amount of displayed Events]]></en>
         </locale>
     </groups>
 
@@ -521,10 +424,6 @@
             <en><![CDATA[Select Event]]></en>
         </locale>
 
-        <locale name="calendar.control.eventSelect.placeholder">
-            <de><![CDATA[Anzuzeigendes Event suchen...]]></de>
-            <en><![CDATA[Search event to show...]]></en>
-        </locale>
 
         <locale name="event.title">
             <de><![CDATA[Event]]></de>

@@ -35,38 +35,5 @@
                 </setting>
             </settings>
         </brick>
-
-        <!-- Next n Events List -->
-        <brick control="\QUI\Calendar\Bricks\EventList">
-            <title>
-                <locale group="quiqqer/calendar"
-                        var="brick.eventList.title"/>
-            </title>
-            <description>
-                <locale group="quiqqer/calendar"
-                        var="brick.eventList.description"/>
-            </description>
-
-            <settings>
-                <setting name="displayStyle" type="select">
-                    <locale group="quiqqer/calendar" var="brick.setting.displayStyle"/>
-
-                    <option value="modern">
-                        <locale group="quiqqer/calendar" var="brick.setting.displayStyle.modern"/>
-                    </option>
-                    <option value="simple">
-                        <locale group="quiqqer/calendar" var="brick.setting.displayStyle.simple"/>
-                    </option>
-                </setting>
-                <setting name="calendarIDs"
-                         data-qui="package/quiqqer/calendar/bin/controls/Select"
-                         data-qui-options-is-edit-calendar="false">
-                    <locale group="quiqqer/calendar" var="brick.setting.calendarIDs"/>
-                </setting>
-                <setting name="amount" type="number">
-                    <locale group="quiqqer/calendar" var="brick.eventList.setting.amount"/>
-                </setting>
-            </settings>
-        </brick>
     </bricks>
 </quiqqer>

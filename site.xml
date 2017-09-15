@@ -1,99 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
     <types>
-        <!-- Event -->
-        <type type="sitetypes/event" icon="fa fa-clock-o" template="sitetypes/event.html">
-            <locale group="quiqqer/calendar" var="sitetypes.event.title"/>
-
-            <desc>
-                <locale group="quiqqer/calendar" var="sitetypes.event.desc"/>
-            </desc>
-
-            <attributes>
-                <attribute>event.settings.id</attribute>
-                <attribute>event.settings.image</attribute>
-            </attributes>
-
-            <settings>
-                <category name="event-settings">
-                    <settings>
-                        <title>
-                            <locale group="quiqqer/calendar" var="sitetypes.event.settings"/>
-                        </title>
-
-                        <input conf="event.settings.id"
-                               type="hidden"
-                               disabled="disabled"
-                               data-qui="package/quiqqer/calendar/bin/controls/eventSelect/EventSelect"
-                               label="false">
-                            <description>
-                                <locale group="quiqqer/calendar" var="sitetypes.event.settings.id"/>
-                            </description>
-                        </input>
-
-                        <input conf="event.settings.image" class="media-image">
-                            <text>
-                                <locale group="quiqqer/calendar" var="sitetypes.event.settings.image"/>
-                            </text>
-                        </input>
-                    </settings>
-                </category>
-            </settings>
-        </type>
-
-
-        <!-- Event-Liste -->
-        <type type="sitetypes/eventList" icon="fa fa-list">
-            <locale group="quiqqer/calendar" var="sitetypes.eventList.title"/>
-
-            <desc>
-                <locale group="quiqqer/calendar" var="sitetypes.eventList.desc"/>
-            </desc>
-
-            <!-- Event-Liste attributes -->
-            <attributes>
-                <attribute>eventList.settings.max</attribute>
-                <attribute default="modern">eventList.settings.displayStyle</attribute>
-                <attribute default="1">eventList.settings.showPagination</attribute>
-            </attributes>
-
-            <!-- Event-Liste settings -->
-            <settings>
-                <category name="event-list-settings">
-                    <settings>
-                        <title>
-                            <locale group="quiqqer/calendar" var="sitetypes.eventList.settings"/>
-                        </title>
-
-                        <select conf="eventList.settings.displayStyle">
-                            <text>
-                                <locale group="quiqqer/calendar" var="sitetypes.eventList.settings.displayStyle"/>
-                            </text>
-                            <option value="modern">
-                                <locale group="quiqqer/calendar" var="sitetypes.eventList.settings.displayStyle.modern"/>
-                            </option>
-                            <option value="simple">
-                                <locale group="quiqqer/calendar" var="sitetypes.eventList.settings.displayStyle.simple"/>
-                            </option>
-                        </select>
-
-                        <input conf="eventList.settings.max" type="number">
-                            <text>
-                                <locale group="quiqqer/calendar" var="sitetypes.eventList.settings.max"/>
-                            </text>
-                        </input>
-
-                        <input conf="eventList.settings.showPagination" type="checkbox">
-                            <text>
-                                <locale group="quiqqer/calendar" var="sitetypes.eventList.settings.showPagination"/>
-                            </text>
-                        </input>
-                    </settings>
-                </category>
-            </settings>
-        </type>
-
-
         <!-- Calendar Full Page -->
         <type type="sitetypes/calendar" icon="fa fa-calendar" template="sitetypes/calendar.html">
             <locale group="quiqqer/calendar" var="admin.types.calendar.title"/>
@@ -162,7 +69,6 @@
                     </settings>
                 </category>
             </settings>
-
         </type>
     </types>
 </site>
