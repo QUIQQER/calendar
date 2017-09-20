@@ -17,13 +17,14 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
     'qui/QUI',
     'qui/controls/Control',
     'package/quiqqer/calendar/bin/Calendars',
+    'package/quiqqer/calendar/bin/classes/ColorHelper',
     'package/quiqqer/calendar-controls/bin/Scheduler',
     'qui/controls/loader/Loader',
 
     'package/bin/mustache/mustache',
     'text!package/quiqqer/calendar/bin/controls/CalendarDisplay.html'
 
-], function (QUI, QUIControl, Calendars, Scheduler, QUILoader, Mustache, displayTemplate)
+], function (QUI, QUIControl, Calendars, ColorHelper, Scheduler, QUILoader, Mustache, displayTemplate)
 {
     "use strict";
 
@@ -102,6 +103,7 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
         initScheduler: function (Element)
         {
             var self = this;
+            var CH = new ColorHelper();
 
             return new Promise(function (resolve)
             {
@@ -150,12 +152,18 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
 
                         Calendars.getCalendar(calID).then(function (calendarData)
                         {
+                            var calendarColor = calendarData.color;
+                            var textColor = CH.getSchedulerTextColor(calendarColor);
+
+                            calendarData.textColor = textColor;
+
                             Calendars.getEventsAsJson(calID).then(function (result)
                             {
                                 var events = JSON.parse(result);
                                 events.forEach(function (event)
                                 {
-                                    event.color = calendarData.color;
+                                    event.color = calendarColor;
+                                    event.textColor = textColor;
                                 });
                                 self.parseEventsIntoScheduler(JSON.stringify(events)).then(function ()
                                 {

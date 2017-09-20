@@ -17,13 +17,14 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
     'qui/QUI',
     'qui/controls/Control',
     'package/quiqqer/calendar/bin/Calendars',
+    'package/quiqqer/calendar/bin/classes/ColorHelper',
     'package/quiqqer/calendar-controls/bin/Scheduler',
     'qui/controls/loader/Loader',
 
     'package/bin/mustache/mustache',
     'text!package/quiqqer/calendar/bin/controls/CalendarDisplay.html'
 
-], function (QUI, QUIControl, Calendars, Scheduler, QUILoader, Mustache, displayTemplate)
+], function (QUI, QUIControl, Calendars, ColorHelper, Scheduler, QUILoader, Mustache, displayTemplate)
 {
     "use strict";
 
@@ -112,6 +113,7 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
         initScheduler: function (Element)
         {
             var self = this;
+            var CH = new ColorHelper();
 
             return new Promise(function (resolve)
             {
@@ -168,13 +170,17 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
                     {
                         self.calendarData = calendarData;
 
+                        var calendarColor = calendarData.color;
+                        var textColor = CH.getSchedulerTextColor(calendarColor);
+
                         Calendars.getEventsAsJson(self.calID).then(function (events)
                         {
                             // Set events colors
                             events = JSON.parse(events);
                             events.forEach(function (event)
                             {
-                                event.color = calendarData.color;
+                                event.color = calendarColor;
+                                event.textColor = textColor;
                             });
                             events = JSON.stringify(events);
 
@@ -292,6 +298,7 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
 
                     // Change color of event to calendar defined color
                     ev.color = self.calendarData.color;
+                    ev.textColor = self.calendarData.textColor;
                     self.Scheduler.updateEvent(id);
 
                     self.Scheduler.changeEventId(id, parseInt(result));
