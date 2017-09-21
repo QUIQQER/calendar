@@ -39,19 +39,19 @@ define('package/quiqqer/calendar/bin/controls/SelectItem', [
          */
         refresh: function ()
         {
+            var self = this;
             return new Promise(function (resolve)
             {
                 QUIAjax.get('package_quiqqer_calendar_ajax_getCalendar', function (result)
                 {
-                    this.$Text.set({
+                    self.$Text.set({
                         html: result.calendarname
                     });
-
                     resolve();
-
-                }.bind(this), {
+                }, {
                     'package' : 'quiqqer/calendar',
-                    calendarID: this.getAttribute('id')
+                    calendarID: this.getAttribute('id'),
+                    onError: function() {self.destroy();}
                 });
             }.bind(this));
         }
