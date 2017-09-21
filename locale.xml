@@ -121,8 +121,8 @@
         </locale>
 
         <locale name="exception.calendar.not_found">
-            <de><![CDATA[Dieser Kalender existiert nicht.]]></de>
-            <en><![CDATA[This calendar doesn't exist.]]></en>
+            <de><![CDATA[Kalender Einstellung: Dieser Kalender existiert nicht.]]></de>
+            <en><![CDATA[Calendar Setting: This calendar doesn't exist.]]></en>
         </locale>
 
         <locale name="exception.calendar.notInternal">
