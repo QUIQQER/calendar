@@ -218,6 +218,11 @@
 
 
         <!-- Bricks -->
+        <locale name="brick.calendarDisplay.title">
+            <de><![CDATA[Kalender: Kalender Anzeige]]></de>
+            <en><![CDATA[Calendar: Calendar Display]]></en>
+        </locale>
+
         <locale name="brick.setting.calendarIDs">
             <de><![CDATA[Anzuzeigende Kalender]]></de>
             <en><![CDATA[Displayed Calendars]]></en>
