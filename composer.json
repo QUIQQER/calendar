@@ -1,27 +1,35 @@
 {
-    "name" : "quiqqer/calendar",
-    "type" : "quiqqer-library",
-
-    "description" : "Mootools Calendar Widget for QUIQQER",
-    "version" : "dev-master",
-    "license" : "MIT",
-
-    "authors" : [{
-        "name": "Arian Stolwijk",
-        "homepage": "http://github.com/arian/mootools-datepicker/",
-        "role": "Developer"
-    }, {
-        "name": "Henning Leutz",
-        "email": "leutz@pcsg.de",
-        "homepage": "http://www.pcsg.de",
-        "role": "Developer"
-    }],
-
-    "support" : {
-        "mail" : "support@pcsg.de"
+  "name": "quiqqer\/calendar",
+  "type": "quiqqer-module",
+  "description": "Adds calendars to your QUIQQER system, allowing you to manage and display events on your website.",
+  "version": "dev-dev",
+  "licence":["CC BY-NC-SA 4.0", "PCSG QL-1.0"],
+  "authors": [
+    {
+      "name": "Henning Leutz",
+      "email": "leutz@pcsg.de",
+      "homepage": "https:\/\/www.pcsg.de",
+      "role": "Developer"
     },
-
-    "require": {
-        "quiqqer/quiqqer" : "*"
+    {
+      "name": "Jan Wennrich",
+      "email": "jan.wennrich@pcsg.de",
+      "homepage": "https:\/\/www.pcsg.de",
+      "role": "Developer"
     }
+  ],
+  "support": {
+    "mail": "support@pcsg.de"
+  },
+  "require": {
+    "quiqqer\/quiqqer": "*",
+    "quiqqer\/calendar-controls": "*@dev",
+    "eluceo\/ical": "0.11.0",
+    "johngrogg\/ics-parser": "dev-master"
+  },
+  "autoload": {
+    "psr-4": {
+      "QUI\\Calendar\\": "src\/QUI\/Calendar"
+    }
+  }
 }

@@ -1,0 +1,56 @@
+<form>
+    <table class="data-table data-table-flexbox">
+        <tbody>
+
+        <tr>
+            <td>
+                <label class="field-container">
+                    <span class="field-container-item">
+                        {{calendar_title}}
+                    </span>
+                    <input type="text" name="calendarname" value="{{name}}" class="field-container-field">
+                </label>
+            </td>
+        </tr>
+
+        {{#isExternal}}
+        <tr>
+            <td>
+                <label class="field-container hasCheckbox">
+                    <span class="field-container-item">
+                        {{calendar_isExternal}}
+                    </span>
+                    <input type="text" name="external_url" value="{{externalUrl}}" class="field-container-field">
+                </label>
+            </td>
+        </tr>
+        {{/isExternal}}
+
+        <tr>
+            <td>
+                <label class="field-container hasCheckbox">
+                    <span class="field-container-item">
+                        {{calendar_isPublic}}
+                    </span>
+                    <span class="field-container-field">
+                        <input type="checkbox" name="isPublic" {{#isPublic}}checked{{/isPublic}}>
+                    </span>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="field-container">
+                    <span class="field-container-item">
+                        {{calendar_color}}
+                    </span>
+                    <div class="field-container-field" id="calendar-color-picker">
+                        <!-- ColorPicker is inserted via JS here -->
+                    </div>
+                </div>
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+</form>

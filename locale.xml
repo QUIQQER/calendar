@@ -1,193 +1,451 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <locales>
 
-    <groups name="quiqqer/calendar" datatype="js">
-        <locale name="use_mouse_wheel">
-            <de><![CDATA[Mit dem Mausrad können Sie schneller die Werte ändern.]]></de>
-            <en><![CDATA[Use the mouse wheel to quickly change value.]]></en>
+    <!-- JS & PHP -->
+    <groups name="quiqqer/calendar" datatype="js,php">
+        <!-- Package -->
+        <locale name="package.title">
+            <de><![CDATA[QUIQQER - Kalender & Termin Verwaltung]]></de>
+            <en><![CDATA[QUIQQER - Calendar & Event Management]]></en>
         </locale>
+        <locale name="package.description">
+            <de><![CDATA[Ermöglicht die Verwaltung von Terminen und Kalendern, sowie deren Präsentation auf Ihrer Webseite.]]></de>
+            <en><![CDATA[Adds the functionality to manage events and calendars, as well as their presentation on your website.]]></en>
+        </locale>
+
+
+        <locale name="menu.apps.calendar.title">
+            <de><![CDATA[Kalender]]></de>
+            <en><![CDATA[Calendars]]></en>
+        </locale>
+
+        <locale name="calendar">
+            <de><![CDATA[Kalender]]></de>
+            <en><![CDATA[Calendar]]></en>
+        </locale>
+
+        <!-- Sitetypes -->
+        <locale name="quiqqer/calendar:sitetypes/calendar.title">
+            <de><![CDATA[Kalender Anzeige]]></de>
+            <en><![CDATA[Calendar Display]]></en>
+        </locale>
+        <locale name="quiqqer/calendar:sitetypes/calendar.description">
+            <de><![CDATA[Zeigt einen oder mehrere Kalender auf einer Seite an.]]></de>
+            <en><![CDATA[Displays one or more calendars on a page.]]></en>
+        </locale>
+
+        <locale name="quiqqer/calendar:sitetypes/calendarEdit.title">
+            <de><![CDATA[Editierbarer Kalender sitetypes]]></de>
+            <en><![CDATA[Editable Calendar sitetypes]]></en>
+        </locale>
+        <locale name="quiqqer/calendar:sitetypes/calendarEdit.description">
+            <de><![CDATA[Zeigt einen editierbaren Kalender auf einer Seite an.]]></de>
+            <en><![CDATA[Displays an editable calendar on a page.]]></en>
+        </locale>
+
+        <locale name="quiqqer/calendar:sitetypes/event.title">
+            <de><![CDATA[Event-Seite]]></de>
+            <en><![CDATA[Event-Page]]></en>
+        </locale>
+        <locale name="quiqqer/calendar:sitetypes/event.description">
+            <de><![CDATA[Eine Seite, die sämtliche Informationen zu einem Event darstellt.]]></de>
+            <en><![CDATA[A page displaying all information about an event.]]></en>
+        </locale>
+
+        <locale name="quiqqer/calendar:sitetypes/eventList.title">
+            <de><![CDATA[Event-Liste]]></de>
+            <en><![CDATA[Event-List]]></en>
+        </locale>
+        <locale name="quiqqer/calendar:sitetypes/eventList.description">
+            <de><![CDATA[Zeigt alle Event-Unterseiten als Liste an.]]></de>
+            <en><![CDATA[Shows all Event-Subpages as a list.]]></en>
+        </locale>
+
+        <!-- Permissions -->
+        <locale name="permission.quiqqer.calendar._header">
+            <de><![CDATA[Kalender]]></de>
+            <en><![CDATA[Calendars]]></en>
+        </locale>
+        <locale name="permission.quiqqer.calendar.create">
+            <de><![CDATA[Kalender erstellen]]></de>
+            <en><![CDATA[Create Calendars]]></en>
+        </locale>
+        <locale name="permission.quiqqer.calendar.edit">
+            <de><![CDATA[Kalender bearbeiten]]></de>
+            <en><![CDATA[Edit Calendars]]></en>
+        </locale>
+        <locale name="permission.quiqqer.calendar.delete">
+            <de><![CDATA[Kalender löschen]]></de>
+            <en><![CDATA[Delete Calendars]]></en>
+        </locale>
+
+        <locale name="permission.quiqqer.calendar.event._header">
+            <de><![CDATA[Events]]></de>
+            <en><![CDATA[Events]]></en>
+        </locale>
+        <locale name="permission.quiqqer.calendar.event.create">
+            <de><![CDATA[Events erstellen]]></de>
+            <en><![CDATA[Create Events]]></en>
+        </locale>
+        <locale name="permission.quiqqer.calendar.event.edit">
+            <de><![CDATA[Events bearbeiten]]></de>
+            <en><![CDATA[Edit Events]]></en>
+        </locale>
+        <locale name="permission.quiqqer.calendar.event.delete">
+            <de><![CDATA[Events löschen]]></de>
+            <en><![CDATA[Delete Events]]></en>
+        </locale>
+
+
+        <!-- Cron -->
+        <locale name="cron.external_calendar_sync.title">
+            <de><![CDATA[Externe Kalender synchronisieren]]></de>
+            <en><![CDATA[Sync External Calendars]]></en>
+        </locale>
+
+        <locale name="cron.external_calendar_sync.description">
+            <de><![CDATA[Synchronisiert alle externen Kalender aus ihrer Quelle mit dem QUIQQER System]]></de>
+            <en><![CDATA[Syncs all external calendars from their origin with the QUIQQER system]]></en>
+        </locale>
+
+
+        <!-- Exceptions -->
+        <locale name="exception.calendar.permission.view">
+            <de><![CDATA[Du hast keine Berechtigung einen dieser Kalender anzusehen.]]></de>
+            <en><![CDATA[You have no permission to view one of these calendars.]]></en>
+        </locale>
+
+        <locale name="exception.calendar.permission.edit">
+            <de><![CDATA[Du hast keine Berechtigung diesen Kalender zu bearbeiten.]]></de>
+            <en><![CDATA[You have no permission to edit this calendar.]]></en>
+        </locale>
+
+        <locale name="exception.calendar.not_found">
+            <de><![CDATA[Kalender Einstellung: Dieser Kalender existiert nicht.]]></de>
+            <en><![CDATA[Calendar Setting: This calendar doesn't exist.]]></en>
+        </locale>
+
+        <locale name="exception.calendar.notInternal">
+            <de><![CDATA[Operation nicht möglich, Kalender ist nicht intern.]]></de>
+            <en><![CDATA[Operation not possible, calendar is not internal.]]></en>
+        </locale>
+
+        <locale name="exception.calendar.notExternal">
+            <de><![CDATA[Operation nicht möglich, Kalender ist nicht extern.]]></de>
+            <en><![CDATA[Operation not possible, calendar is not external.]]></en>
+        </locale>
+
+        <locale name="exception.ical.invalid">
+            <de><![CDATA[iCal-Datei ist ungültig.]]></de>
+            <en><![CDATA[iCal-file is invalid.]]></en>
+        </locale>
+    </groups>
+
+
+    <!-- PHP ONLY -->
+    <groups name="quiqqer/calendar" datatype="php">
+        <locale name="message.calendar.successful.created">
+            <de><![CDATA[Der Kalender wurde erfolgreich erstellt.]]></de>
+            <en><![CDATA[The calendar was successfully created.]]></en>
+        </locale>
+
+        <locale name="message.calendar.external.successful.added">
+            <de><![CDATA[Der externe Kalender wurde erfolgreich hinzugefügt.]]></de>
+            <en><![CDATA[The external calendar was successfully added.]]></en>
+        </locale>
+
+        <locale name="message.calendar.external.error.url.invalid">
+            <de><![CDATA[Sie haben eine ungültige URL angegeben.]]></de>
+            <en><![CDATA[You entered an invalid URL.]]></en>
+        </locale>
+
+        <locale name="message.calendar.external.error.url.unreachable">
+            <de><![CDATA[Der Kalender kann nicht abgerufen werden. Versuchen Sie es später erneut.]]></de>
+            <en><![CDATA[The calendar is unreachable. Try again later.]]></en>
+        </locale>
+
+        <locale name="message.calendar.successful.imported">
+            <de><![CDATA[Der Kalender wurde erfolgreich importiert.]]></de>
+            <en><![CDATA[The calendar was successfully imported.]]></en>
+        </locale>
+
+
+        <!-- Sitetypes -->
+        <locale name="admin.types.calendar.title">
+            <de><![CDATA[Kalender Anzeige]]></de>
+            <en><![CDATA[Calendar Display]]></en>
+        </locale>
+
+        <locale name="admin.types.calendarEdit.title">
+            <de><![CDATA[Editierbarer Kalender]]></de>
+            <en><![CDATA[Editable Kalender]]></en>
+        </locale>
+
+        <locale name="calendar.settings.title">
+            <de><![CDATA[Kalender Einstellungen]]></de>
+            <en><![CDATA[Kalender Einstellungen]]></en>
+        </locale>
+        <locale name="quiqqer.settings.calendar.ids">
+            <de><![CDATA[Wählen Sie die auf der Seite anzuzeigenden Kalender aus]]></de>
+            <en><![CDATA[Select the calendars that should be shown on the page]]></en>
+        </locale>
+
+        <locale name="calendarEdit.settings.title">
+            <de><![CDATA[Kalender Einstellungen]]></de>
+            <en><![CDATA[Kalender Einstellungen]]></en>
+        </locale>
+        <locale name="quiqqer.settings.calendarEdit.id">
+            <de><![CDATA[Wählen Sie den auf der Seite anzuzeigenden Kalender aus]]></de>
+            <en><![CDATA[Select the calendar that should be shown on the page]]></en>
+        </locale>
+
+
+        <!-- Settings -->
+        <locale name="settings.general.title">
+            <de><![CDATA[Allgemein]]></de>
+            <en><![CDATA[General]]></en>
+        </locale>
+
+        <locale name="settings.general.cachingTime.text">
+            <de><![CDATA[Cache Zeit (in Sekunden)]]></de>
+            <en><![CDATA[Caching Time (in seconds)]]></en>
+        </locale>
+
+        <locale name="settings.general.cachingTime.description">
+            <de><![CDATA[Wie lange sollen externe Kalender zwischengespeichert werden?]]></de>
+            <en><![CDATA[How long shall external calendars be cached?]]></en>
+        </locale>
+
+
+        <!-- Bricks -->
+        <locale name="brick.calendarDisplay.title">
+            <de><![CDATA[Kalender: Kalender Anzeige]]></de>
+            <en><![CDATA[Calendar: Calendar Display]]></en>
+        </locale>
+
+        <locale name="brick.setting.calendarIDs">
+            <de><![CDATA[Anzuzeigende Kalender]]></de>
+            <en><![CDATA[Displayed Calendars]]></en>
+        </locale>
+
+        <locale name="brick.setting.view">
+            <de><![CDATA[Ansicht]]></de>
+            <en><![CDATA[View]]></en>
+        </locale>
+
+        <locale name="brick.setting.view.day">
+            <de><![CDATA[Tag]]></de>
+            <en><![CDATA[Day]]></en>
+        </locale>
+        <locale name="brick.setting.view.week">
+            <de><![CDATA[Woche]]></de>
+            <en><![CDATA[Week]]></en>
+        </locale>
+        <locale name="brick.setting.view.month">
+            <de><![CDATA[Monat]]></de>
+            <en><![CDATA[Month]]></en>
+        </locale>
+        <locale name="brick.setting.view.agenda">
+            <de><![CDATA[Agenda]]></de>
+            <en><![CDATA[Agenda]]></en>
+        </locale>
+    </groups>
+
+
+    <!-- JS ONLY -->
+    <groups name="quiqqer/calendar" datatype="js">
+
+        <locale name="calendar.window.addcalendar.title">
+            <de><![CDATA[Kalender hinzufügen]]></de>
+            <en><![CDATA[Add Calendar]]></en>
+        </locale>
+
+
+        <!-- Add Event Popup -->
+        <locale name="calendar.window.addevent.title">
+            <de><![CDATA[Event hinzufügen]]></de>
+            <en><![CDATA[Add Event]]></en>
+        </locale>
+
+        <locale name="calendar.window.addevent.tip">
+            <de><![CDATA[Hinweis: Sie können Events auch einfach per Doppelklick auf die entsprechende Stelle im Kalender hinzufügen.]]></de>
+            <en><![CDATA[Tip: You can also add events by just double clicking a spot in the calendar.]]></en>
+        </locale>
+
+        <locale name="calendar.window.addevent.event.title">
+            <de><![CDATA[Titel]]></de>
+            <en><![CDATA[Title]]></en>
+        </locale>
+
+        <locale name="calendar.window.addevent.event.desc">
+            <de><![CDATA[Beschreibung]]></de>
+            <en><![CDATA[Description]]></en>
+        </locale>
+
+        <locale name="calendar.window.addevent.event.wholeDay">
+            <de><![CDATA[Ganztägig?]]></de>
+            <en><![CDATA[All-Day?]]></en>
+        </locale>
+
+        <locale name="calendar.window.addevent.event.start">
+            <de><![CDATA[Start]]></de>
+            <en><![CDATA[Start]]></en>
+        </locale>
+
+        <locale name="calendar.window.addevent.event.end">
+            <de><![CDATA[Ende]]></de>
+            <en><![CDATA[End]]></en>
+        </locale>
+
+        <locale name="calendar.window.addevent.event.calendarID">
+            <de><![CDATA[Kalender ID]]></de>
+            <en><![CDATA[Calendar ID]]></en>
+        </locale>
+
+
+        <!-- Add/Edit Calendar -->
+        <locale name="calendar.window.add.calendar.title">
+            <de><![CDATA[Kalender hinzufügen]]></de>
+            <en><![CDATA[Add calendar]]></en>
+        </locale>
+
+        <locale name="calendar.window.edit.calendar.title">
+            <de><![CDATA[Kalender bearbeiten]]></de>
+            <en><![CDATA[Edit calendar]]></en>
+        </locale>
+
+        <locale name="calendar.window.delete.calendar.title">
+            <de><![CDATA[Kalender löschen]]></de>
+            <en><![CDATA[Delete Calendar]]></en>
+        </locale>
+        <locale name="calendar.window.delete.calendar.text">
+            <de><![CDATA[<p>Möchten Sie folgende Kalender wirklich löschen?</p>]]></de>
+            <en><![CDATA[<p>Do you really want to delete the following calendars?</p>]]></en>
+        </locale>
+        <locale name="calendar.window.delete.calendar.information">
+            <de><![CDATA[<p>Zu löschende Kalender mit IDs: <b>[ids]</b></p>
+                <p>Beachten Sie, die Kalender und dazugehörige Events sind nicht wiederherstellbar</p>]]></de>
+            <en><![CDATA[<p>You want to delete following calendars with IDs: <b>[ids]</b></p>
+                <p>Note that the calendars and the corresponding events can not be restored.</p>]]></en>
+        </locale>
+
+        <!-- iCal import -->
+        <locale name="calendar.ical.import.info">
+            <de><![CDATA[Geben Sie hier die URL zu einer iCal Datei (.ics) ein:]]></de>
+            <en><![CDATA[Enter the URL to an iCal file (.ics) here:]]></en>
+        </locale>
+
+        <!-- Panel Elements -->
+        <locale name="panel.title">
+            <de><![CDATA[Kalender]]></de>
+            <en><![CDATA[Calendars]]></en>
+        </locale>
+
+        <locale name="panel.button.add.event.text">
+            <de><![CDATA[Event hinzufügen]]></de>
+            <en><![CDATA[Add event]]></en>
+        </locale>
+
+        <locale name="panel.button.add.calendar.text">
+            <de><![CDATA[Kalender hinzufügen]]></de>
+            <en><![CDATA[Add calendar]]></en>
+        </locale>
+
+        <locale name="panel.button.add.calendar.external.text">
+            <de><![CDATA[Externen Kalender hinzufügen]]></de>
+            <en><![CDATA[Add external calendar]]></en>
+        </locale>
+
+        <locale name="panel.button.edit.calendar.text">
+            <de><![CDATA[Bearbeiten]]></de>
+            <en><![CDATA[Edit]]></en>
+        </locale>
+
+        <locale name="panel.button.ical.import.text">
+            <de><![CDATA[iCal importieren]]></de>
+            <en><![CDATA[Import iCal]]></en>
+        </locale>
+
+
+        <locale name="panel.button.ical.export.text">
+            <de><![CDATA[Als iCal exportieren]]></de>
+            <en><![CDATA[Export as iCal]]></en>
+        </locale>
+
+        <locale name="panel.button.delete.calendar.text">
+            <de><![CDATA[Löschen]]></de>
+            <en><![CDATA[Remove]]></en>
+        </locale>
+
+        <locale name="panel.button.show_as_list.text">
+            <de><![CDATA[Als Liste anzeigen]]></de>
+            <en><![CDATA[Show as list]]></en>
+        </locale>
+
+
+        <!-- Kalender Table Headers -->
+        <locale name="calendar.title">
+            <de><![CDATA[Kalender Name]]></de>
+            <en><![CDATA[Calendar Name]]></en>
+        </locale>
+
+        <locale name="calendar.userid">
+            <de><![CDATA[Besitzer]]></de>
+            <en><![CDATA[Owner]]></en>
+        </locale>
+
+        <locale name="calendar.color">
+            <de><![CDATA[Kalender Farbe]]></de>
+            <en><![CDATA[Calendar Color]]></en>
+        </locale>
+
+        <locale name="calendar.is_public">
+            <de><![CDATA[Öffentlich?]]></de>
+            <en><![CDATA[Public?]]></en>
+        </locale>
+
+        <locale name="calendar.is_external">
+            <de><![CDATA[Extern?]]></de>
+            <en><![CDATA[External?]]></en>
+        </locale>
+
+        <locale name="calendar.external_url">
+            <de><![CDATA[Externe URL]]></de>
+            <en><![CDATA[External URL]]></en>
+        </locale>
+
+        <locale name="calendar.control.search.title">
+            <de><![CDATA[Kalender Auswählen]]></de>
+            <en><![CDATA[Select Calendars]]></en>
+        </locale>
+
+        <locale name="calendar.control.select.placeholder">
+            <de><![CDATA[Kalender zum Hinzufügen suchen...]]></de>
+            <en><![CDATA[Search calendar to add...]]></en>
+        </locale>
+
+        <locale name="calendar.control.eventSearch.title">
+            <de><![CDATA[Event Auswählen]]></de>
+            <en><![CDATA[Select Event]]></en>
+        </locale>
+
+
+        <locale name="event.title">
+            <de><![CDATA[Event]]></de>
+            <en><![CDATA[Event]]></en>
+        </locale>
+
+
         <locale name="time_confirm_button">
             <de><![CDATA[OK]]></de>
             <en><![CDATA[OK]]></en>
         </locale>
-        <locale name="select_a_time">
-            <de><![CDATA[Wählen Sie eine Zeit]]></de>
-            <en><![CDATA[Select a time]]></en>
-        </locale>
-
-    </groups>
 
 
-    <groups name="quiqqer/calendar" datatype="js,php">
-        <locale name="month">
-            <de><![CDATA[Monat]]></de>
-            <en><![CDATA[Month]]></en>
-        </locale>
-        <locale name="day">
-            <de><![CDATA[Tag]]></de>
-            <en><![CDATA[Tag]]></en>
-        </locale>
-        <locale name="year">
-            <de><![CDATA[Jahr]]></de>
-            <en><![CDATA[Year]]></en>
-        </locale>
-
-    <!-- week days -->
-        <locale name="monday">
-            <de><![CDATA[Montag]]></de>
-            <en><![CDATA[Monday]]></en>
-        </locale>
-        <locale name="tuesday">
-            <de><![CDATA[Dienstag]]></de>
-            <en><![CDATA[Tuesday]]></en>
-        </locale>
-        <locale name="wednesday">
-            <de><![CDATA[Mittwoch]]></de>
-            <en><![CDATA[Wednesday]]></en>
-        </locale>
-        <locale name="thursday">
-            <de><![CDATA[Donerstag]]></de>
-            <en><![CDATA[Thursday]]></en>
-        </locale>
-        <locale name="friday">
-            <de><![CDATA[Freitag]]></de>
-            <en><![CDATA[Friday]]></en>
-        </locale>
-        <locale name="saturday">
-            <de><![CDATA[Samstag]]></de>
-            <en><![CDATA[Saturday]]></en>
-        </locale>
-        <locale name="sunday">
-            <de><![CDATA[Sonntag]]></de>
-            <en><![CDATA[Sunday]]></en>
-        </locale>
-
-        <locale name="monday.short">
-            <de><![CDATA[Mon]]></de>
-            <en><![CDATA[Mon]]></en>
-        </locale>
-        <locale name="tuesday.short">
-            <de><![CDATA[Die]]></de>
-            <en><![CDATA[Tue]]></en>
-        </locale>
-        <locale name="wednesday.short">
-            <de><![CDATA[Mit]]></de>
-            <en><![CDATA[Wed]]></en>
-        </locale>
-        <locale name="thursday.short">
-            <de><![CDATA[Don]]></de>
-            <en><![CDATA[Thu]]></en>
-        </locale>
-        <locale name="friday.short">
-            <de><![CDATA[Fre]]></de>
-            <en><![CDATA[Fri]]></en>
-        </locale>
-        <locale name="saturday.short">
-            <de><![CDATA[Sam]]></de>
-            <en><![CDATA[Sat]]></en>
-        </locale>
-        <locale name="sunday.short">
-            <de><![CDATA[Son]]></de>
-            <en><![CDATA[Sun]]></en>
-        </locale>
-
-    <!-- month -->
-        <locale name="month.01">
-            <de><![CDATA[Januar]]></de>
-            <en><![CDATA[January]]></en>
-        </locale>
-        <locale name="month.02">
-            <de><![CDATA[Februar]]></de>
-            <en><![CDATA[February]]></en>
-        </locale>
-        <locale name="month.03">
-            <de><![CDATA[März]]></de>
-            <en><![CDATA[March]]></en>
-        </locale>
-        <locale name="month.04">
-            <de><![CDATA[April]]></de>
-            <en><![CDATA[April]]></en>
-        </locale>
-        <locale name="month.05">
-            <de><![CDATA[Mai]]></de>
-            <en><![CDATA[Mai]]></en>
-        </locale>
-        <locale name="month.06">
-            <de><![CDATA[Juni]]></de>
-            <en><![CDATA[June]]></en>
-        </locale>
-        <locale name="month.07">
-            <de><![CDATA[Juli]]></de>
-            <en><![CDATA[July]]></en>
-        </locale>
-        <locale name="month.08">
-            <de><![CDATA[August]]></de>
-            <en><![CDATA[August]]></en>
-        </locale>
-        <locale name="month.09">
-            <de><![CDATA[September]]></de>
-            <en><![CDATA[September]]></en>
-        </locale>
-        <locale name="month.10">
-            <de><![CDATA[Oktober]]></de>
-            <en><![CDATA[October]]></en>
-        </locale>
-        <locale name="month.11">
-            <de><![CDATA[November]]></de>
-            <en><![CDATA[November]]></en>
-        </locale>
-        <locale name="month.12">
-            <de><![CDATA[Dezember]]></de>
-            <en><![CDATA[December]]></en>
-        </locale>
-
-        <locale name="month.01.short">
-            <de><![CDATA[Jan]]></de>
-            <en><![CDATA[Jan]]></en>
-        </locale>
-        <locale name="month.02.short">
-            <de><![CDATA[Feb]]></de>
-            <en><![CDATA[Febr]]></en>
-        </locale>
-        <locale name="month.03.short">
-            <de><![CDATA[Mär]]></de>
-            <en><![CDATA[Mar]]></en>
-        </locale>
-        <locale name="month.04.short">
-            <de><![CDATA[Apr]]></de>
-            <en><![CDATA[Apr]]></en>
-        </locale>
-        <locale name="month.05.short">
-            <de><![CDATA[Mai]]></de>
-            <en><![CDATA[Mai]]></en>
-        </locale>
-        <locale name="month.06.short">
-            <de><![CDATA[Jun]]></de>
-            <en><![CDATA[Jun]]></en>
-        </locale>
-        <locale name="month.07.short">
-            <de><![CDATA[Jul]]></de>
-            <en><![CDATA[Jul]]></en>
-        </locale>
-        <locale name="month.08.short">
-            <de><![CDATA[Aug]]></de>
-            <en><![CDATA[Aug]]></en>
-        </locale>
-        <locale name="month.09.short">
-            <de><![CDATA[Sept]]></de>
-            <en><![CDATA[Sept]]></en>
-        </locale>
-        <locale name="month.10.short">
-            <de><![CDATA[Okt]]></de>
-            <en><![CDATA[Oct]]></en>
-        </locale>
-        <locale name="month.11.short">
-            <de><![CDATA[Nov]]></de>
-            <en><![CDATA[Nov]]></en>
-        </locale>
-        <locale name="month.12.short">
-            <de><![CDATA[Dez]]></de>
-            <en><![CDATA[Dec]]></en>
+        <!-- Error -->
+        <locale name="error.missing.start">
+            <de><![CDATA[Sie müssen einen Startzeitpunkt für das Event angeben.]]></de>
+            <en><![CDATA[You have to enter a start time for the event.]]></en>
         </locale>
     </groups>
 

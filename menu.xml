@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<menu>
+    <item parent="/extras/"
+          name="calendar"
+          icon="fa fa-calendar"
+          require="package/quiqqer/calendar/bin/Panel"
+    >
+        <locale group="quiqqer/calendar" var="menu.apps.calendar.title"/>
+    </item>
+</menu>

@@ -1,0 +1,59 @@
+<form>
+    <table class="data-table data-table-flexbox">
+        <tbody>
+        <tr>
+            <td>
+                <label class="field-container">
+                    <span class="field-container-item">
+                        {{title}}
+                    </span>
+                    <input type="text" name="eventtitle" value="" class="field-container-field">
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label class="field-container hasCheckbox">
+                    <span class="field-container-item">
+                        {{desc}}
+                    </span>
+                    <input type="text" name="eventdesc" value="" class="field-container-field">
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="field-container">
+                    <span class="field-container-item">
+                        {{wholeDay}}
+                    </span>
+                    <div class="field-container-field" id="whole-day">
+                        <!-- ButtonSwitch is inserted via JS here -->
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label class="field-container">
+                    <span class="field-container-item">
+                        {{start}}
+                    </span>
+                    <input type="text" id="eventstart" name="eventstart" value="" class="field-container-field">
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label class="field-container hasCheckbox">
+                    <span class="field-container-item">
+                        {{end}}
+                    </span>
+                    <input type="text" id="eventend" name="eventend" value="" class="field-container-field">
+                </label>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</form>
+{{tip}}

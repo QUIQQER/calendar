@@ -1,41 +1,40 @@
+![QUIQQER Calendar](bin/images/Readme.jpg)
 
-QUIQQER Kalender
+QUIQQER Calendar
 ========
+Calendar Plugin - Manage Events
 
-Paketname:
+Package Name:
 
-    quiqqer/calender
+    quiqqer/calendar
 
 
-Features (Funktionen)
+Features
 --------
+- JavaScript Calendar Control
+- Display external calendars (e.g. Google Calendar) inside QUIQQER
+- Manage and display your events
+- Special sitetypes and bricks for calendars
 
-- JavaScript Kalender Control
 
 Installation
 ------------
+Package name is: `quiqqer/calendar`
 
-Der Paketname ist: quiqqer/calender
 
-
-Mitwirken
+Contribute
 ----------
-
-- Issue Tracker: https://dev.quiqqer.com/quiqqer/package-calendar/issues
-- Source Code: https://dev.quiqqer.com/quiqqer/package-calendar/tree/master
+- Issue Tracker: https://dev.quiqqer.com/quiqqer/calendar/issues
+- Source Code: https://dev.quiqqer.com/quiqqer/calendar/tree/master
 
 
 Support
 -------
+If you found any flaws, have any wishes or suggestions you can send an email
+to [support@pcsg.de](mailto:support@pcsg.de) to inform us about your concerns. 
+We will try to respond to your request and forward it to the responsible developer.
 
-Falls Sie ein Fehler gefunden haben, oder Verbesserungen wünschen,
-dann können Sie gerne an support@pcsg.de eine E-Mail schreiben.
 
-
-Lizenz
+License
 -------
-
-MIT
-
-Entwickler
---------
+PCSG QL-1.0, CC BY-NC-SA 4.0

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+    <types>
+        <!-- Calendar Full Page -->
+        <type type="sitetypes/calendar" icon="fa fa-calendar" template="sitetypes/calendar.html">
+            <locale group="quiqqer/calendar" var="admin.types.calendar.title"/>
+
+            <desc>
+                <locale group="quiqqer/calendar" var="admin.types.calendar.desc"/>
+            </desc>
+
+            <attributes>
+                <attribute>calendar.settings.ids</attribute>
+            </attributes>
+
+            <settings>
+                <category name="calendar-fullpage-settings">
+                    <settings>
+                        <title>
+                            <locale group="quiqqer/calendar" var="calendar.settings.title"/>
+                        </title>
+
+                        <input conf="calendar.settings.ids"
+                               type="hidden"
+                               disabled="disabled"
+                               data-qui="package/quiqqer/calendar/bin/controls/Select"
+                               data-qui-options-is-edit-calendar="false"
+                               label="false">
+                            <description>
+                                <locale group="quiqqer/calendar" var="quiqqer.settings.calendar.ids"/>
+                            </description>
+                        </input>
+                    </settings>
+                </category>
+            </settings>
+
+        </type>
+
+        <!-- Calendar Edit Full Page -->
+        <type type="sitetypes/calendarEdit" icon="fa fa-calendar" template="sitetypes/calendarEdit.html">
+            <locale group="quiqqer/calendar" var="admin.types.calendarEdit.title"/>
+
+            <desc>
+                <locale group="quiqqer/calendar" var="admin.types.calendarEdit.desc"/>
+            </desc>
+
+            <attributes>
+                <attribute>calendarEdit.settings.id</attribute>
+            </attributes>
+
+            <settings>
+                <category name="calendar-edit-settings">
+                    <settings>
+                        <title>
+                            <locale group="quiqqer/calendar" var="calendarEdit.settings.title"/>
+                        </title>
+
+                        <input conf="calendarEdit.settings.id"
+                               type="hidden"
+                               disabled="disabled"
+
+                               data-qui="package/quiqqer/calendar/bin/controls/Select"
+                               data-qui-options-is-edit-calendar="true"
+                               label="false">
+                            <description>
+                                <locale group="quiqqer/calendar" var="quiqqer.settings.calendarEdit.id"/>
+                            </description>
+                        </input>
+                    </settings>
+                </category>
+            </settings>
+        </type>
+    </types>
+</site>
