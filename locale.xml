@@ -142,7 +142,7 @@
         <!-- Tour -->
         <!-- Tours -->
         <locale name="tour.general.title">
-            <de><![CDATA[Kalender.]]></de>
+            <de><![CDATA[Kalender]]></de>
             <en><![CDATA[Calendar]]></en>
         </locale>
         <locale name="tour.general.description">
