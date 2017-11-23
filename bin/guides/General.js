@@ -1,4 +1,4 @@
-define('package/quiqqer/bricks/bin/guides/General', [
+define('package/quiqqer/calendar/bin/guides/General', [
 
     'package/quiqqer/tour/bin/classes/Tour',
     'utils/Panels',
