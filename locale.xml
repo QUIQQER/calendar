@@ -139,6 +139,29 @@
             <de><![CDATA[iCal-Datei ist ungültig.]]></de>
             <en><![CDATA[iCal-file is invalid.]]></en>
         </locale>
+
+        <!-- Tour -->
+        <!-- General Tour Variables -->
+        <locale name="general.title.1">
+            <de><![CDATA[iCal-Datei ist ungültig.]]></de>
+            <en><![CDATA[iCal-file is invalid.]]></en>
+        </locale>
+        <locale name="general.text.1">
+            <de><![CDATA[iCal-Datei ist ungültig.]]></de>
+            <en><![CDATA[iCal-file is invalid.]]></en>
+        </locale>
+        <!-- End General Tour Variables -->
+        <!-- Buttons -->
+        <locale name="button.next">
+            <de><![CDATA[Weiter]]></de>
+            <en><![CDATA[Next]]></en>
+        </locale>
+        <locale name="button.cancel">
+            <de><![CDATA[Abbruch]]></de>
+            <en><![CDATA[Cancel]]></en>
+        </locale>
+        <!-- End Buttons -->
+        <!-- End Tour -->
     </groups>
 
 
