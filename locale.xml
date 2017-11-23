@@ -13,7 +13,6 @@
             <en><![CDATA[Adds the functionality to manage events and calendars, as well as their presentation on your website.]]></en>
         </locale>
 
-
         <locale name="menu.apps.calendar.title">
             <de><![CDATA[Kalender]]></de>
             <en><![CDATA[Calendars]]></en>
