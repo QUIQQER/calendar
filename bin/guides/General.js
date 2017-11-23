@@ -27,4 +27,6 @@ define('package/quiqqer/calendar/bin/guides/General', [
             }
         }]
     });
+
+    return Calendar;
 });
