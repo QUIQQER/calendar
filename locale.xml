@@ -140,6 +140,15 @@
         </locale>
 
         <!-- Tour -->
+        <!-- Tours -->
+        <locale name="tour.general.title">
+            <de><![CDATA[Kalender.]]></de>
+            <en><![CDATA[Calendar]]></en>
+        </locale>
+        <locale name="tour.general.description">
+            <de><![CDATA[Eine Einführung in die Nutzung des QUIQQER Kalender-Moduls]]></de>
+            <en><![CDATA[An Introduction to using the QUIQQER calendar-module]]></en>
+        </locale>
         <!-- General Tour Variables -->
         <locale name="general.title.1">
             <de><![CDATA[iCal-Datei ist ungültig.]]></de>
