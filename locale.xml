@@ -3,6 +3,39 @@
 
     <!-- JS & PHP -->
     <groups name="quiqqer/calendar" datatype="js,php">
+        <!-- Bricks -->
+        <locale name="brick.calendarDisplay.title">
+            <de><![CDATA[Kalender: Kalender Anzeige]]></de>
+            <en><![CDATA[Calendar: Calendar Display]]></en>
+        </locale>
+
+        <locale name="brick.setting.calendarIDs">
+            <de><![CDATA[Anzuzeigende Kalender]]></de>
+            <en><![CDATA[Displayed Calendars]]></en>
+        </locale>
+
+        <locale name="brick.setting.view">
+            <de><![CDATA[Ansicht]]></de>
+            <en><![CDATA[View]]></en>
+        </locale>
+
+        <locale name="brick.setting.view.day">
+            <de><![CDATA[Tag]]></de>
+            <en><![CDATA[Day]]></en>
+        </locale>
+        <locale name="brick.setting.view.week">
+            <de><![CDATA[Woche]]></de>
+            <en><![CDATA[Week]]></en>
+        </locale>
+        <locale name="brick.setting.view.month">
+            <de><![CDATA[Monat]]></de>
+            <en><![CDATA[Month]]></en>
+        </locale>
+        <locale name="brick.setting.view.agenda">
+            <de><![CDATA[Agenda]]></de>
+            <en><![CDATA[Agenda]]></en>
+        </locale>
+        
         <!-- Package -->
         <locale name="package.title">
             <de><![CDATA[QUIQQER - Kalender & Termin Verwaltung]]></de>
@@ -214,40 +247,6 @@
         <locale name="settings.general.cachingTime.description">
             <de><![CDATA[Wie lange sollen externe Kalender zwischengespeichert werden?]]></de>
             <en><![CDATA[How long shall external calendars be cached?]]></en>
-        </locale>
-
-
-        <!-- Bricks -->
-        <locale name="brick.calendarDisplay.title">
-            <de><![CDATA[Kalender: Kalender Anzeige]]></de>
-            <en><![CDATA[Calendar: Calendar Display]]></en>
-        </locale>
-
-        <locale name="brick.setting.calendarIDs">
-            <de><![CDATA[Anzuzeigende Kalender]]></de>
-            <en><![CDATA[Displayed Calendars]]></en>
-        </locale>
-
-        <locale name="brick.setting.view">
-            <de><![CDATA[Ansicht]]></de>
-            <en><![CDATA[View]]></en>
-        </locale>
-
-        <locale name="brick.setting.view.day">
-            <de><![CDATA[Tag]]></de>
-            <en><![CDATA[Day]]></en>
-        </locale>
-        <locale name="brick.setting.view.week">
-            <de><![CDATA[Woche]]></de>
-            <en><![CDATA[Week]]></en>
-        </locale>
-        <locale name="brick.setting.view.month">
-            <de><![CDATA[Monat]]></de>
-            <en><![CDATA[Month]]></en>
-        </locale>
-        <locale name="brick.setting.view.agenda">
-            <de><![CDATA[Agenda]]></de>
-            <en><![CDATA[Agenda]]></en>
         </locale>
     </groups>
 
