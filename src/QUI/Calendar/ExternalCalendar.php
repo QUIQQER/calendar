@@ -97,17 +97,18 @@ class ExternalCalendar extends AbstractCalendar
      */
     public static function isUrlReachable($url)
     {
-        $validUrl = false;
+        $curlParams = [
+            CURLOPT_HEADER => true,
+            CURLOPT_NOBODY => true
+        ];
+
         try {
-            list($status) = get_headers($url);
-            if (strpos($status, '200') !== false) {
-                // url returns HTTP code 200 -> everything is fine
-                $validUrl = true;
-            }
-        } catch (\Exception $exception) {
+            $returnCode = QUI\Utils\Request\Url::getInfo($url, CURLINFO_HTTP_CODE, $curlParams);
+        } catch (QUI\Exception $exception) {
+            return false;
         }
 
-        return $validUrl;
+        return $returnCode == 200;
     }
 
 
