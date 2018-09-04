@@ -66,8 +66,8 @@ class ExternalCalendar extends AbstractCalendar
                 throw new Exception($msg);
             }
 
-            // TODO: Issue #21
-            $icalData = file_get_contents($this->externalUrl);
+            // TODO: Handle failing requests
+            $icalData = QUI\Utils\Request\Url::get($this->externalUrl);
 
             if (!self::isValidIcal($icalData)) {
                 $msg = QUI::getLocale()->get(
