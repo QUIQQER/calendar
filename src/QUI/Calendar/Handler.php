@@ -100,8 +100,7 @@ class Handler
             throw new Exception($msg);
         }
 
-        // TODO: Issue #21
-        if (!ExternalCalendar::isValidIcal(file_get_contents($icalUrl))) {
+        if (!ExternalCalendar::isValidIcal(QUI\Utils\Request\Url::get($icalUrl))) {
             $msg = QUI::getLocale()->get(
                 'quiqqer/calendar',
                 'exception.ical.invalid'
