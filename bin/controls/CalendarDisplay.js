@@ -171,9 +171,11 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
                                 });
                             }).catch(function ()
                             {
+                                self.Loader.hide();
                             });
                         }).catch(function ()
                         {
+                            self.Loader.hide();
                         });
                     });
 

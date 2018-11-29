@@ -1,0 +1,14 @@
+<quiqqer>
+    <tours>
+        <tour require="package/quiqqer/calendar/bin/guides/General">
+            <title>
+                <locale group="quiqqer/calendar" var="tour.general.title"/>
+            </title>
+            <description>
+                <locale group="quiqqer/calendar" var="tour.general.description"/>
+            </description>
+
+            <icon/>
+        </tour>
+    </tours>
+</quiqqer>

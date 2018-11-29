@@ -46,7 +46,6 @@
             <en><![CDATA[Adds the functionality to manage events and calendars, as well as their presentation on your website.]]></en>
         </locale>
 
-
         <locale name="menu.apps.calendar.title">
             <de><![CDATA[Kalender]]></de>
             <en><![CDATA[Calendars]]></en>
@@ -172,6 +171,38 @@
             <de><![CDATA[iCal-Datei ist ungültig.]]></de>
             <en><![CDATA[iCal-file is invalid.]]></en>
         </locale>
+
+        <!-- Tour -->
+        <!-- Tours -->
+        <locale name="tour.general.title">
+            <de><![CDATA[Kalender]]></de>
+            <en><![CDATA[Calendar]]></en>
+        </locale>
+        <locale name="tour.general.description">
+            <de><![CDATA[Eine Einführung in die Nutzung des QUIQQER Kalender-Moduls]]></de>
+            <en><![CDATA[An Introduction to using the QUIQQER calendar-module]]></en>
+        </locale>
+        <!-- General Tour Variables -->
+        <locale name="general.title.1">
+            <de><![CDATA[iCal-Datei ist ungültig.]]></de>
+            <en><![CDATA[iCal-file is invalid.]]></en>
+        </locale>
+        <locale name="general.text.1">
+            <de><![CDATA[iCal-Datei ist ungültig.]]></de>
+            <en><![CDATA[iCal-file is invalid.]]></en>
+        </locale>
+        <!-- End General Tour Variables -->
+        <!-- Buttons -->
+        <locale name="button.next">
+            <de><![CDATA[Weiter]]></de>
+            <en><![CDATA[Next]]></en>
+        </locale>
+        <locale name="button.cancel">
+            <de><![CDATA[Abbruch]]></de>
+            <en><![CDATA[Cancel]]></en>
+        </locale>
+        <!-- End Buttons -->
+        <!-- End Tour -->
     </groups>
 
 

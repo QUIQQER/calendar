@@ -2,7 +2,7 @@
   "name": "quiqqer\/calendar",
   "type": "quiqqer-module",
   "description": "Adds calendars to your QUIQQER system, allowing you to manage and display events on your website.",
-  "version": "dev-master",
+  "version": "dev-dev",
   "licence":["CC BY-NC-SA 4.0", "PCSG QL-1.0"],
   "authors": [
     {
@@ -23,7 +23,7 @@
   },
   "require": {
     "quiqqer\/quiqqer": "*",
-    "quiqqer\/calendar-controls": "dev-master",
+    "quiqqer\/calendar-controls": "1.1.0|dev-master|dev-dev",
     "eluceo\/ical": "0.11.0",
     "johngrogg\/ics-parser": "2.1.5"
   },
