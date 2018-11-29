@@ -12,6 +12,5 @@ QUI::$Ajax->registerFunction(
     function ($calendarID) {
         return \QUI\Calendar\Handler::getCalendar($calendarID)->toArray();
     },
-    array('calendarID'),
-    'Permission::checkAdminUser'
+    array('calendarID')
 );
