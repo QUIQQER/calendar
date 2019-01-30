@@ -143,8 +143,8 @@
 
         <!-- Exceptions -->
         <locale name="exception.calendar.permission.view">
-            <de><![CDATA[Du hast keine Berechtigung einen dieser Kalender anzusehen.]]></de>
-            <en><![CDATA[You have no permission to view one of these calendars.]]></en>
+            <de><![CDATA[Du hast keine Berechtigung die Termine von einem dieser Kalender anzusehen.]]></de>
+            <en><![CDATA[You have no permission to view the events from one of these calendars.]]></en>
         </locale>
 
         <locale name="exception.calendar.permission.edit">
