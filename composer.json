@@ -11,13 +11,13 @@
     {
       "name": "Henning Leutz",
       "email": "leutz@pcsg.de",
-      "homepage": "https:\/\/www.pcsg.de",
+      "homepage": "https://www.pcsg.de",
       "role": "Developer"
     },
     {
       "name": "Jan Wennrich",
       "email": "jan.wennrich@pcsg.de",
-      "homepage": "https:\/\/www.pcsg.de",
+      "homepage": "https://www.pcsg.de",
       "role": "Developer"
     }
   ],
@@ -25,10 +25,10 @@
     "mail": "support@pcsg.de"
   },
   "require": {
-    "quiqqer\/quiqqer": "*",
-    "quiqqer\/calendar-controls": "1.1.0|dev-master|dev-dev",
-    "eluceo\/ical": "0.11.0",
-    "johngrogg\/ics-parser": "2.1.5"
+    "quiqqer/quiqqer": "*",
+    "quiqqer/calendar-controls": "1.2.*|dev-master|dev-dev",
+    "eluceo/ical": "0.11.0",
+    "johngrogg/ics-parser": "2.1.5"
   },
   "autoload": {
     "psr-4": {
