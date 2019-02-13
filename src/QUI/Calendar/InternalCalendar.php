@@ -202,6 +202,111 @@ class InternalCalendar extends AbstractCalendar
 
     /**
      * @inheritdoc
+     *
+     * @throws \QUI\Calendar\Exception - No permission to view this calendar
+     */
+    public function getEventsForDate(\DateTime $Date, $ignoreTime)
+    {
+        $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
+
+        $timestamp = $Date->getTimestamp();
+
+        $where = [
+            'calendarid' => (int)$this->getId(),
+            'start'      => [
+                'type'  => '<=',
+                'value' => $timestamp
+            ],
+            'end'        => [
+                'type'  => '>=',
+                'value' => $timestamp
+            ]
+        ];
+
+        if ($ignoreTime) {
+            $DateImmutable = \DateTimeImmutable::createFromMutable($Date);
+
+            $timestampDayStart = $DateImmutable->setTime(0, 0, 0)->getTimestamp();
+            $timestampDayEnd   = $DateImmutable->setTime(23, 59, 59)->getTimestamp();
+
+            // Values are correctly assigned and not swapped (!)
+            // The event has to start before the end of this day
+            // The event has to end after the start of this day
+            $where['start']['value'] = $timestampDayEnd;
+            $where['end']['value']   = $timestampDayStart;
+        }
+
+        try {
+            $eventsRaw = QUI::getDataBase()->fetch(array(
+                'from'  => Handler::tableCalendarsEvents(),
+                'where' => $where
+            ));
+        } catch (QUI\Database\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+            $eventsRaw = [];
+        }
+
+        $Events = new EventCollection();
+        foreach ($eventsRaw as $event) {
+            $Events->append(\QUI\Calendar\Event::fromDatabaseArray($event));
+        }
+
+        return $Events;
+    }
+
+
+    /**
+     * @inheritdoc
+     *
+     * @throws \QUI\Calendar\Exception - No permission to view this calendar
+     */
+    public function getEventsBetweenDates(\DateTime $StartDate, \DateTime $EndDate, $ignoreTime)
+    {
+        $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
+
+        $timestampStartDate = $StartDate->getTimestamp();
+        $timestampEndDate   = $EndDate->getTimestamp();
+
+        if ($ignoreTime) {
+            $StartDateImmutable = \DateTimeImmutable::createFromMutable($StartDate);
+            $timestampStartDate = $StartDateImmutable->setTime(0, 0, 0)->getTimestamp();
+
+            $EndDateImmutable = \DateTimeImmutable::createFromMutable($EndDate);
+            $timestampEndDate = $EndDateImmutable->setTime(23, 59, 59)->getTimestamp();
+        }
+
+        try {
+            $eventsRaw = QUI::getDataBase()->fetch(array(
+                'from'  => Handler::tableCalendarsEvents(),
+                'where' => [
+                    'calendarid' => (int)$this->getId(),
+                    'start'      => [
+                        'type'  => '<=',
+                        'value' => $timestampEndDate
+                    ],
+                    'end'        => [
+                        'type'  => '>=',
+                        'value' => $timestampStartDate
+                    ]
+                ]
+            ));
+        } catch (QUI\Database\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+            $eventsRaw = [];
+        }
+
+
+        $Events = new EventCollection();
+        foreach ($eventsRaw as $event) {
+            $Events->append(\QUI\Calendar\Event::fromDatabaseArray($event));
+        }
+
+        return $Events;
+    }
+
+
+    /**
+     * @inheritdoc
      */
     public function getUpcomingEvents($amount = -1)
     {

@@ -181,6 +181,41 @@ abstract class AbstractCalendar
     abstract public function getEvents();
 
     /**
+     * Returns all events for a given date (day).
+     *
+     * The second parameter determines whether the exact point in time should be used or the entire day.
+     *
+     * @example
+     * passed date object: 20.04.2042 13:37
+     * second parameter true: Returns all events that occur on 20.04.2042
+     * second parameter false: Returns all events that occur on 20.04.2042 at 13:37
+     *
+     * @param \DateTime $Date
+     * @param boolean $ignoreTime
+     *
+     * @return EventCollection
+     */
+    abstract public function getEventsForDate(\DateTime $Date, $ignoreTime);
+
+    /**
+     * Returns all events between two given dates.
+     *
+     * The second parameter determines whether the exact point in time should be used or the entire day.
+     *
+     * @example
+     * passed date objects: 20.04.2042 13:37 and 06.09.2042 04:20
+     * second parameter true: Returns all events that occur between 20.04.2042 00:00 and 06.09.2042 23:59
+     * second parameter false: Returns all events that occur between 20.04.2042 13:37 and 06.09.2042 04:20
+     *
+     * @param \DateTime $StartDate
+     * @param \DateTime $EndDate
+     * @param boolean $ignoreTime
+     *
+     * @return EventCollection
+     */
+    abstract public function getEventsBetweenDates(\DateTime $StartDate, \DateTime $EndDate, $ignoreTime);
+
+    /**
      * Returns the calendars color in hex format.
      *
      * @return string

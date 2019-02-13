@@ -184,6 +184,97 @@ class ExternalCalendar extends AbstractCalendar
 
     /**
      * @inheritdoc
+     *
+     * @throws \QUI\Calendar\Exception - No permission to view this calendar
+     * @throws \Exception - Something went wrong converting the given date to timestamps
+     */
+    public function getEventsForDate(\DateTime $Date, $ignoreTime)
+    {
+        $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
+
+        $timestampStart = $Date->format(DATE_ISO8601);
+        $timestampEnd   = $timestampStart;
+
+        if ($ignoreTime) {
+            $DateImmutable = \DateTimeImmutable::createFromMutable($Date);
+
+            $timestampStart = $DateImmutable->setTime(0, 0, 0)->format(DATE_ISO8601);
+            $timestampEnd   = $DateImmutable->setTime(23, 59, 59)->format(DATE_ISO8601);
+        }
+
+        $ICal = new ICal();
+        $ICal->initString($this->getIcalData());
+
+        $eventsRaw = $ICal->eventsFromRange($timestampStart, $timestampEnd);
+
+        $Events = new EventCollection();
+        foreach ($eventsRaw as $eventData) {
+            $start = Event::timestampToSchedulerFormat((int)$ICal->iCalDateToUnixTimestamp($eventData->dtstart));
+            $end   = Event::timestampToSchedulerFormat((int)$ICal->iCalDateToUnixTimestamp($eventData->dtend));
+
+            $Event = new Event(
+                $eventData->summary,
+                $eventData->description,
+                $start,
+                $end,
+                $eventData->uid,
+                $this->getId()
+            );
+            $Events->append($Event);
+        }
+
+        return $Events;
+    }
+
+
+    /**
+     * @inheritdoc
+     *
+     * @throws \QUI\Calendar\Exception - No permission to view this calendar
+     * @throws \Exception - Something went wrong converting the given date to timestamps
+     */
+    public function getEventsBetweenDates(\DateTime $StartDate, \DateTime $EndDate, $ignoreTime)
+    {
+        $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
+
+        $timestampStartDate = $StartDate->format(DATE_ISO8601);
+        $timestampEndDate   = $EndDate->format(DATE_ISO8601);
+
+        if ($ignoreTime) {
+            $StartDateImmutable = \DateTimeImmutable::createFromMutable($StartDate);
+            $timestampStartDate = $StartDateImmutable->setTime(0, 0, 0)->format(DATE_ISO8601);
+
+            $EndDateImmutable = \DateTimeImmutable::createFromMutable($EndDate);
+            $timestampEndDate = $EndDateImmutable->setTime(23, 59, 59)->format(DATE_ISO8601);
+        }
+
+        $ICal = new ICal();
+        $ICal->initString($this->getIcalData());
+
+        $eventsRaw = $ICal->eventsFromRange($timestampStartDate, $timestampEndDate);
+
+        $Events = new EventCollection();
+        foreach ($eventsRaw as $eventData) {
+            $start = Event::timestampToSchedulerFormat((int)$ICal->iCalDateToUnixTimestamp($eventData->dtstart));
+            $end   = Event::timestampToSchedulerFormat((int)$ICal->iCalDateToUnixTimestamp($eventData->dtend));
+
+            $Event = new Event(
+                $eventData->summary,
+                $eventData->description,
+                $start,
+                $end,
+                $eventData->uid,
+                $this->getId()
+            );
+            $Events->append($Event);
+        }
+
+        return $Events;
+    }
+
+
+    /**
+     * @inheritdoc
      */
     public function getUpcomingEvents($amount = -1)
     {
