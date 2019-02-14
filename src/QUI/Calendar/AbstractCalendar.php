@@ -277,17 +277,22 @@ abstract class AbstractCalendar
 
 
     /**
-     * Checks if the user can perform a specified action on the calendar
+     * Checks if a user can perform a specified action on the calendar.
+     * By default the session user is used.
+     * By passing a user as the second argument the permissions for a third user can be checked.
      *
      * @param $permission - Name of the permission to check
+     * @param User $User - The user to check the permission for (Session User by default)
      *
      * @return boolean
      *
      * @throws \QUI\Calendar\Exception\NoPermission
      */
-    public function checkPermission($permission)
+    public function checkPermission($permission, User $User = null)
     {
-        $User = QUI::getUsers()->getUserBySession();
+        if (is_null($User)) {
+            $User = QUI::getUsers()->getUserBySession();
+        }
 
         // Super User
         if ($User->isSU()) {
