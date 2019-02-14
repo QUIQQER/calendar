@@ -27,7 +27,7 @@ class Cron
         foreach (Handler::getExternalCalendars() as $Calendar) {
             // Loads non cached calendars into cache
             try {
-                $Calendar->getIcalData();
+                $Calendar->toICal();
             } catch (Exception $exception) {
                 continue;
             }

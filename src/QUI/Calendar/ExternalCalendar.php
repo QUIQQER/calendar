@@ -60,8 +60,24 @@ class ExternalCalendar extends AbstractCalendar
      * @return string
      *
      * @throws QUI\Exception - Calendar's URL is not reachable or contains invalid iCal
+     *
+     * @deprecated - Use toICal() instead.
      */
     public function getIcalData()
+    {
+        return $this->toICal();
+    }
+
+
+
+    /**
+     * Returns a string in iCal format containing the calendar's events
+     *
+     * @return string
+     *
+     * @throws QUI\Exception - Calendar's URL is not reachable or contains invalid iCal
+     */
+    protected function fetchICal()
     {
         try {
             return QUI\Cache\Manager::get($this->icalCacheKey);
@@ -129,7 +145,7 @@ class ExternalCalendar extends AbstractCalendar
     {
         $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
 
-        return $this->getIcalData();
+        return $this->fetchICal();
     }
 
 
@@ -191,7 +207,7 @@ class ExternalCalendar extends AbstractCalendar
         $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
 
         $ICal = new ICal();
-        $ICal->initString($this->getIcalData());
+        $ICal->initString($this->toICal());
 
         $eventsRaw = $ICal->events();
         $events    = array();
@@ -228,7 +244,7 @@ class ExternalCalendar extends AbstractCalendar
         }
 
         $ICal = new ICal();
-        $ICal->initString($this->getIcalData());
+        $ICal->initString($this->toICal());
 
         $eventsRaw = $ICal->eventsFromRange($timestampStart, $timestampEnd);
 
@@ -274,7 +290,7 @@ class ExternalCalendar extends AbstractCalendar
         }
 
         $ICal = new ICal();
-        $ICal->initString($this->getIcalData());
+        $ICal->initString($this->toICal());
 
         $eventsRaw = $ICal->eventsFromRange($timestampStartDate, $timestampEndDate);
 
@@ -308,7 +324,7 @@ class ExternalCalendar extends AbstractCalendar
         $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
 
         $ICal = new ICal();
-        $ICal->initString($this->getIcalData());
+        $ICal->initString($this->toICal());
 
         $eventsRaw = $ICal->eventsFromRange();  // gets event from now on
         $events    = array();
