@@ -82,12 +82,9 @@ class ExternalCalendar extends AbstractCalendar
             return QUI\Cache\Manager::get($this->icalCacheKey);
         } catch (\Exception  $exception) {
             // No data cached
-            if (!self::isUrlReachable($this->externalUrl)) {
-                $msg = QUI::getLocale()->get(
-                    'quiqqer/calendar',
-                    'message.calendar.external.error.url.unreachable'
-                );
-                throw new Exception($msg);
+
+            if (!QUI\Utils\Request\Url::isReachable($this->externalUrl)) {
+                throw new Exception(['quiqqer/calendar', 'message.calendar.external.error.url.unreachable']);
             }
 
             // TODO: Issue #21
@@ -118,20 +115,12 @@ class ExternalCalendar extends AbstractCalendar
      * @param string $url - An URL
      *
      * @return boolean
+     *
+     * @deprecated Use QUI\Utils\Request\Url::isReachable() instead
      */
     public static function isUrlReachable($url)
     {
-        $validUrl = false;
-        try {
-            list($status) = get_headers($url);
-            if (strpos($status, '200') !== false) {
-                // url returns HTTP code 200 -> everything is fine
-                $validUrl = true;
-            }
-        } catch (\Exception $exception) {
-        }
-
-        return $validUrl;
+        return QUI\Utils\Request\Url::isReachable($url);
     }
 
 
@@ -176,7 +165,7 @@ class ExternalCalendar extends AbstractCalendar
     {
         $this->checkPermission(self::PERMISSION_EDIT_CALENDAR);
 
-        if (!self::isUrlReachable($externalUrl)) {
+        if (!QUI\Utils\Request\Url::isReachable($externalUrl)) {
             $msg = QUI::getLocale()->get(
                 'quiqqer/calendar',
                 'message.calendar.external.error.url.invalid'

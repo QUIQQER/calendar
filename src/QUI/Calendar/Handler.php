@@ -104,12 +104,8 @@ class Handler
         $isPublic = false,
         $color = '#2F8FC6'
     ) {
-        if (!ExternalCalendar::isUrlReachable($icalUrl)) {
-            $msg = QUI::getLocale()->get(
-                'quiqqer/calendar',
-                'message.calendar.external.error.url.invalid'
-            );
-            throw new Exception($msg);
+        if (!QUI\Utils\Request\Url::isReachable($icalUrl)) {
+            throw new Exception(['quiqqer/calendar', 'message.calendar.external.error.url.invalid']);
         }
 
         // TODO: Issue #21
