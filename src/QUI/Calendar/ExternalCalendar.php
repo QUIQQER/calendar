@@ -87,15 +87,14 @@ class ExternalCalendar extends AbstractCalendar
                 throw new Exception(['quiqqer/calendar', 'message.calendar.external.error.url.unreachable']);
             }
 
-            // TODO: Issue #21
-            $icalData = file_get_contents($this->externalUrl);
+            try {
+                $icalData = QUI\Utils\Request\Url::get($this->externalUrl);
+            } catch (QUI\Exception $Exception) {
+                throw new Exception(['quiqqer/calendar', 'message.calendar.external.error.url.unreachable']);
+            }
 
             if (!self::isValidIcal($icalData)) {
-                $msg = QUI::getLocale()->get(
-                    'quiqqer/calendar',
-                    'exception.ical.invalid'
-                );
-                throw new Exception($msg);
+                throw new Exception(['quiqqer/calendar', 'exception.ical.invalid']);
             }
 
             $Package     = QUI::getPackage('quiqqer/calendar');
