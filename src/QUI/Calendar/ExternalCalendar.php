@@ -38,6 +38,8 @@ class ExternalCalendar extends AbstractCalendar
 
     /**
      * @inheritdoc
+     *
+     * @throws Exception - Given calendar data doesn't belong to an external calendar
      */
     protected function construct($data)
     {
@@ -52,6 +54,13 @@ class ExternalCalendar extends AbstractCalendar
     }
 
 
+    /**
+     * Returns a string in iCal format containing the calendar's events
+     *
+     * @return string
+     *
+     * @throws QUI\Exception - Calendar's URL is not reachable or contains invalid iCal
+     */
     public function getIcalData()
     {
         try {
@@ -113,6 +122,8 @@ class ExternalCalendar extends AbstractCalendar
 
     /**
      * @inheritdoc
+     *
+     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
      */
     public function toICal()
     {
@@ -124,6 +135,8 @@ class ExternalCalendar extends AbstractCalendar
 
     /**
      * @inheritdoc
+     *
+     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
      */
     public function toJSON()
     {
@@ -133,8 +146,18 @@ class ExternalCalendar extends AbstractCalendar
     }
 
 
+    /**
+     * Sets the URL to an iCal file that the calendar should use
+     *
+     * @param string $externalUrl - URL to an iCal file
+     *
+     * @throws Exception - URL is not reachable/valid
+     * @throws Exception\NoPermission - User is not permitted to edit the calendar
+     */
     public function setExternalUrl($externalUrl)
     {
+        $this->checkPermission(self::PERMISSION_EDIT_CALENDAR);
+
         if (!self::isUrlReachable($externalUrl)) {
             $msg = QUI::getLocale()->get(
                 'quiqqer/calendar',
@@ -160,6 +183,8 @@ class ExternalCalendar extends AbstractCalendar
 
     /**
      * @inheritdoc
+     *
+     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
      */
     public function getEvents()
     {
@@ -185,7 +210,7 @@ class ExternalCalendar extends AbstractCalendar
     /**
      * @inheritdoc
      *
-     * @throws \QUI\Calendar\Exception - No permission to view this calendar
+     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
      * @throws \Exception - Something went wrong converting the given date to timestamps
      */
     public function getEventsForDate(\DateTime $Date, $ignoreTime)
@@ -230,7 +255,7 @@ class ExternalCalendar extends AbstractCalendar
     /**
      * @inheritdoc
      *
-     * @throws \QUI\Calendar\Exception - No permission to view this calendar
+     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
      * @throws \Exception - Something went wrong converting the given date to timestamps
      */
     public function getEventsBetweenDates(\DateTime $StartDate, \DateTime $EndDate, $ignoreTime)
@@ -275,6 +300,8 @@ class ExternalCalendar extends AbstractCalendar
 
     /**
      * @inheritdoc
+     *
+     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
      */
     public function getUpcomingEvents($amount = -1)
     {

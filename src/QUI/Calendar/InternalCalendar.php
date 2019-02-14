@@ -20,6 +20,8 @@ class InternalCalendar extends AbstractCalendar
 {
     /**
      * @inheritdoc
+     *
+     * @throws Exception - given calendar data belongs to an external calendar
      */
     protected function construct($data)
     {
@@ -40,6 +42,7 @@ class InternalCalendar extends AbstractCalendar
      *
      * @return int - The ID the event got assigned from the database
      *
+     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
      */
     public function addCalendarEvent($title, $desc, $start, $end)
     {
@@ -61,9 +64,13 @@ class InternalCalendar extends AbstractCalendar
      * Adds multiple events at once to the calendar.
      *
      * @param \QUI\Calendar\Event[] $events
+     *
+     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to add events to the calendar
      */
     public function addCalendarEvents($events)
     {
+        $this->checkPermission(self::PERMISSION_ADD_EVENT);
+
         if (!is_array($events) || empty($events)) {
             return;
         }
@@ -97,6 +104,8 @@ class InternalCalendar extends AbstractCalendar
      * @param string $desc - Event description
      * @param int $start - Unix timestamp when the event starts
      * @param int $end - Unix timestamp when the event ends
+     *
+     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
      */
     public function editCalendarEvent($eventID, $title, $desc, $start, $end)
     {
@@ -116,6 +125,8 @@ class InternalCalendar extends AbstractCalendar
      * Removes an event from the calendar.
      *
      * @param int $eventID - ID of the event to remove
+     *
+     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to remove events from the calendar
      */
     public function removeCalendarEvent($eventID)
     {
@@ -130,6 +141,8 @@ class InternalCalendar extends AbstractCalendar
      * Converts a calendar and all its' events to iCal format
      *
      * @return string - The calendar in iCal format
+     *
+     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
      */
     public function toICal()
     {
@@ -164,6 +177,8 @@ class InternalCalendar extends AbstractCalendar
      * Converts the calendars events to JSON format
      *
      * @return string - The calendars events in JSON format
+     *
+     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
      */
     public function toJSON()
     {
@@ -179,6 +194,8 @@ class InternalCalendar extends AbstractCalendar
      * Returns all events in a calendar as an array
      *
      * @return \QUI\Calendar\Event[] - array of events
+     *
+     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
      */
     public function getEvents()
     {
@@ -203,7 +220,7 @@ class InternalCalendar extends AbstractCalendar
     /**
      * @inheritdoc
      *
-     * @throws \QUI\Calendar\Exception - No permission to view this calendar
+     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
      */
     public function getEventsForDate(\DateTime $Date, $ignoreTime)
     {
@@ -258,7 +275,7 @@ class InternalCalendar extends AbstractCalendar
     /**
      * @inheritdoc
      *
-     * @throws \QUI\Calendar\Exception - No permission to view this calendar
+     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
      */
     public function getEventsBetweenDates(\DateTime $StartDate, \DateTime $EndDate, $ignoreTime)
     {
@@ -307,6 +324,8 @@ class InternalCalendar extends AbstractCalendar
 
     /**
      * @inheritdoc
+     *
+     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
      */
     public function getUpcomingEvents($amount = -1)
     {

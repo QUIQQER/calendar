@@ -96,6 +96,8 @@ abstract class AbstractCalendar
      * @param $name - The new calendar name
      * @param $isPublic - Is the calendar public?
      * @param $color - The calendars color
+     *
+     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to edit the calendar
      */
     public function editCalendar($name, $isPublic, $color)
     {
@@ -238,6 +240,8 @@ abstract class AbstractCalendar
      * Converts the calendars information to an array. Does not include events.
      *
      * @return array
+     *
+     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
      */
     public function toArray()
     {
@@ -259,7 +263,7 @@ abstract class AbstractCalendar
      *
      * @return boolean
      *
-     * @throws \QUI\Calendar\Exception
+     * @throws \QUI\Calendar\Exception\NoPermission
      */
     public function checkPermission($permission)
     {
@@ -278,10 +282,10 @@ abstract class AbstractCalendar
                 if ($this->isOwner($User) || $this->isPublic()) {
                     return true;
                 } else {
-                    throw new Exception(array(
+                    throw new QUI\Calendar\Exception\NoPermission([
                         'quiqqer/calendar',
                         'exception.calendar.permission.view'
-                    ));
+                    ]);
                 }
                 break;
             case self::PERMISSION_EDIT_CALENDAR:
@@ -293,10 +297,10 @@ abstract class AbstractCalendar
                 if ($this->isOwner($User)) {
                     return true;
                 }
-                throw new Exception(array(
+                throw new QUI\Calendar\Exception\NoPermission([
                     'quiqqer/calendar',
                     'exception.calendar.permission.edit'
-                ));
+                ]);
         }
     }
 
