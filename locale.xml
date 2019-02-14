@@ -172,6 +172,11 @@
             <en><![CDATA[iCal-file is invalid.]]></en>
         </locale>
 
+        <locale name="exception.database.general">
+            <de><![CDATA[Ein Fehler ist in der Datenbank aufgetreten.]]></de>
+            <en><![CDATA[An error occurred in the database.]]></en>
+        </locale>
+
         <!-- Tour -->
         <!-- Tours -->
         <locale name="tour.general.title">

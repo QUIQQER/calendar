@@ -2,7 +2,9 @@
 
 namespace QUI\Calendar;
 
+use QUI\Calendar\Exception\Database;
 use QUI\Calendar\Exception\NoPermission;
+use QUI\System\Log;
 
 class EventManager
 {
@@ -10,17 +12,25 @@ class EventManager
      * Returns the event for a given ID or null if not found
      *
      * @param int $id - An event id
+     *
      * @return null|Event The event or null if event not found or no permission to view the events calendar
+     *
+     * @throws Database - Couldn't fetch event's data from the database
      */
     public static function getEventById($id)
     {
-        $data = \QUI::getDataBase()->fetch(array(
-            'from'  => Handler::tableCalendarsEvents(),
-            'where' => array(
-                'eventid' => $id
-            ),
-            'limit' => 1
-        ));
+        try {
+            $data = \QUI::getDataBase()->fetch(array(
+                'from'  => Handler::tableCalendarsEvents(),
+                'where' => array(
+                    'eventid' => $id
+                ),
+                'limit' => 1
+            ));
+        } catch (\QUI\Database\Exception $Exception) {
+            Log::writeException($Exception);
+            throw new Database();
+        }
 
         if (empty($data)) {
             return null;
@@ -131,12 +141,19 @@ class EventManager
      * Returns all events from the database
      *
      * @return array
+     *
+     * @throws Database - Could not fetch event's data from the database
      */
     public static function getAllEvents()
     {
-        $eventsDataRaw = \QUI::getDataBase()->fetch(array(
-            'from' => Handler::tableCalendarsEvents()
-        ));
+        try {
+            $eventsDataRaw = \QUI::getDataBase()->fetch(array(
+                'from' => Handler::tableCalendarsEvents()
+            ));
+        } catch (\QUI\Database\Exception $Exception) {
+            Log::writeException($Exception);
+            throw new Database();
+        }
 
         $events = array();
         foreach ($eventsDataRaw as $key => $eventData) {

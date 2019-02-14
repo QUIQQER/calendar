@@ -69,7 +69,6 @@ class ExternalCalendar extends AbstractCalendar
     }
 
 
-
     /**
      * Returns a string in iCal format containing the calendar's events
      *
@@ -140,6 +139,7 @@ class ExternalCalendar extends AbstractCalendar
      * @inheritdoc
      *
      * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
+     * @throws QUI\Exception - External calendar's URL can not be reached or is invalid
      */
     public function toICal()
     {
@@ -153,6 +153,7 @@ class ExternalCalendar extends AbstractCalendar
      * @inheritdoc
      *
      * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
+     * @throws QUI\Exception - Calendar's iCal could not be loaded (URL is not reachable or content invalid)
      */
     public function toJSON()
     {
@@ -168,6 +169,7 @@ class ExternalCalendar extends AbstractCalendar
      * @param string $externalUrl - URL to an iCal file
      *
      * @throws Exception - URL is not reachable/valid
+     * @throws QUI\Calendar\Exception\Database - Could not update the external URL in the database
      * @throws Exception\NoPermission - User is not permitted to edit the calendar
      */
     public function setExternalUrl($externalUrl)
@@ -185,11 +187,16 @@ class ExternalCalendar extends AbstractCalendar
         if ($this->externalUrl !== $externalUrl) {
             $this->externalUrl = $externalUrl;
 
-            QUI::getDataBase()->update(
-                Handler::tableCalendars(),
-                ['externalUrl' => $externalUrl],
-                ['id' => $this->getId()]
-            );
+            try {
+                QUI::getDataBase()->update(
+                    Handler::tableCalendars(),
+                    ['externalUrl' => $externalUrl],
+                    ['id' => $this->getId()]
+                );
+            } catch (\QUI\Database\Exception $Exception) {
+                QUI\System\Log::writeException($Exception);
+                throw new QUI\Calendar\Exception\Database();
+            }
 
             // Clear cache entry since the URL has changed -> different data
             QUI\Cache\Manager::clear($this->icalCacheKey);
@@ -201,6 +208,7 @@ class ExternalCalendar extends AbstractCalendar
      * @inheritdoc
      *
      * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
+     * @throws QUI\Exception - Calendar's iCal could not be loaded (URL is not reachable or content invalid)
      */
     public function getEvents()
     {
@@ -318,6 +326,7 @@ class ExternalCalendar extends AbstractCalendar
      * @inheritdoc
      *
      * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
+     * @throws QUI\Exception - Calendar's iCal could not be loaded (URL is not reachable or content invalid)
      */
     public function getUpcomingEvents($amount = -1)
     {
@@ -326,14 +335,19 @@ class ExternalCalendar extends AbstractCalendar
         $ICal = new ICal();
         $ICal->initString($this->toICal());
 
-        $eventsRaw = $ICal->eventsFromRange();  // gets event from now on
-        $events    = array();
+        try {
+            $eventsRaw = $ICal->eventsFromRange();  // gets events from now on
+        } catch (\Exception $Exception) {
+            // We should never end up here, but just to be save...
+            $eventsRaw = [];
+        }
 
         if ($amount == -1) {
             $amount = PHP_INT_MAX;
         }
 
-        $count = 0;
+        $count  = 0;
+        $events = array();
         foreach ($eventsRaw as $key => $Event) {
             if ($count >= $amount) {
                 break;

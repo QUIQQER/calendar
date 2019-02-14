@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\Calendar\Setup
  */
+
 namespace QUI\Calendar;
 
 use QUI;
@@ -15,6 +16,8 @@ class Setup
 {
     /**
      * Only for udpates: Delete columns created in older versions of the package
+     *
+     * @throws QUI\Calendar\Exception\Database - Couldn't delete calendar's without owner/userid from the database
      */
     public static function run()
     {
@@ -30,7 +33,12 @@ class Setup
         }
 
         // Delete calendars without owner/userid
-        $DB->delete($tableCalendarsName, ['userid' => null]);
+        try {
+            $DB->delete($tableCalendarsName, ['userid' => null]);
+        } catch (QUI\Database\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+            throw new QUI\Calendar\Exception\Database();
+        }
 
         // Delete Events without associated Calendar
         $DB->getPDO()->query(

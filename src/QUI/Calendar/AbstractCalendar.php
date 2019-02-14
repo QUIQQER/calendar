@@ -49,17 +49,24 @@ abstract class AbstractCalendar
      *
      * @param int - $calendarId
      *
-     * @throws QUI\Calendar\Exception
+     * @throws QUI\Calendar\Exception - Calendar does not exist
+     * @throws QUI\Calendar\Exception\Database - Couldn't fetch the calendar's data from the database
      */
     public function __construct($calendarId)
     {
-        $result = QUI::getDataBase()->fetch(array(
-            'from'  => Handler::tableCalendars(),
-            'where' => array(
-                'id' => (int)$calendarId
-            ),
-            'limit' => 1
-        ));
+        try {
+            $result = QUI::getDataBase()->fetch(array(
+                'from'  => Handler::tableCalendars(),
+                'where' => array(
+                    'id' => (int)$calendarId
+                ),
+                'limit' => 1
+            ));
+        } catch (QUI\Database\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+            throw new QUI\Calendar\Exception\Database();
+        }
+
 
         if (!isset($result[0])) {
             throw new QUI\Calendar\Exception(array(
@@ -83,8 +90,15 @@ abstract class AbstractCalendar
      */
     protected function construct($data)
     {
-        $this->name     = $data['name'];
-        $this->User     = QUI::getUsers()->get($data['userid']);
+        $this->name = $data['name'];
+
+        try {
+            $this->User = QUI::getUsers()->get($data['userid']);
+        } catch (QUI\Exception $Exception) {
+            // The user specified in the calendar's data does not exist (anymore)
+            $this->User = QUI::getUsers()->getNobody();
+        }
+
         $this->isPublic = $data['isPublic'] == 1 ? true : false;
         $this->color    = $data['color'];
     }
@@ -98,6 +112,7 @@ abstract class AbstractCalendar
      * @param $color - The calendars color
      *
      * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to edit the calendar
+     * @throws QUI\Calendar\Exception\Database - Couldn't update the event in the database
      */
     public function editCalendar($name, $isPublic, $color)
     {
@@ -107,15 +122,20 @@ abstract class AbstractCalendar
         $this->isPublic = $isPublic;
         $this->color    = $color;
 
-        QUI::getDataBase()->update(
-            Handler::tableCalendars(),
-            [
-                'name'     => $name,
-                'isPublic' => $isPublic,
-                'color'    => $color
-            ],
-            ['id' => $this->getId()]
-        );
+        try {
+            QUI::getDataBase()->update(
+                Handler::tableCalendars(),
+                [
+                    'name'     => $name,
+                    'isPublic' => $isPublic,
+                    'color'    => $color
+                ],
+                ['id' => $this->getId()]
+            );
+        } catch (QUI\Database\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+            throw new QUI\Calendar\Exception\Database();
+        }
     }
 
 
@@ -269,10 +289,12 @@ abstract class AbstractCalendar
     {
         $User = QUI::getUsers()->getUserBySession();
 
+        // Super User
         if ($User->isSU()) {
             return true;
         }
 
+        // System User (e.g. CRON or CLI)
         if (QUI::getUsers()->isSystemUser($User)) {
             return true;
         }

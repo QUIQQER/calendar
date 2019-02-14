@@ -28,7 +28,7 @@ class Cron
             // Loads non cached calendars into cache
             try {
                 $Calendar->toICal();
-            } catch (Exception $exception) {
+            } catch (\QUI\Exception $exception) {
                 continue;
             }
         }

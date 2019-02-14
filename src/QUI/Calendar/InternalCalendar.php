@@ -43,18 +43,24 @@ class InternalCalendar extends AbstractCalendar
      * @return int - The ID the event got assigned from the database
      *
      * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
+     * @throws QUI\Calendar\Exception\Database - Couldn't insert event into the database
      */
     public function addCalendarEvent($title, $desc, $start, $end)
     {
         $this->checkPermission(self::PERMISSION_ADD_EVENT);
 
-        QUI::getDataBase()->insert(Handler::tableCalendarsEvents(), array(
-            'title'      => $title,
-            'desc'       => $desc,
-            'start'      => $start,
-            'end'        => $end,
-            'calendarid' => $this->getId()
-        ));
+        try {
+            QUI::getDataBase()->insert(Handler::tableCalendarsEvents(), array(
+                'title'      => $title,
+                'desc'       => $desc,
+                'start'      => $start,
+                'end'        => $end,
+                'calendarid' => $this->getId()
+            ));
+        } catch (QUI\Database\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+            throw new QUI\Calendar\Exception\Database();
+        }
 
         return QUI::getDataBase()->getPDO()->lastInsertId('eventid');
     }
@@ -106,19 +112,25 @@ class InternalCalendar extends AbstractCalendar
      * @param int $end - Unix timestamp when the event ends
      *
      * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
+     * @throws QUI\Calendar\Exception\Database - Couldn't update event in the database
      */
     public function editCalendarEvent($eventID, $title, $desc, $start, $end)
     {
         $this->checkPermission(self::PERMISSION_EDIT_EVENT);
 
-        QUI::getDataBase()->update(Handler::tableCalendarsEvents(), array(
-            'title' => $title,
-            'desc'  => $desc,
-            'start' => $start,
-            'end'   => $end
-        ), array(
-            'eventid' => $eventID
-        ));
+        try {
+            QUI::getDataBase()->update(Handler::tableCalendarsEvents(), array(
+                'title' => $title,
+                'desc'  => $desc,
+                'start' => $start,
+                'end'   => $end
+            ), array(
+                'eventid' => $eventID
+            ));
+        } catch (QUI\Database\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+            throw new QUI\Calendar\Exception\Database();
+        }
     }
 
     /**
@@ -127,14 +139,20 @@ class InternalCalendar extends AbstractCalendar
      * @param int $eventID - ID of the event to remove
      *
      * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to remove events from the calendar
+     * @throws QUI\Calendar\Exception\Database - Couldn't delete the event from the database
      */
     public function removeCalendarEvent($eventID)
     {
         $this->checkPermission(self::PERMISSION_REMOVE_EVENT);
 
-        QUI::getDataBase()->delete(Handler::tableCalendarsEvents(), array(
-            'eventid' => $eventID
-        ));
+        try {
+            QUI::getDataBase()->delete(Handler::tableCalendarsEvents(), array(
+                'eventid' => $eventID
+            ));
+        } catch (QUI\Database\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+            throw new QUI\Calendar\Exception\Database();
+        }
     }
 
     /**
@@ -152,11 +170,19 @@ class InternalCalendar extends AbstractCalendar
         $events   = $this->getEvents();
 
         foreach ($events as $Event) {
-            $start = new \DateTime();
-            $start->setTimestamp(strtotime($Event->start_date));
+            try {
+                $start = new \DateTime();
+                $start->setTimestamp(strtotime($Event->start_date));
 
-            $end = new \DateTime();
-            $end->setTimestamp(strtotime($Event->end_date));
+                $end = new \DateTime();
+                $end->setTimestamp(strtotime($Event->end_date));
+            } catch (\Exception $Exception) {
+                // This should never happen since DateTime is instantiated without parameters
+                // But just to be save, let's do this...
+                QUI\System\Log::writeException($Exception);
+
+                return "";
+            }
 
             $CalendarEvent = new Event();
 
@@ -196,17 +222,23 @@ class InternalCalendar extends AbstractCalendar
      * @return \QUI\Calendar\Event[] - array of events
      *
      * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
+     * @throws QUI\Calendar\Exception\Database - Couldn't fetch events' data from the database
      */
     public function getEvents()
     {
         $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
 
-        $eventsRaw = QUI::getDataBase()->fetch(array(
-            'from'  => Handler::tableCalendarsEvents(),
-            'where' => array(
-                'calendarid' => (int)$this->getId()
-            )
-        ));
+        try {
+            $eventsRaw = QUI::getDataBase()->fetch(array(
+                'from'  => Handler::tableCalendarsEvents(),
+                'where' => array(
+                    'calendarid' => (int)$this->getId()
+                )
+            ));
+        } catch (QUI\Database\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+            throw new QUI\Calendar\Exception\Database();
+        }
 
         $events = array();
         foreach ($eventsRaw as $event) {

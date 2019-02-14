@@ -25,16 +25,24 @@ class Handler
      * @param string $color - The calendars color in hex format (leading #)
      *
      * @return InternalCalendar - The created calendar
+     *
+     * @throws Exception
+     * @throws QUI\Calendar\Exception\Database - Could not insert calendar into the database
      */
     public static function createCalendar($name, $User, $isPublic = false, $color = '#2F8FC6')
     {
-        QUI::getDataBase()->insert(self::tableCalendars(), array(
-            'name'     => $name,
-            'userid'   => $User->getId(),
-            'isPublic' => $isPublic ? 1 : 0,
-            'color'    => $color
-        ));
-        $calendarID = QUI::getPDO()->lastInsertId();
+        try {
+            QUI::getDataBase()->insert(self::tableCalendars(), array(
+                'name'     => $name,
+                'userid'   => $User->getId(),
+                'isPublic' => $isPublic ? 1 : 0,
+                'color'    => $color
+            ));
+            $calendarID = QUI::getPDO()->lastInsertId();
+        } catch (QUI\Database\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+            throw new QUI\Calendar\Exception\Database();
+        }
 
         return new InternalCalendar($calendarID);
     }
@@ -46,6 +54,8 @@ class Handler
      * @param User $User - The calendar owner
      *
      * @return InternalCalendar - The created calendar object
+     *
+     * @throws Exception
      */
     public static function createCalendarFromIcal($icalUrl, $User)
     {
@@ -83,7 +93,9 @@ class Handler
      * @param string $color - The calendars color in hex format (leading #)
      *
      * @return ExternalCalendar
+     *
      * @throws Exception
+     * @throws QUI\Calendar\Exception\Database - Couldn't insert calendar into the database
      */
     public static function addExternalCalendar(
         $calendarName,
@@ -113,20 +125,35 @@ class Handler
             $User = QUI::getUserBySession();
         }
 
-        QUI::getDataBase()->insert(self::tableCalendars(), array(
-            'name'        => $calendarName,
-            'userid'      => $User->getId(),
-            'isPublic'    => $isPublic,
-            'isExternal'  => 1,
-            'externalUrl' => $icalUrl,
-            'color'       => $color
-        ));
+        try {
+            QUI::getDataBase()->insert(self::tableCalendars(), array(
+                'name'        => $calendarName,
+                'userid'      => $User->getId(),
+                'isPublic'    => $isPublic,
+                'isExternal'  => 1,
+                'externalUrl' => $icalUrl,
+                'color'       => $color
+            ));
+        } catch (QUI\Database\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+            throw new QUI\Calendar\Exception\Database();
+        }
+
         $calendarID = QUI::getPDO()->lastInsertId();
 
         return new ExternalCalendar($calendarID);
     }
 
 
+    /**
+     * Returns if the given calendar ID belongs to an external calendar
+     *
+     * @param $calendarID
+     *
+     * @return bool
+     *
+     * @throws Exception
+     */
     public static function isExternalCalendar($calendarID)
     {
         return !self::getCalendar($calendarID)->isInternal();
@@ -157,6 +184,10 @@ class Handler
      * Deletes calendars with the given IDs from the database
      *
      * @param array $ids - The IDs of calendar which should be deleted
+     *
+     * @throws QUI\Calendar\Exception\NoPermission - User has no permission to delete one of the calendars
+     * @throws Exception - One of the calendars could not be found
+     * @throws QUI\Calendar\Exception\Database - Couldn't delete calendar from the database
      */
     public static function deleteCalendars($ids)
     {
@@ -169,13 +200,18 @@ class Handler
 
             $Calendar->checkPermission($Calendar::PERMISSION_DELETE_CALENDAR);
 
-            $Database->delete(self::tableCalendars(), array(
-                'id' => $id
-            ));
+            try {
+                $Database->delete(self::tableCalendars(), array(
+                    'id' => $id
+                ));
 
-            $Database->delete(self::tableCalendarsEvents(), array(
-                'calendarid' => $id
-            ));
+                $Database->delete(self::tableCalendarsEvents(), array(
+                    'calendarid' => $id
+                ));
+            } catch (QUI\Database\Exception $Exception) {
+                QUI\System\Log::writeException($Exception);
+                throw new QUI\Calendar\Exception\Database();
+            }
         }
     }
 
@@ -183,18 +219,24 @@ class Handler
      * Returns all calendars from database.
      *
      * @return array - all calendars in the database
+     *
+     * @throws QUI\Calendar\Exception\Database - Couldn't fetch calendars' data from the database
      */
     public static function getCalendars()
     {
-        $calendars = QUI::getDataBase()->fetch(array(
-            'from' => self::tableCalendars()
-        ));
+        try {
+            $calendars = QUI::getDataBase()->fetch(array(
+                'from' => self::tableCalendars()
+            ));
+        } catch (QUI\Database\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+            throw new QUI\Calendar\Exception\Database();
+        }
 
         foreach ($calendars as $key => $calendarData) {
-            $Calendar = Handler::getCalendar($calendarData['id']);
-
             // Only return calendars the user can edit
             try {
+                $Calendar = Handler::getCalendar($calendarData['id']);
                 $Calendar->checkPermission($Calendar::PERMISSION_EDIT_CALENDAR);
             } catch (QUI\Calendar\Exception $ex) {
                 unset($calendars[$key]);
@@ -214,22 +256,28 @@ class Handler
      * Returns all external calendars from database.
      *
      * @return ExternalCalendar[] - All external calendars in the database
+     *
+     * @throws QUI\Calendar\Exception\Database - Couldn't fetch external calendars' data from the database
      */
     public static function getExternalCalendars()
     {
-        $calendarsRaw = QUI::getDataBase()->fetch(array(
-            'from'  => self::tableCalendars(),
-            'where' => array(
-                'isExternal' => 1
-            )
-        ));
+        try {
+            $calendarsRaw = QUI::getDataBase()->fetch(array(
+                'from'  => self::tableCalendars(),
+                'where' => array(
+                    'isExternal' => 1
+                )
+            ));
+        } catch (QUI\Database\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+            throw new QUI\Calendar\Exception\Database();
+        }
 
         $calendars = array();
         foreach ($calendarsRaw as $calendarData) {
-            $Calendar = new ExternalCalendar($calendarData['id']);
-
             // Only return calendars the user can edit
             try {
+                $Calendar = new ExternalCalendar($calendarData['id']);
                 $Calendar->checkPermission($Calendar::PERMISSION_EDIT_CALENDAR);
             } catch (QUI\Calendar\Exception $ex) {
                 continue;
@@ -251,16 +299,22 @@ class Handler
      * @return ExternalCalendar|InternalCalendar - internal or external calendar
      *
      * @throws Exception - If calendar not found
+     * @throws QUI\Calendar\Exception\Database - Couldn't fetch calendar's data from the database
      */
     public static function getCalendar($calendarID)
     {
-        $calendarRaw = QUI::getDataBase()->fetch(array(
-            'from'  => self::tableCalendars(),
-            'where' => array(
-                'id' => $calendarID
-            ),
-            'limit' => 1
-        ));
+        try {
+            $calendarRaw = QUI::getDataBase()->fetch(array(
+                'from'  => self::tableCalendars(),
+                'where' => array(
+                    'id' => $calendarID
+                ),
+                'limit' => 1
+            ));
+        } catch (QUI\Database\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+            throw new QUI\Calendar\Exception\Database();
+        }
 
         if (!isset($calendarRaw[0])) {
             throw new QUI\Calendar\Exception(array(
