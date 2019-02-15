@@ -178,6 +178,16 @@ class Handler
     }
 
     /**
+     * The name of the database table containing calendar url hashes
+     *
+     * @return string
+     */
+    public static function tableCalendarsShares()
+    {
+        return QUI::getDBTableName('calendars_shares');
+    }
+
+    /**
      * Deletes calendars with the given IDs from the database
      *
      * @param array $ids - The IDs of calendar which should be deleted

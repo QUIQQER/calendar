@@ -398,7 +398,25 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
                     onError     : reject
                 });
             });
-        }
+        },
 
+
+        /**
+         * Resolves with the share URL for a given calendar ID
+         *
+         * @param {int} calendarID
+         * @return {Promise<T>}
+         */
+        getShareUrl: function (calendarID) {
+            return new Promise(function (resolve, reject) {
+                QUIAjax.get('package_quiqqer_calendar_ajax_getShareUrl', function (result) {
+                    resolve(result);
+                }, {
+                    'package'   : 'quiqqer/calendar',
+                    'calendarID': calendarID,
+                    onError     : reject
+                });
+            });
+        }
     });
 });

@@ -25,6 +25,7 @@
     "mail": "support@pcsg.de"
   },
   "require": {
+    "php": "^7",
     "quiqqer/quiqqer": "*",
     "quiqqer/calendar-controls": "1.2.*|dev-master|dev-dev",
     "quiqqer/utils": "^1.15.1|dev-master|dev-dev",

@@ -384,6 +384,26 @@ abstract class AbstractCalendar
     }
 
 
+    /**
+     * Returns the share URL for the calendar.
+     * By default the URL is returned for the current session's user.
+     *
+     * If a user is passed as an argument the share URL for this user is returned.
+     *
+     * @param User|null $User - The user to get the share URL for
+     *
+     * @return string
+     *
+     * @throws QUI\Calendar\Exception\NoPermission - The user has no permission to view the calendar
+     * @throws QUI\Calendar\Exception\Database - Couldn't read/write from/to database
+     * @throws QUI\Calendar\Exception\Share - Couldn't generate a share-hash (missing entropy)
+     */
+    public function getShareUrl(User $User = null)
+    {
+        return ShareHandler::getShareUrlForCalendar($this, $User);
+    }
+
+
     const PERMISSION_VIEW_CALENDAR = 'viewCalendar';
     const PERMISSION_EDIT_CALENDAR = 'editCalendar';
     const PERMISSION_DELETE_CALENDAR = 'deleteCalendar';

@@ -364,6 +364,17 @@
                 <p>Note that the calendars and the corresponding events can not be restored.</p>]]></en>
         </locale>
 
+        <!-- region Share calendar -->
+        <locale name="calendar.window.share.title">
+            <de><![CDATA[Kalender Freigeben]]></de>
+            <en><![CDATA[Share Calendar]]></en>
+        </locale>
+        <locale name="calendar.window.share.information">
+            <de html="true"><![CDATA[Verwenden Sie den folgenden Link um Ihren Kalender freizugeben.<br>Damit kann der Kalender beispielsweise in Outlook, Thunderbird, oder Google Kalender verwendet werden.]]></de>
+            <en html="true"><![CDATA[Use the following link to share your calendar.<br>This will allow you to use the calendar in Outlook, Thunderbird, or Google Calendar for example.]]></en>
+        </locale>
+        <!-- endregion -->
+
         <!-- iCal import -->
         <locale name="calendar.ical.import.info">
             <de><![CDATA[Geben Sie hier die URL zu einer iCal Datei (.ics) ein:]]></de>
@@ -403,8 +414,12 @@
 
 
         <locale name="panel.button.ical.export.text">
-            <de><![CDATA[Als iCal exportieren]]></de>
-            <en><![CDATA[Export as iCal]]></en>
+            <de><![CDATA[Herunterladen]]></de>
+            <en><![CDATA[Download]]></en>
+        </locale>
+        <locale name="panel.button.ical.export.title">
+            <de><![CDATA[Lädt den Kalender im iCal Format (.ics) herunter]]></de>
+            <en><![CDATA[Downloads the calendar in iCal format (.ics)]]></en>
         </locale>
 
         <locale name="panel.button.delete.calendar.text">
@@ -415,6 +430,15 @@
         <locale name="panel.button.show_as_list.text">
             <de><![CDATA[Als Liste anzeigen]]></de>
             <en><![CDATA[Show as list]]></en>
+        </locale>
+
+        <locale name="panel.button.share.text">
+            <de><![CDATA[Freigeben]]></de>
+            <en><![CDATA[Share]]></en>
+        </locale>
+        <locale name="panel.button.share.title">
+            <de><![CDATA[Erzeugt eine URL zum Abrufen des Kalenders im iCal Format (.ics)]]></de>
+            <en><![CDATA[Generates an URL to access the calendar in iCal format (.ics)]]></en>
         </locale>
 
 
