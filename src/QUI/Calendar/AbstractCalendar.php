@@ -49,17 +49,24 @@ abstract class AbstractCalendar
      *
      * @param int - $calendarId
      *
-     * @throws QUI\Calendar\Exception
+     * @throws QUI\Calendar\Exception - Calendar does not exist
+     * @throws QUI\Calendar\Exception\Database - Couldn't fetch the calendar's data from the database
      */
     public function __construct($calendarId)
     {
-        $result = QUI::getDataBase()->fetch(array(
-            'from'  => Handler::tableCalendars(),
-            'where' => array(
-                'id' => (int)$calendarId
-            ),
-            'limit' => 1
-        ));
+        try {
+            $result = QUI::getDataBase()->fetch(array(
+                'from'  => Handler::tableCalendars(),
+                'where' => array(
+                    'id' => (int)$calendarId
+                ),
+                'limit' => 1
+            ));
+        } catch (QUI\Database\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+            throw new QUI\Calendar\Exception\Database();
+        }
+
 
         if (!isset($result[0])) {
             throw new QUI\Calendar\Exception(array(
@@ -83,8 +90,15 @@ abstract class AbstractCalendar
      */
     protected function construct($data)
     {
-        $this->name     = $data['name'];
-        $this->User     = QUI::getUsers()->get($data['userid']);
+        $this->name = $data['name'];
+
+        try {
+            $this->User = QUI::getUsers()->get($data['userid']);
+        } catch (QUI\Exception $Exception) {
+            // The user specified in the calendar's data does not exist (anymore)
+            $this->User = QUI::getUsers()->getNobody();
+        }
+
         $this->isPublic = $data['isPublic'] == 1 ? true : false;
         $this->color    = $data['color'];
     }
@@ -96,6 +110,9 @@ abstract class AbstractCalendar
      * @param $name - The new calendar name
      * @param $isPublic - Is the calendar public?
      * @param $color - The calendars color
+     *
+     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to edit the calendar
+     * @throws QUI\Calendar\Exception\Database - Couldn't update the event in the database
      */
     public function editCalendar($name, $isPublic, $color)
     {
@@ -105,15 +122,20 @@ abstract class AbstractCalendar
         $this->isPublic = $isPublic;
         $this->color    = $color;
 
-        QUI::getDataBase()->update(
-            Handler::tableCalendars(),
-            [
-                'name'     => $name,
-                'isPublic' => $isPublic,
-                'color'    => $color
-            ],
-            ['id' => $this->getId()]
-        );
+        try {
+            QUI::getDataBase()->update(
+                Handler::tableCalendars(),
+                [
+                    'name'     => $name,
+                    'isPublic' => $isPublic,
+                    'color'    => $color
+                ],
+                ['id' => $this->getId()]
+            );
+        } catch (QUI\Database\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+            throw new QUI\Calendar\Exception\Database();
+        }
     }
 
 
@@ -181,6 +203,41 @@ abstract class AbstractCalendar
     abstract public function getEvents();
 
     /**
+     * Returns all events for a given date (day).
+     *
+     * The second parameter determines whether the exact point in time should be used or the entire day.
+     *
+     * @example
+     * passed date object: 20.04.2042 13:37
+     * second parameter true: Returns all events that occur on 20.04.2042
+     * second parameter false: Returns all events that occur on 20.04.2042 at 13:37
+     *
+     * @param \DateTime $Date
+     * @param boolean $ignoreTime
+     *
+     * @return EventCollection
+     */
+    abstract public function getEventsForDate(\DateTime $Date, $ignoreTime);
+
+    /**
+     * Returns all events between two given dates.
+     *
+     * The second parameter determines whether the exact point in time should be used or the entire day.
+     *
+     * @example
+     * passed date objects: 20.04.2042 13:37 and 06.09.2042 04:20
+     * second parameter true: Returns all events that occur between 20.04.2042 00:00 and 06.09.2042 23:59
+     * second parameter false: Returns all events that occur between 20.04.2042 13:37 and 06.09.2042 04:20
+     *
+     * @param \DateTime $StartDate
+     * @param \DateTime $EndDate
+     * @param boolean $ignoreTime
+     *
+     * @return EventCollection
+     */
+    abstract public function getEventsBetweenDates(\DateTime $StartDate, \DateTime $EndDate, $ignoreTime);
+
+    /**
      * Returns the calendars color in hex format.
      *
      * @return string
@@ -203,6 +260,8 @@ abstract class AbstractCalendar
      * Converts the calendars information to an array. Does not include events.
      *
      * @return array
+     *
+     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
      */
     public function toArray()
     {
@@ -218,22 +277,29 @@ abstract class AbstractCalendar
 
 
     /**
-     * Checks if the user can perform a specified action on the calendar
+     * Checks if a user can perform a specified action on the calendar.
+     * By default the session user is used.
+     * By passing a user as the second argument the permissions for a third user can be checked.
      *
      * @param $permission - Name of the permission to check
+     * @param User $User - The user to check the permission for (Session User by default)
      *
      * @return boolean
      *
-     * @throws \QUI\Calendar\Exception
+     * @throws \QUI\Calendar\Exception\NoPermission
      */
-    public function checkPermission($permission)
+    public function checkPermission($permission, User $User = null)
     {
-        $User = QUI::getUsers()->getUserBySession();
+        if (is_null($User)) {
+            $User = QUI::getUsers()->getUserBySession();
+        }
 
+        // Super User
         if ($User->isSU()) {
             return true;
         }
 
+        // System User (e.g. CRON or CLI)
         if (QUI::getUsers()->isSystemUser($User)) {
             return true;
         }
@@ -243,10 +309,10 @@ abstract class AbstractCalendar
                 if ($this->isOwner($User) || $this->isPublic()) {
                     return true;
                 } else {
-                    throw new Exception(array(
+                    throw new QUI\Calendar\Exception\NoPermission([
                         'quiqqer/calendar',
                         'exception.calendar.permission.view'
-                    ));
+                    ]);
                 }
                 break;
             case self::PERMISSION_EDIT_CALENDAR:
@@ -258,10 +324,10 @@ abstract class AbstractCalendar
                 if ($this->isOwner($User)) {
                     return true;
                 }
-                throw new Exception(array(
+                throw new QUI\Calendar\Exception\NoPermission([
                     'quiqqer/calendar',
                     'exception.calendar.permission.edit'
-                ));
+                ]);
         }
     }
 
@@ -315,6 +381,26 @@ abstract class AbstractCalendar
                 'exception.calendar.notExternal'
             ));
         }
+    }
+
+
+    /**
+     * Returns the share URL for the calendar.
+     * By default the URL is returned for the current session's user.
+     *
+     * If a user is passed as an argument the share URL for this user is returned.
+     *
+     * @param User|null $User - The user to get the share URL for
+     *
+     * @return string
+     *
+     * @throws QUI\Calendar\Exception\NoPermission - The user has no permission to view the calendar
+     * @throws QUI\Calendar\Exception\Database - Couldn't read/write from/to database
+     * @throws QUI\Calendar\Exception\Share - Couldn't generate a share-hash (missing entropy)
+     */
+    public function getShareUrl(User $User = null)
+    {
+        return ShareHandler::getShareUrlForCalendar($this, $User);
     }
 
 

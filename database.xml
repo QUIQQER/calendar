@@ -19,5 +19,16 @@
             <field type="INT( 11 ) NOT NULL">end</field>
             <field type="INT( 5 ) NOT NULL">calendarid</field>
         </table>
+
+        <table name="calendars_shares">
+            <field type="INT( 5 ) NOT NULL">calendarid</field>
+            <field type="INT( 11 ) NOT NULL">userid</field>
+            <field type="VARCHAR ( 32 ) NOT NULL">hash</field>
+            <field type="DATETIME NOT NULL">date_created</field>
+
+            <primary>hash</primary>
+            <index>calendarid</index>
+            <index>userid</index>
+        </table>
     </global>
 </database>

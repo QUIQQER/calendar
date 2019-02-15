@@ -23,6 +23,7 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
 
     'qui/QUI',
     'qui/controls/windows/Confirm',
+    'qui/controls/windows/Popup',
     'qui/controls/desktop/Panel',
     'qui/controls/buttons/Separator',
     'qui/utils/Functions',
@@ -33,7 +34,7 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
     'Ajax',
     'Locale'
 
-], function (QUI, QUIConfirm, QUIPanel, QUIButtonSeparator, QUIFunctionUtils, Calendars, CalendarDisplay, CalendarEditDisplay, Scheduler, QUIAjax, QUILocale) {
+], function (QUI, QUIConfirm, QUIPopup, QUIPanel, QUIButtonSeparator, QUIFunctionUtils, Calendars, CalendarDisplay, CalendarEditDisplay, Scheduler, QUIAjax, QUILocale) {
     "use strict";
 
     var lg = 'quiqqer/calendar';
@@ -57,7 +58,8 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
             'addEventClick',
             'serialize',
             'unserialize',
-            'exportIcalClick'
+            'exportIcalClick',
+            'shareClick'
         ],
 
         /**
@@ -133,10 +135,23 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
 
             this.addButton({
                 name     : 'exportIcal',
+                title    : QUILocale.get(lg, 'panel.button.ical.export.title'),
                 text     : QUILocale.get(lg, 'panel.button.ical.export.text'),
                 textimage: 'fa fa-download',
                 events   : {
                     onClick: this.exportIcalClick
+                }
+            });
+
+            this.addButton(new QUIButtonSeparator());
+
+            this.addButton({
+                name     : 'share',
+                text     : QUILocale.get(lg, 'panel.button.share.text'),
+                title    : QUILocale.get(lg, 'panel.button.share.title'),
+                textimage: 'fa fa-share-alt',
+                events   : {
+                    onClick: this.shareClick
                 }
             });
 
@@ -328,7 +343,32 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
                     }
                 }
             }).open();
-        }
+        },
 
+
+        /**
+         * Opens the share calendar dialog
+         */
+        shareClick: function () {
+            Calendars.getShareUrl(this.calendarData.id).then(function (shareUrl) {
+                new QUIPopup({
+                    maxHeight: 200,
+                    maxWidth : 450,
+                    icon     : 'fa fa-share-alt',
+                    title    : QUILocale.get(lg, 'calendar.window.share.title'),
+                    content  : '<p style="text-align: center">' + QUILocale.get(lg, 'calendar.window.share.information') + '</p>' +
+                               '<input type="text" readonly onClick="this.select();" style="width: 100%; margin-top: 20px;"/>',
+                    buttons  : false,
+                    events   : {
+                        'onOpen': function (self) {
+                            var Input = self.getContent().querySelector('input');
+
+                            Input.value = shareUrl;
+                            Input.select();
+                        }
+                    }
+                }).open();
+            });
+        }
     });
 });
