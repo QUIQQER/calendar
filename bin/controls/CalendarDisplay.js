@@ -24,8 +24,7 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
     'package/bin/mustache/mustache',
     'text!package/quiqqer/calendar/bin/controls/CalendarDisplay.html'
 
-], function (QUI, QUIControl, Calendars, ColorHelper, Scheduler, QUILoader, Mustache, displayTemplate)
-{
+], function (QUI, QUIControl, Calendars, ColorHelper, Scheduler, QUILoader, Mustache, displayTemplate) {
     "use strict";
 
     var lg = 'quiqqer/calendar';
@@ -51,11 +50,14 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
          *
          * @param options - constructor options
          */
-        initialize: function (options)
-        {
+        initialize: function (options) {
             this.parent(options);
 
             this.schedulerReady = false;
+
+            if (!this.getAttribute('extensions')) {
+                this.setAttribute('extensions', ['agenda_view']);
+            }
 
             if (options !== undefined) {
                 if (options.some(isNaN)) {
@@ -71,8 +73,7 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
         },
 
 
-        $onInject: function ()
-        {
+        $onInject: function () {
             if (this.calIDs.length < 1) {
                 try {
                     this.calIDs = this.$Elm.getProperty('data-qui-options-calendarids').split(',');
@@ -100,13 +101,11 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
          * @param Element - The element to create the Scheduler in
          * @return Promise
          */
-        initScheduler: function (Element)
-        {
+        initScheduler: function (Element) {
             var self = this;
             var CH = new ColorHelper();
 
-            return new Promise(function (resolve)
-            {
+            return new Promise(function (resolve) {
                 // If scheduler already initiated return/resolve
                 if (self.schedulerReady) {
                     resolve();
@@ -116,11 +115,12 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
                     html: Mustache.render(displayTemplate)
                 });
 
+                var extensions = self.getAttribute('extensions').map(function (extension) {
+                    return Scheduler.loadExtension(extension);
+                });
+
                 // Load scheduler extensions
-                Promise.all([
-                    Scheduler.loadExtension('agenda_view')
-                ]).then(function (Scheduler)
-                {
+                Promise.all(extensions).then(function (Scheduler) {
                     // Get last scheduler object (the one with all loaded extensions)
                     Scheduler = Scheduler[Scheduler.length - 1];
 
@@ -146,41 +146,34 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
                     self.Scheduler.init(Element.getElementById('calendar'));
 
                     // Parse events from all calendars in Scheduler
-                    self.calIDs.forEach(function (calID)
-                    {
+                    self.calIDs.forEach(function (calID) {
                         self.Loader.show();
 
-                        Calendars.getCalendar(calID).then(function (calendarData)
-                        {
+                        Calendars.getCalendar(calID).then(function (calendarData) {
                             var calendarColor = calendarData.color;
                             var textColor = CH.getSchedulerTextColor(calendarColor);
 
                             calendarData.textColor = textColor;
 
-                            Calendars.getEventsAsJson(calID).then(function (result)
-                            {
+                            Calendars.getEventsAsJson(calID).then(function (result) {
                                 var events = JSON.parse(result);
-                                events.forEach(function (event)
-                                {
+                                events.forEach(function (event) {
                                     event.color = calendarColor;
                                     event.textColor = textColor;
                                 });
-                                self.parseEventsIntoScheduler(JSON.stringify(events)).then(function ()
-                                {
+                                self.parseEventsIntoScheduler(JSON.stringify(events)).then(function () {
                                     self.Loader.hide();
                                 });
-                            }).catch(function ()
-                            {
+                            }).catch(function () {
                                 self.Loader.hide();
                             });
-                        }).catch(function ()
-                        {
+                        }).catch(function () {
                             self.Loader.hide();
                         });
                     });
 
                     var view = self.getAttribute('view');
-                    if(view) {
+                    if (view) {
                         self.Scheduler.updateView(null, view);
                     }
 
@@ -198,11 +191,9 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
          * @param {string} events - events as JSON string
          * @return {Promise} - Resolves when parsing completed.
          */
-        parseEventsIntoScheduler: function (events)
-        {
+        parseEventsIntoScheduler: function (events) {
             var self = this;
-            return new Promise(function (resolve)
-            {
+            return new Promise(function (resolve) {
                 self.Scheduler.parse(events, 'json');
                 resolve();
             });
@@ -215,8 +206,7 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
          * @param {Number} width
          * @param {Number} height
          */
-        setDimensions: function (width, height)
-        {
+        setDimensions: function (width, height) {
             if (width < 0 || height < 0) {
                 return;
             }
@@ -228,8 +218,7 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
          * Updates the scheduler size when the window is resized
          * event : on resize
          */
-        $onResize: function ()
-        {
+        $onResize: function () {
             if (this.schedulerReady) {
                 this.Scheduler.update_view();
             }
@@ -239,8 +228,7 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
         /**
          * Detach events from Scheduler
          */
-        detachEvents: function ()
-        {
+        detachEvents: function () {
             // No events attached since the Scheduler is read-only, so nothing to do here
         }
     });
