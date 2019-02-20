@@ -64,6 +64,10 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
         {
             this.parent(options);
 
+            if (!this.getAttribute('extensions')) {
+                this.setAttribute('extensions', ['agenda_view']);
+            }
+
             this.calID = options;
 
             this.schedulerReady = false;
@@ -126,11 +130,12 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
                     html: Mustache.render(displayTemplate)
                 });
 
+                var extensions = self.getAttribute('extensions').map(function (extension) {
+                    return Scheduler.loadExtension(extension);
+                });
+
                 // Load scheduler extensions
-                Promise.all([
-                    Scheduler.loadExtension('agenda_view')
-                ]).then(function (Scheduler)
-                {
+                Promise.all(extensions).then(function (Scheduler) {
                     // Get last scheduler object (the one with all loaded extensions)
                     Scheduler = Scheduler[Scheduler.length - 1];
 
