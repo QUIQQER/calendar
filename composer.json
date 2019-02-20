@@ -2,7 +2,7 @@
   "name": "quiqqer/calendar",
   "type": "quiqqer-module",
   "description": "Adds calendars to your QUIQQER system, allowing you to manage and display events on your website.",
-  "version": "dev-master",
+  "version": "3.1.1",
   "license": [
     "CC BY-NC-SA 4.0",
     "PCSG QL-1.0"
