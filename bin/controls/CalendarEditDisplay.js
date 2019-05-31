@@ -21,10 +21,12 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
     'package/quiqqer/calendar-controls/bin/Scheduler',
     'qui/controls/loader/Loader',
 
+    'Locale',
+
     'package/bin/mustache/mustache',
     'text!package/quiqqer/calendar/bin/controls/CalendarDisplay.html'
 
-], function (QUI, QUIControl, Calendars, ColorHelper, Scheduler, QUILoader, Mustache, displayTemplate)
+], function (QUI, QUIControl, Calendars, ColorHelper, Scheduler, QUILoader, QUILocale, Mustache, displayTemplate)
 {
     "use strict";
 
@@ -161,6 +163,12 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
                     // Always use UTC since we store unix timestamps (UTC)
                     self.Scheduler.config.server_utc = true;
 
+                    // Event description
+                    self.Scheduler.config.lightbox.sections = [
+                        {name:QUILocale.get(lg, 'calendar.window.addevent.event.title'), height:30, map_to:"text", type:"textarea" , focus:true},
+                        {name:"description", height:200, map_to:"description", type:"textarea"}
+                    ];
+
                     // Remove all events from calendar (if another scheduler was opened previously)
                     self.Scheduler.clearAll();
 
@@ -292,7 +300,7 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
                 Calendars.addEvent(
                     self.calID,
                     ev.text,
-                    ev.text,
+                    ev.description,
                     ev.start_date.getTime() / 1000,
                     ev.end_date.getTime() / 1000
                 ).then(function (result)

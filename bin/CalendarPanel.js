@@ -289,7 +289,8 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
                     self.Scheduler.addEventToScheduler({
                         start_date: Start,
                         end_date  : End,
-                        text      : title
+                        text      : title,
+                        description: desc
                     });
                     this.Loader.hide();
                     aeWindow.close();
