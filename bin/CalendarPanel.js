@@ -184,6 +184,7 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
          */
         $onDestroy: function () {
             this.Scheduler.detachEvents();
+            this.Scheduler.Scheduler.resetLightbox();
         },
 
 
