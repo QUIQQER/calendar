@@ -11,12 +11,12 @@
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_calendar_ajax_editEvent',
-    function ($calendarID, $eventID, $title, $desc, $start, $end) {
+    function ($calendarID, $eventID, $title, $desc, $start, $end, $eventurl) {
         $Calendar = \QUI\Calendar\Handler::getCalendar($calendarID);
         $Calendar->checkInternal();
 
-        $Calendar->editCalendarEvent($eventID, $title, $desc, $start, $end);
+        $Calendar->editCalendarEvent($eventID, $title, $desc, $start, $end, $eventurl);
     },
-    array('calendarID', 'eventID', 'title', 'desc', 'start', 'end'),
+    array('calendarID', 'eventID', 'title', 'desc', 'start', 'end', 'eventurl'),
     'quiqqer.calendar.event.edit'
 );

@@ -210,10 +210,11 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
          * @param {String} eDesc  - The new event description
          * @param {int} eStart    - The new event start (unix timestamp)
          * @param {int} eEnd      - The new event end (unix timestamp)
+         * @param {String} eUrl   - Link to further information about the event
          *
          * @returns {Promise} - Resolves when event was edited, rejects on error
          */
-        editEvent: function (cID, eID, eTitle, eDesc, eStart, eEnd)
+        editEvent: function (cID, eID, eTitle, eDesc, eStart, eEnd, eUrl)
         {
             return new Promise(function (resolve, reject)
             {
@@ -226,6 +227,7 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
                         'desc'      : eDesc,
                         'start'     : eStart,
                         'end'       : eEnd,
+                        'eventurl'  : eUrl,
                         onError     : reject
                     });
             });
@@ -240,10 +242,11 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
          * @param {String} desc  - The event description
          * @param {int} start    - The event start as UNIX timestamp
          * @param {int} end      - The event end as UNIX timestamp
+         * @param {String} url   - Link to further information about the event
          *
          * @returns {Promise} - Resolves with the assigned event id, rejects on error
          */
-        addEvent: function (cID, title, desc, start, end)
+        addEvent: function (cID, title, desc, start, end, url)
         {
             return new Promise(function (resolve, reject)
             {
@@ -258,6 +261,7 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
                         'desc'      : desc,
                         'start'     : start,
                         'end'       : end,
+                        'eventurl'  : url,
                         onError     : reject
                     });
             });

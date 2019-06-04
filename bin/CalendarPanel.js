@@ -184,6 +184,7 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
          */
         $onDestroy: function () {
             this.Scheduler.detachEvents();
+            this.Scheduler.Scheduler.resetLightbox();
         },
 
 
@@ -254,6 +255,7 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
 
                         title      = Content.getElement('[name=eventtitle]').value,
                         desc       = Content.getElement('[name=eventdesc]').value,
+                        url        = Content.getElement('[name=eventurl]').value,
 
                         startRaw   = Content.getElement('[name=eventstart]').value,
                         Start      = new Date(startRaw),
@@ -287,10 +289,11 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
                     }
 
                     self.Scheduler.addEventToScheduler({
-                        start_date: Start,
-                        end_date  : End,
-                        text      : title,
-                        description: desc
+                        start_date : Start,
+                        end_date   : End,
+                        text       : title,
+                        description: desc,
+                        url        : url
                     });
                     this.Loader.hide();
                     aeWindow.close();

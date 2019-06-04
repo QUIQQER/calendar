@@ -15,6 +15,7 @@
             <field type="INT( 6 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY">eventid</field>
             <field type="VARCHAR( 255 ) NOT NULL">title</field>
             <field type="TEXT NULL">desc</field>
+            <field type="TEXT NULL">url</field>
             <field type="INT( 11 ) NOT NULL">start</field>
             <field type="INT( 11 ) NOT NULL">end</field>
             <field type="INT( 5 ) NOT NULL">calendarid</field>
