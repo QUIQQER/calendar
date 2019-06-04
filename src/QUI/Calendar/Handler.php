@@ -32,6 +32,12 @@ class Handler
     public static function createCalendar($name, $User, $isPublic = false, $color = '#2F8FC6')
     {
         try {
+            QUI\Permissions\Permission::checkPermission(AbstractCalendar::PERMISSION_CREATE_CALENDAR);
+        } catch (QUI\Permissions\Exception $Exception) {
+            throw new QUI\Calendar\Exception\NoPermission();
+        }
+
+        try {
             QUI::getDataBase()->insert(self::tableCalendars(), [
                 'name'     => $name,
                 'userid'   => $User->getId(),
@@ -59,6 +65,12 @@ class Handler
      */
     public static function createCalendarFromIcal($icalUrl, $User)
     {
+        try {
+            QUI\Permissions\Permission::checkPermission(AbstractCalendar::PERMISSION_CREATE_CALENDAR);
+        } catch (QUI\Permissions\Exception $Exception) {
+            throw new QUI\Calendar\Exception\NoPermission();
+        }
+
         // Translation of the word "Calendar"
         $calendarTranslation = QUI::getLocale()->get('quiqqer/calendar', 'calendar');
 
@@ -94,7 +106,7 @@ class Handler
      *
      * @return ExternalCalendar
      *
-     * @throws Exception
+     * @throws QUI\Exception
      * @throws QUI\Calendar\Exception\Database - Couldn't insert calendar into the database
      */
     public static function addExternalCalendar(
@@ -104,6 +116,12 @@ class Handler
         $isPublic = false,
         $color = '#2F8FC6'
     ) {
+        try {
+            QUI\Permissions\Permission::checkPermission(AbstractCalendar::PERMISSION_CREATE_CALENDAR);
+        } catch (QUI\Permissions\Exception $Exception) {
+            throw new QUI\Calendar\Exception\NoPermission();
+        }
+
         if (!QUI\Utils\Request\Url::isReachable($icalUrl)) {
             throw new Exception(['quiqqer/calendar', 'message.calendar.external.error.url.invalid']);
         }
@@ -241,6 +259,14 @@ class Handler
         }
 
         foreach ($calendars as $key => $calendarData) {
+            try {
+                $Calendar = Handler::getCalendar($calendarData['id']);
+                $Calendar->checkPermission($Calendar::PERMISSION_VIEW_CALENDAR);
+            } catch (QUI\Calendar\Exception $ex) {
+                unset($calendars[$key]);
+                continue;
+            }
+
             $calendars[$key]['isPublic']   = $calendarData['isPublic'] == 1 ? true : false;
             $calendars[$key]['isExternal'] = $calendarData['isExternal'] == 1 ? true : false;
         }

@@ -4,6 +4,7 @@ namespace QUI\Calendar;
 
 use QUI\Calendar\Exception\Database;
 use QUI\Calendar\Exception\NoPermission;
+use QUI\Permissions\Permission;
 use QUI\System\Log;
 
 class EventManager
@@ -143,9 +144,16 @@ class EventManager
      * @return array
      *
      * @throws Database - Could not fetch event's data from the database
+     * @throws NoPermission
      */
     public static function getAllEvents()
     {
+        try {
+            Permission::checkPermission(AbstractCalendar::PERMISSION_IS_ADMIN);
+        } catch (\QUI\Permissions\Exception $Exception) {
+            throw new NoPermission();
+        }
+
         try {
             $eventsDataRaw = \QUI::getDataBase()->fetch(array(
                 'from' => Handler::tableCalendarsEvents()

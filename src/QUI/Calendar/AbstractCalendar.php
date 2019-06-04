@@ -304,6 +304,10 @@ abstract class AbstractCalendar
             return true;
         }
 
+        if ($User->hasPermission(self::PERMISSION_IS_ADMIN)) {
+            return true;
+        }
+
         switch ($permission) {
             case self::PERMISSION_VIEW_CALENDAR:
                 if ($this->isOwner($User) || $this->isPublic()) {
@@ -315,6 +319,7 @@ abstract class AbstractCalendar
                     ]);
                 }
                 break;
+            case self::PERMISSION_CREATE_CALENDAR:
             case self::PERMISSION_EDIT_CALENDAR:
             case self::PERMISSION_DELETE_CALENDAR:
             case self::PERMISSION_ADD_EVENT:
@@ -404,11 +409,24 @@ abstract class AbstractCalendar
     }
 
 
-    const PERMISSION_VIEW_CALENDAR = 'viewCalendar';
-    const PERMISSION_EDIT_CALENDAR = 'editCalendar';
-    const PERMISSION_DELETE_CALENDAR = 'deleteCalendar';
+    /**
+     * Calendar specific permissions
+     */
+    const PERMISSION_VIEW_CALENDAR = 'quiqqer.calendar.view';
+    const PERMISSION_EDIT_CALENDAR = 'quiqqer.calendar.edit';
+    const PERMISSION_DELETE_CALENDAR = 'quiqqer.calendar.delete';
+    const PERMISSION_CREATE_CALENDAR = 'quiqqer.calendar.create';
 
-    const PERMISSION_ADD_EVENT = 'addEvent';
-    const PERMISSION_REMOVE_EVENT = 'removeEvent';
-    const PERMISSION_EDIT_EVENT = 'editEvent';
+    /**
+     * Admin Permission:
+     * Allows the user to edit every calendar and event.
+     */
+    const PERMISSION_IS_ADMIN = 'quiqqer.calendar.admin';
+
+    /**
+     * Event-specific permissions
+     */
+    const PERMISSION_ADD_EVENT = 'quiqqer.calendar.event.create';
+    const PERMISSION_REMOVE_EVENT = 'quiqqer.calendar.event.delete';
+    const PERMISSION_EDIT_EVENT = 'quiqqer.calendar.event.edit';
 }

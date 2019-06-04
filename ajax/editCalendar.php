@@ -13,6 +13,5 @@ QUI::$Ajax->registerFunction(
     function ($calendarID, $name, $isPublic, $color = '#2F8FC6') {
         \QUI\Calendar\Handler::getCalendar($calendarID)->editCalendar($name, $isPublic, $color);
     },
-    array('calendarID', 'name', 'isPublic', 'color'),
-    'quiqqer.calendar.edit'
+    array('calendarID', 'name', 'isPublic', 'color')
 );

@@ -17,6 +17,5 @@ QUI::$Ajax->registerFunction(
 
         $Calendar->editCalendarEvent($eventID, $title, $desc, $start, $end, $eventurl);
     },
-    array('calendarID', 'eventID', 'title', 'desc', 'start', 'end', 'eventurl'),
-    'quiqqer.calendar.event.edit'
+    array('calendarID', 'eventID', 'title', 'desc', 'start', 'end', 'eventurl')
 );
