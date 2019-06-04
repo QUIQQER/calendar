@@ -167,7 +167,8 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
                     self.Scheduler.config.lightbox.sections = [
                         {name:QUILocale.get(lg, 'calendar.window.addevent.event.title'), height:30, map_to:"text", type:"textarea" , focus:true},
                         {name:"description", height:200, map_to:"description", type:"textarea"},
-                        {name:QUILocale.get(lg, 'calendar.window.addevent.event.url'), height:50, map_to:"url", type:"textarea"}
+                        {name:QUILocale.get(lg, 'calendar.window.addevent.event.url'), height:50, map_to:"url", type:"textarea"},
+                        {name:"time", height:72, type:"time", map_to:"auto"}
                     ];
 
                     // Remove all events from calendar (if another scheduler was opened previously)
