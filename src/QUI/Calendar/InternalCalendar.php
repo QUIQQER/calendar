@@ -39,13 +39,14 @@ class InternalCalendar extends AbstractCalendar
      * @param string $desc - Event description
      * @param int $start - Unix timestamp when the event starts
      * @param int $end - Unix timestamp when the event ends
+     * @param string $url - Link to further information about the event
      *
      * @return int - The ID the event got assigned from the database
      *
      * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
      * @throws QUI\Calendar\Exception\Database - Couldn't insert event into the database
      */
-    public function addCalendarEvent($title, $desc, $start, $end)
+    public function addCalendarEvent($title, $desc, $start, $end, $url = "")
     {
         $this->checkPermission(self::PERMISSION_ADD_EVENT);
 
@@ -55,6 +56,7 @@ class InternalCalendar extends AbstractCalendar
                 'desc'       => $desc,
                 'start'      => $start,
                 'end'        => $end,
+                'url'        => $url,
                 'calendarid' => $this->getId()
             ));
         } catch (QUI\Database\Exception $Exception) {
@@ -81,12 +83,13 @@ class InternalCalendar extends AbstractCalendar
             return;
         }
 
-        $sql      = "INSERT INTO " . Handler::tableCalendarsEvents() . " (title, `desc`, start, `end`, calendarid) VALUES ";
+        $sql      = "INSERT INTO " . Handler::tableCalendarsEvents() . " (title, `desc`, `url`, start, `end`, calendarid) VALUES ";
         $lastElem = last($events);
         foreach ($events as $Event) {
             $data = implode(',', [
                 "'" . $Event->text . "'",
                 "'" . $Event->description . "'",
+                "'" . $Event->url . "'",
                 $Event->start_date,
                 $Event->end_date,
                 $this->getId()
@@ -110,11 +113,12 @@ class InternalCalendar extends AbstractCalendar
      * @param string $desc - Event description
      * @param int $start - Unix timestamp when the event starts
      * @param int $end - Unix timestamp when the event ends
+     * @param string $url - Link to further information about the event
      *
      * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
      * @throws QUI\Calendar\Exception\Database - Couldn't update event in the database
      */
-    public function editCalendarEvent($eventID, $title, $desc, $start, $end)
+    public function editCalendarEvent($eventID, $title, $desc, $start, $end, $url)
     {
         $this->checkPermission(self::PERMISSION_EDIT_EVENT);
 
@@ -123,7 +127,8 @@ class InternalCalendar extends AbstractCalendar
                 'title' => $title,
                 'desc'  => $desc,
                 'start' => $start,
-                'end'   => $end
+                'end'   => $end,
+                'url'   => $url
             ), array(
                 'eventid' => $eventID
             ));
@@ -190,6 +195,7 @@ class InternalCalendar extends AbstractCalendar
                 ->setDtEnd($end)
                 ->setSummary($Event->text)
                 ->setDescription($Event->description)
+                ->setUrl($Event->url)
                 ->setUniqueId($Event->id);
 
             $Calendar->addComponent($CalendarEvent);
