@@ -1,0 +1,70 @@
+.quiqqer-eventList {
+    margin: 0 auto;
+    max-width: 800px;
+}
+
+.quiqqer-eventList-entry {
+    display: flex;
+    margin: 1rem 0;
+    align-items: center;
+}
+
+.quiqqer-eventList-entry-date {
+    width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    flex-grow: 0;
+    flex-shrink: 0;
+    padding: 1rem;
+}
+
+.quiqqer-eventList-entry:hover .quiqqer-eventList-entry-data {
+    box-shadow: 0 1px 10px rgba(0,0,0,0.1);
+}
+
+.quiqqer-eventList-entry-date time {
+    opacity: 0.75;
+}
+
+.quiqqer-eventList-entry-date-day {
+    font-size: 2.5rem;
+    display: block;
+    opacity: inherit;
+    line-height: 2rem;
+}
+
+.quiqqer-eventList-entry-date-month {
+    font-size: 1.25rem;
+    letter-spacing: 2px;
+    margin-top: 5px;
+    display: block;
+}
+
+.quiqqer-eventList-entry-data {
+    margin: 1rem 1rem;
+    padding: 0.5rem 1.5rem;
+    flex-grow: 1;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    border-left: 5px solid #9880b7;
+}
+
+.quiqqer-eventList-entry-data header {
+    font-size: 1.5rem;
+    font-weight: normal;
+}
+
+.quiqqer-eventList-entry-data-desc {
+    margin: 6px 0;
+}
+
+/* inactive */
+.quiqqer-eventList-entry.inactive {
+    opacity: 0.5;
+}
+
+.quiqqer-eventList-entry.inactive .quiqqer-eventList-entry-data {
+    background: #fafafa;
+}

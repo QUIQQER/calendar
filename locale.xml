@@ -250,6 +250,15 @@
             <en><![CDATA[Editable Kalender]]></en>
         </locale>
 
+        <locale name="admin.types.eventList.title">
+            <de><![CDATA[Event-Kalender: Liste]]></de>
+            <en><![CDATA[Event Calendar: list]]></en>
+        </locale>
+        <locale name="admin.types.eventList.desc">
+            <de><![CDATA[Liste mit den kommenden Events.]]></de>
+            <en><![CDATA[List of upcoming events.]]></en>
+        </locale>
+
         <locale name="calendar.settings.title">
             <de><![CDATA[Kalender Einstellungen]]></de>
             <en><![CDATA[Kalender Einstellungen]]></en>

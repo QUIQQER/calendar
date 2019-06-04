@@ -1,0 +1,54 @@
+{if $Template->getAttribute('content-header')}
+<section class="content-header grid-100 mobile-grid-100">
+    <header>
+        <h1>{$Site->getAttribute('title')}</h1>
+    </header>
+
+    {if $Site->getAttribute('short')}
+    <div class="content-short">
+        {$Site->getAttribute('short')}
+    </div>
+    {/if}
+</section>
+{/if}
+
+{if $Template->getAttribute('content-body') && $Site->getAttribute('content')}
+<section class="content-body grid-100 mobile-grid-100">
+    {$Site->getAttribute('content')}
+</section>
+{/if}
+
+
+
+<section class="quiqqer-eventList">
+{foreach $events as $event}
+
+    <div class="quiqqer-eventList-entry">
+        <div class="quiqqer-eventList-entry-date">
+            <time datetime="{$event->start_date|date_format:'c'}">
+                <span class="quiqqer-eventList-entry-date-day" title="{locale_date date=$event->start_date}">
+                    {$event->start_date|date_format:"d"}
+                </span>
+                <span class="quiqqer-eventList-entry-date-month">
+                    {$event->start_date|date_format:"M"}
+                </span>
+            </time>
+        </div>
+
+        <div class="quiqqer-eventList-entry-data">
+            <header>
+                {$event->text}
+            </header>
+            <div class="quiqqer-eventList-entry-data-desc">
+                {$event->description}
+            </div>
+            <div class="quiqqer-eventList-entry-data-footer">
+                <span class="quiqqer-eventList-entry-data-footer-calendar">
+                    {$event->calendar_id}
+                </span>
+            </div>
+        </div>
+    </div>
+
+{/foreach}
+</section>

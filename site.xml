@@ -70,5 +70,38 @@
                 </category>
             </settings>
         </type>
+
+        <type type="sitetypes/eventList" icon="fa fa-list-ol">
+            <locale group="quiqqer/calendar" var="admin.types.eventList.title"/>
+
+            <desc>
+                <locale group="quiqqer/calendar" var="admin.types.eventList.desc"/>
+            </desc>
+
+            <attributes>
+                <attribute>calendar.settings.ids</attribute>
+            </attributes>
+
+            <settings>
+                <category name="calendar-fullpage-settings">
+                    <settings>
+                        <title>
+                            <locale group="quiqqer/calendar" var="calendar.settings.title"/>
+                        </title>
+
+                        <input conf="calendar.settings.ids"
+                               type="hidden"
+                               disabled="disabled"
+                               data-qui="package/quiqqer/calendar/bin/controls/Select"
+                               data-qui-options-is-edit-calendar="false"
+                               label="false">
+                            <description>
+                                <locale group="quiqqer/calendar" var="quiqqer.settings.calendar.ids"/>
+                            </description>
+                        </input>
+                    </settings>
+                </category>
+            </settings>
+        </type>
     </types>
 </site>
