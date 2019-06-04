@@ -35,6 +35,11 @@ class Event
     public $calendar_id;
 
     /**
+     * @var string - Link to further information about the event
+     */
+    public $url;
+
+    /**
      * Event constructor.
      * @param string $title
      * @param string $desc
@@ -42,8 +47,9 @@ class Event
      * @param string $end - The events end time/date in format YYYY-MM-DD HH:mm
      * @param int $id
      * @param int $calendarid
+     * @param string $url - Link to further information about the event
      */
-    public function __construct($title, $desc, $start, $end, $id = -1, $calendarid = -1)
+    public function __construct($title, $desc, $start, $end, $id = -1, $calendarid = -1, $url = "")
     {
         $this->text        = $title;
         $this->description = $desc;
@@ -51,6 +57,7 @@ class Event
         $this->end_date    = $end;
         $this->id          = $id;
         $this->calendar_id = $calendarid;
+        $this->url         = $url;
     }
 
     /**
@@ -68,7 +75,8 @@ class Event
             self::timestampToSchedulerFormat($data['start']),
             self::timestampToSchedulerFormat($data['end']),
             $data['eventid'],
-            $data['calendarid']
+            $data['calendarid'],
+            $data['url']
         );
     }
 

@@ -63,6 +63,7 @@ define('package/quiqqer/calendar/bin/AddEventWindow', [
                 html: Mustache.render(template, {
                     title   : QUILocale.get(lg, 'calendar.window.addevent.event.title'),
                     desc    : QUILocale.get(lg, 'calendar.window.addevent.event.desc'),
+                    url     : QUILocale.get(lg, 'calendar.window.addevent.event.url'),
                     wholeDay: QUILocale.get(lg, 'calendar.window.addevent.event.wholeDay'),
                     start   : QUILocale.get(lg, 'calendar.window.addevent.event.start'),
                     end     : QUILocale.get(lg, 'calendar.window.addevent.event.end'),

@@ -317,6 +317,11 @@
             <en><![CDATA[Description]]></en>
         </locale>
 
+        <locale name="calendar.window.addevent.event.url">
+            <de><![CDATA[URL]]></de>
+            <en><![CDATA[URL]]></en>
+        </locale>
+
         <locale name="calendar.window.addevent.event.wholeDay">
             <de><![CDATA[Ganztägig?]]></de>
             <en><![CDATA[All-Day?]]></en>

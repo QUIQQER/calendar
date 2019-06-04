@@ -13,7 +13,7 @@
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_calendar_ajax_addEvent',
-    function ($calendarID, $title, $desc, $start, $end) {
+    function ($calendarID, $title, $desc, $start, $end, $eventurl) {
         if (is_null($calendarID) || empty($calendarID)) {
             return null;
         }
@@ -22,10 +22,10 @@ QUI::$Ajax->registerFunction(
 
         $Calendar->checkInternal();
 
-        $eventID = $Calendar->addCalendarEvent($title, $desc, $start, $end);
+        $eventID = $Calendar->addCalendarEvent($title, $desc, $start, $end, $eventurl);
 
         return (int)$eventID;
     },
-    array('calendarID', 'title', 'desc', 'start', 'end'),
+    array('calendarID', 'title', 'desc', 'start', 'end', 'eventurl'),
     'quiqqer.calendar.event.create'
 );
