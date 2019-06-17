@@ -18,12 +18,10 @@
 </section>
 {/if}
 
-
-
 <section class="quiqqer-eventList">
 {foreach $events as $event}
 
-    <div class="quiqqer-eventList-entry">
+    <div class="quiqqer-eventList-entry status-{$event->eventTimeStatus}">
         <div class="quiqqer-eventList-entry-date">
             <time datetime="{$event->start_date|date_format:'c'}">
                 <span class="quiqqer-eventList-entry-date-day" title="{locale_date date=$event->start_date}">
@@ -36,15 +34,19 @@
         </div>
 
         <div class="quiqqer-eventList-entry-data">
-            <header>
+            <header title="{$event->text}">
                 {$event->text}
             </header>
             <div class="quiqqer-eventList-entry-data-desc">
                 {$event->description}
             </div>
             <div class="quiqqer-eventList-entry-data-footer">
+                <span class="quiqqer-eventList-entry-data-footer-label">
+                    Kalender:
+                </span>
                 <span class="quiqqer-eventList-entry-data-footer-calendar">
-                    {$event->calendar_id}
+                    {*$event->calendar_id*}
+                    {QUI\Calendar\Handler::getCalendar($event->calendar_id)->getName()}
                 </span>
             </div>
         </div>

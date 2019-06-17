@@ -4,24 +4,26 @@
 }
 
 .quiqqer-eventList-entry {
+    align-items: center;
     display: flex;
     margin: 1rem 0;
-    align-items: center;
 }
 
 .quiqqer-eventList-entry-date {
-    width: 100px;
-    display: flex;
     align-items: center;
-    justify-content: center;
-    text-align: center;
+    align-self: flex-start;
+    display: flex;
     flex-grow: 0;
     flex-shrink: 0;
+    justify-content: center;
+    margin-top: 1rem;
     padding: 1rem;
+    text-align: center;
+    width: 100px;
 }
 
 .quiqqer-eventList-entry:hover .quiqqer-eventList-entry-data {
-    box-shadow: 0 1px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
 }
 
 .quiqqer-eventList-entry-date time {
@@ -29,26 +31,25 @@
 }
 
 .quiqqer-eventList-entry-date-day {
-    font-size: 2.5rem;
     display: block;
-    opacity: inherit;
+    font-size: 2rem;
     line-height: 2rem;
+    opacity: inherit;
 }
 
 .quiqqer-eventList-entry-date-month {
-    font-size: 1.25rem;
-    letter-spacing: 2px;
-    margin-top: 5px;
     display: block;
+    font-size: 1rem;
+    letter-spacing: 2px;
 }
 
 .quiqqer-eventList-entry-data {
+    border: 1px solid #ddd;
+    border-left: 5px solid #d7c3f0;
+    border-radius: 5px;
+    flex-grow: 1;
     margin: 1rem 1rem;
     padding: 0.5rem 1.5rem;
-    flex-grow: 1;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    border-left: 5px solid #9880b7;
 }
 
 .quiqqer-eventList-entry-data header {
@@ -60,11 +61,35 @@
     margin: 6px 0;
 }
 
+.quiqqer-eventList-entry-data-footer {
+    margin-top: 1rem;
+    font-size: 0.75rem;
+}
+
+.quiqqer-eventList-entry-data-footer-label {
+    opacity: 0.80;
+}
+
+.quiqqer-eventList-entry-data-footer-calendar {
+    font-weight: normal;
+}
+
 /* inactive */
-.quiqqer-eventList-entry.inactive {
+.quiqqer-eventList-entry.status-past {
     opacity: 0.5;
 }
 
-.quiqqer-eventList-entry.inactive .quiqqer-eventList-entry-data {
-    background: #fafafa;
+.quiqqer-eventList-entry.status-past .quiqqer-eventList-entry-data {
+    /*background: #fafafa;*/
+}
+
+/* now / today */
+.quiqqer-eventList-entry.status-now .quiqqer-eventList-entry-date time {
+    opacity: 1;
+    font-weight: normal;
+}
+
+.quiqqer-eventList-entry.status-now .quiqqer-eventList-entry-data {
+    /*background: #f7f3fd;*/
+    border-left-color: #9880b7;
 }
