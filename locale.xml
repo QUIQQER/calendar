@@ -277,6 +277,12 @@
             <en><![CDATA[Select the calendar that should be shown on the page]]></en>
         </locale>
 
+        <!-- frontend -->
+        <locale name="quiqqer.frontend.calendar.label">
+            <de><![CDATA[Kalender:]]></de>
+            <en><![CDATA[Calendar:]]></en>
+        </locale>
+
 
         <!-- Settings -->
         <locale name="settings.general.title">
