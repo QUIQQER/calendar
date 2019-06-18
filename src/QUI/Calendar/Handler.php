@@ -199,6 +199,16 @@ class Handler
     }
 
     /**
+     * The name of the database table containing calendar events recurrence data
+     *
+     * @return string
+     */
+    public static function tableCalendarsEventsRecurrence()
+    {
+        return QUI::getDBTableName('calendars_events_recurrence');
+    }
+
+    /**
      * The name of the database table containing calendar url hashes
      *
      * @return string

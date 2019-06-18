@@ -21,6 +21,12 @@
             <field type="INT( 5 ) NOT NULL">calendarid</field>
         </table>
 
+        <table name="calendars_events_recurrence">
+            <field type="INT( 5 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY">eventid</field>
+            <field type="VARCHAR( 5 )">interval</field>
+            <field type="DATETIME NULL">end</field>
+        </table>
+
         <table name="calendars_shares">
             <field type="INT( 5 ) NOT NULL">calendarid</field>
             <field type="INT( 11 ) NOT NULL">userid</field>

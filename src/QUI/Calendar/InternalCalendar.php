@@ -365,42 +365,107 @@ class InternalCalendar extends AbstractCalendar
      *
      * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
      */
-    public function getUpcomingEvents($amount = -1)
+    public function getUpcomingEvents($amount = 1000)
     {
         $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
 
-        $table = Handler::tableCalendarsEvents();
+        $tableEvents     = Handler::tableCalendarsEvents();
+        $tableRecurrence = Handler::tableCalendarsEventsRecurrence();
 
         $sql = "
-            SELECT * 
-            FROM {$table}
+            SELECT events.*, recurrence.end AS recurrence_end, recurrence.interval AS recurrence_interval 
+            FROM {$tableEvents} events
+            LEFT JOIN {$tableRecurrence} recurrence
+                ON events.eventid = recurrence.eventid
             WHERE 
               calendarid = :calendarID AND 
-              start >= :startDate
+              start >= :startDate AND 
+              (
+                (recurrence.end >= :currentDate OR recurrence.end IS NULL)               
+              )
             ORDER BY start ASC
         ";
 
         $parameters = array(
-            ':calendarID' => (int)$this->getId(),
-            ':startDate'  => time()
+            ':calendarID'  => (int)$this->getId(),
+            ':startDate'   => time(),
+            ':currentDate' => date("Y-m-d H:i:s")
         );
 
-        if (is_numeric($amount) && $amount > -1) {
-            $limit = (int)$amount;
-            $sql   .= "LIMIT {$limit}";
-        }
+        $limit = (int)$amount;
+        $sql   .= "LIMIT {$limit}";
 
         $Statement = QUI::getDataBase()->getPDO()->prepare($sql);
         $Statement->execute($parameters);
 
         $eventsRaw = $Statement->fetchAll(\PDO::FETCH_ASSOC);
+        $eventsRaw = static::processEventDatabaseData($eventsRaw, $amount);
 
-        $events = array();
+        $events = [];
         foreach ($eventsRaw as $event) {
             $events[] = \QUI\Calendar\Event::fromDatabaseArray($event);
         }
 
         return $events;
+    }
+
+
+    /**
+     * Processes the event-data from the database to an Event-Collection.
+     * This takes care of generating recurring events, etc.
+     *
+     * @param array $eventDataArray
+     * @param int $limit - The maximum amount of events this method should return
+     *
+     * @return EventCollection
+     */
+    private static function processEventDatabaseData($eventDataArray, $limit = 1000)
+    {
+        $result = [];
+
+        foreach ($eventDataArray as $eventData) {
+            // If there is no recurrence for the current event, don't do anything
+            if (empty($eventData['recurrence_interval'])) {
+                $result[] = $eventData;
+                continue;
+            }
+
+            // Determine the end of the recurrence, if none is set, use the maximum integer
+            $recurrenceEndTimestamp = PHP_INT_MAX;
+            if (isset($eventData['recurrence_end'])) {
+                $recurrenceEndTimestamp = strtotime($eventData['recurrence_end']);
+            }
+
+            // The start and end of the current event. Using a DateTime object here to add the recurrence interval later
+            $CurrentEventDateStart = new \DateTime();
+            $CurrentEventDateStart->setTimestamp($eventData['start']);
+
+            $CurrentEventDateEnd   = new \DateTime();
+            $CurrentEventDateEnd->setTimestamp($eventData['end']);
+
+            $recurrenceInterval = $eventData['recurrence_interval'];
+
+            // Generate the events
+            $eventCounter = 0;
+            while (($CurrentEventDateStart->getTimestamp() < $recurrenceEndTimestamp) && (++$eventCounter <= $limit)) {
+                // Calculate the event's start and end
+                $currentEventData          = $eventData;
+                $currentEventData['start'] = $CurrentEventDateStart->getTimestamp();
+                $currentEventData['end']   = $CurrentEventDateEnd->getTimestamp();
+                $result[]                  = $currentEventData;
+
+                // Add the recurrence interval to generate the next event
+                $CurrentEventDateStart->modify("+ 1 {$recurrenceInterval}");
+                $CurrentEventDateEnd->modify("+ 1 {$recurrenceInterval}");
+            }
+        }
+
+        // The events might be out of order so we have to sort them again
+        \usort($result, function ($eventAData, $eventBData) {
+            return ($eventAData['start'] - $eventBData['start']);
+        });
+
+        return array_slice($result, 0, $limit);
     }
 
 

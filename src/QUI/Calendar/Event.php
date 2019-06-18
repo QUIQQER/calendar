@@ -16,11 +16,13 @@ class Event
 
     /**
      * @var int - The events start time/date in format YYYY-MM-DD HH:mm
+     * @todo Turn this into a DateTime-object
      */
     public $start_date;
 
     /**
      * @var int - The events end time/date in format YYYY-MM-DD HH:mm
+     * @todo Turn this into a DateTime-object
      */
     public $end_date;
 
