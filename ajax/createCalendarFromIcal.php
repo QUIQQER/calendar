@@ -23,6 +23,5 @@ QUI::$Ajax->registerFunction(
             )
         );
     },
-    array('icalUrl', 'userid'),
-    'quiqqer.calendar.create'
+    array('icalUrl', 'userid')
 );

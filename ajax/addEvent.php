@@ -26,6 +26,5 @@ QUI::$Ajax->registerFunction(
 
         return (int)$eventID;
     },
-    array('calendarID', 'title', 'desc', 'start', 'end', 'eventurl'),
-    'quiqqer.calendar.event.create'
+    array('calendarID', 'title', 'desc', 'start', 'end', 'eventurl')
 );

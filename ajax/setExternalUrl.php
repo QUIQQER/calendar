@@ -14,6 +14,5 @@ QUI::$Ajax->registerFunction(
 
         $Calendar->setExternalUrl($externalUrl);
     },
-    array('calendarID', 'externalUrl'),
-    'quiqqer.calendar.edit'
+    array('calendarID', 'externalUrl')
 );

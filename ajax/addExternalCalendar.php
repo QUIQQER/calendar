@@ -27,6 +27,5 @@ QUI::$Ajax->registerFunction(
             )
         );
     },
-    array('calendarName', 'icalUrl', 'userid', 'isPublic', 'color'),
-    'quiqqer.calendar.create'
+    array('calendarName', 'icalUrl', 'userid', 'isPublic', 'color')
 );

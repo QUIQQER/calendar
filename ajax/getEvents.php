@@ -10,6 +10,5 @@ QUI::$Ajax->registerFunction(
     function () {
         return \QUI\Calendar\EventManager::getAllEvents();
     },
-    false,
-    'Permission::checkAdminUser'
+    false
 );
