@@ -11,6 +11,5 @@ QUI::$Ajax->registerFunction(
         $ids     = json_decode($ids, true);
         \QUI\Calendar\Handler::deleteCalendars($ids);
     },
-    array('ids'),
-    'quiqqer.calendar.delete'
+    array('ids')
 );

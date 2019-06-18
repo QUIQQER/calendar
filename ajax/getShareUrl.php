@@ -10,6 +10,5 @@ QUI::$Ajax->registerFunction(
     function ($calendarID) {
         return \QUI\Calendar\Handler::getCalendar($calendarID)->getShareUrl();
     },
-    ['calendarID'],
-    'Permission::checkAdminUser'
+    ['calendarID']
 );

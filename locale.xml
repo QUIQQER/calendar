@@ -98,6 +98,16 @@
             <de><![CDATA[Kalender]]></de>
             <en><![CDATA[Calendars]]></en>
         </locale>
+
+        <locale name="permission.quiqqer.calendar.admin">
+            <de><![CDATA[Kalender Admin: Kann alle Kalender & Events bearbeiten.]]></de>
+            <en><![CDATA[Calendar Admin: Can view/edit all calendars & events.]]></en>
+        </locale>
+
+        <locale name="permission.quiqqer.calendar.view">
+            <de><![CDATA[Kalender ansehen]]></de>
+            <en><![CDATA[View Calendars]]></en>
+        </locale>
         <locale name="permission.quiqqer.calendar.create">
             <de><![CDATA[Kalender erstellen]]></de>
             <en><![CDATA[Create Calendars]]></en>
@@ -142,9 +152,19 @@
 
 
         <!-- Exceptions -->
+        <locale name="exception.calendar.permission.message.general">
+            <de><![CDATA[Dir fehlt die Berechtigung '[permission]'.]]></de>
+            <en><![CDATA[You are lacking the permission '[permission]'.]]></en>
+        </locale>
+
         <locale name="exception.calendar.permission.view">
             <de><![CDATA[Du hast keine Berechtigung die Termine von einem dieser Kalender anzusehen.]]></de>
             <en><![CDATA[You have no permission to view the events from one of these calendars.]]></en>
+        </locale>
+
+        <locale name="exception.calendar.permission.create">
+            <de><![CDATA[Du hast keine Berechtigung Kalender anzulegen.]]></de>
+            <en><![CDATA[You have no permission to create calendars.]]></en>
         </locale>
 
         <locale name="exception.calendar.permission.edit">
