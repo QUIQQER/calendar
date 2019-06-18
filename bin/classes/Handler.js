@@ -395,7 +395,6 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
             {
                 QUIAjax.get('package_quiqqer_calendar_ajax_canUserEditCalendar', function (result)
                 {
-                    console.log('result', result);
                     resolve(result);
                 }, {
                     'package'   : 'quiqqer/calendar',
