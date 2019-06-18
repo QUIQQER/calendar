@@ -34,7 +34,10 @@ class Handler
         try {
             QUI\Permissions\Permission::checkPermission(AbstractCalendar::PERMISSION_CREATE_CALENDAR);
         } catch (QUI\Permissions\Exception $Exception) {
-            throw new QUI\Calendar\Exception\NoPermission();
+            throw new QUI\Calendar\Exception\NoPermission([
+                'quiqqer/calendar',
+                'exception.calendar.permission.create'
+            ]);
         }
 
         try {

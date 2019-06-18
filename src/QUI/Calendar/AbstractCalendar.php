@@ -207,15 +207,15 @@ abstract class AbstractCalendar
      *
      * The second parameter determines whether the exact point in time should be used or the entire day.
      *
+     * @param \DateTime $Date
+     * @param boolean $ignoreTime
+     *
+     * @return EventCollection
      * @example
      * passed date object: 20.04.2042 13:37
      * second parameter true: Returns all events that occur on 20.04.2042
      * second parameter false: Returns all events that occur on 20.04.2042 at 13:37
      *
-     * @param \DateTime $Date
-     * @param boolean $ignoreTime
-     *
-     * @return EventCollection
      */
     abstract public function getEventsForDate(\DateTime $Date, $ignoreTime);
 
@@ -224,16 +224,16 @@ abstract class AbstractCalendar
      *
      * The second parameter determines whether the exact point in time should be used or the entire day.
      *
-     * @example
-     * passed date objects: 20.04.2042 13:37 and 06.09.2042 04:20
-     * second parameter true: Returns all events that occur between 20.04.2042 00:00 and 06.09.2042 23:59
-     * second parameter false: Returns all events that occur between 20.04.2042 13:37 and 06.09.2042 04:20
-     *
      * @param \DateTime $StartDate
      * @param \DateTime $EndDate
      * @param boolean $ignoreTime
      *
      * @return EventCollection
+     * @example
+     * passed date objects: 20.04.2042 13:37 and 06.09.2042 04:20
+     * second parameter true: Returns all events that occur between 20.04.2042 00:00 and 06.09.2042 23:59
+     * second parameter false: Returns all events that occur between 20.04.2042 13:37 and 06.09.2042 04:20
+     *
      */
     abstract public function getEventsBetweenDates(\DateTime $StartDate, \DateTime $EndDate, $ignoreTime);
 
@@ -277,7 +277,30 @@ abstract class AbstractCalendar
 
 
     /**
+     * Returns if a user can perform a specified action on the calendar.
+     * By default the session user is used.
+     * By passing a user as the second argument the permissions for a third user can be checked.
+     *
+     * @param $permission - Name of the permission to check
+     * @param User $User - The user to check the permission for (Session User by default)
+     *
+     * @return boolean
+     */
+    public function hasPermission($permission, User $User = null)
+    {
+        try {
+            static::checkPermission($permission, $User);
+        } catch (QUI\Calendar\Exception\NoPermission $Exception) {
+            return false;
+        }
+
+        return true;
+    }
+
+
+    /**
      * Checks if a user can perform a specified action on the calendar.
+     * Throws an exception if the user doesn't have the permission.
      * By default the session user is used.
      * By passing a user as the second argument the permissions for a third user can be checked.
      *
@@ -308,32 +331,59 @@ abstract class AbstractCalendar
             return true;
         }
 
+        $localeGroup = 'quiqqer/calendar';
+
         switch ($permission) {
+            // View the current calendar
             case self::PERMISSION_VIEW_CALENDAR:
                 if ($this->isOwner($User) || $this->isPublic()) {
                     return true;
-                } else {
-                    throw new QUI\Calendar\Exception\NoPermission([
-                        'quiqqer/calendar',
-                        'exception.calendar.permission.view'
-                    ]);
                 }
+
+                throw new QUI\Calendar\Exception\NoPermission([
+                    $localeGroup,
+                    'exception.calendar.permission.view'
+                ]);
+
                 break;
+
+            // Create a calendar
             case self::PERMISSION_CREATE_CALENDAR:
-            case self::PERMISSION_EDIT_CALENDAR:
-            case self::PERMISSION_DELETE_CALENDAR:
-            case self::PERMISSION_ADD_EVENT:
-            case self::PERMISSION_REMOVE_EVENT:
-            case self::PERMISSION_EDIT_EVENT:
-            default:
-                if ($this->isOwner($User)) {
+                if ($User->hasPermission($permission)) {
                     return true;
                 }
+
                 throw new QUI\Calendar\Exception\NoPermission([
-                    'quiqqer/calendar',
-                    'exception.calendar.permission.edit'
+                    $localeGroup,
+                    'exception.calendar.permission.create'
                 ]);
+
+                break;
+
+            case self::PERMISSION_ADD_EVENT:
+            case self::PERMISSION_DELETE_CALENDAR:
+            case self::PERMISSION_EDIT_CALENDAR:
+            case self::PERMISSION_EDIT_EVENT:
+            case self::PERMISSION_REMOVE_EVENT:
+                if ($this->isOwner($User) && $User->hasPermission($permission)) {
+                    return true;
+                }
+
+                $Locale         = QUI::getLocale();
+                $permissionName = $Locale->get($localeGroup, 'permission.' . $permission);
+                $message        = $Locale->get(
+                    $localeGroup,
+                    'exception.calendar.permission.message.general',
+                    ['permission' => $permissionName]
+                );
+
+                throw new QUI\Calendar\Exception\NoPermission($message);
         }
+
+        throw new QUI\Calendar\Exception\NoPermission([
+            $localeGroup,
+            'exception.calendar.permission.edit'
+        ]);
     }
 
     /**

@@ -389,14 +389,41 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
          *
          * @param calendarID
          */
-        canUserEditCalendar: function (calendarID)
-        {
-            return new Promise(function (resolve, reject)
-            {
-                QUIAjax.get('package_quiqqer_calendar_ajax_canUserEditCalendar', function (result)
-                {
-                    resolve(result);
-                }, {
+        canUserEditCalendar: function (calendarID) {
+            return new Promise(function (resolve, reject) {
+                QUIAjax.get('package_quiqqer_calendar_ajax_canUserEditCalendar', resolve, {
+                    'package'   : 'quiqqer/calendar',
+                    'calendarID': calendarID,
+                    onError     : reject
+                });
+            });
+        },
+
+
+        /**
+         * Can the current User edit events of the calendar with the given ID?
+         *
+         * @param calendarID
+         */
+        canUserEditCalendarsEvents: function (calendarID) {
+            return new Promise(function (resolve, reject) {
+                QUIAjax.get('package_quiqqer_calendar_ajax_canUserEditCalendarsEvents', resolve, {
+                    'package'   : 'quiqqer/calendar',
+                    'calendarID': calendarID,
+                    onError     : reject
+                });
+            });
+        },
+
+
+        /**
+         * Can the current User delete events from the calendar with the given ID?
+         *
+         * @param calendarID
+         */
+        canUserDeleteCalendarsEvents: function (calendarID) {
+            return new Promise(function (resolve, reject) {
+                QUIAjax.get('package_quiqqer_calendar_ajax_canUserDeleteCalendarsEvents', resolve, {
                     'package'   : 'quiqqer/calendar',
                     'calendarID': calendarID,
                     onError     : reject

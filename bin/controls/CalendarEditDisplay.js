@@ -26,8 +26,7 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
     'package/bin/mustache/mustache',
     'text!package/quiqqer/calendar/bin/controls/CalendarDisplay.html'
 
-], function (QUI, QUIControl, Calendars, ColorHelper, Scheduler, QUILoader, QUILocale, Mustache, displayTemplate)
-{
+], function (QUI, QUIControl, Calendars, ColorHelper, Scheduler, QUILoader, QUILocale, Mustache, displayTemplate) {
     "use strict";
 
     var lg = 'quiqqer/calendar';
@@ -47,9 +46,13 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
 
         Loader: null,
 
-        ChangeEventInCalendarEvent  : null,
-        AddEventToCalendarEvent     : null,
-        DeleteEventFromCalendarEvent: null,
+        BeforeChangeEventInCalendarEvent: null,
+        ChangeEventInCalendarEvent      : null,
+
+        AddEventToCalendarEvent: null,
+
+        BeforeDeleteEventFromCalendarEvent: null,
+        DeleteEventFromCalendarEvent      : null,
 
         Binds: [
             '$onInject',
@@ -62,13 +65,15 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
          *
          * @param options - constructor options
          */
-        initialize: function (options)
-        {
+        initialize: function (options) {
             this.parent(options);
 
             if (!this.getAttribute('extensions')) {
                 this.setAttribute('extensions', ['agenda_view']);
             }
+
+            this.setAttribute('canUserEditEvents', false);
+            this.setAttribute('canUserDeleteEvents', false);
 
             this.calID = options;
 
@@ -86,8 +91,7 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
          *
          * Fired when Class is inserted in HTML via qui-data Attribute
          */
-        $onInject: function ()
-        {
+        $onInject: function () {
             var calID;
             if (this.calID !== undefined) {
                 calID = this.calID;
@@ -116,13 +120,11 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
          * @param Element - The element to create the Scheduler in
          * @return Promise - Resolves when Scheduler is initialized
          */
-        initScheduler: function (Element)
-        {
+        initScheduler: function (Element) {
             var self = this;
             var CH = new ColorHelper();
 
-            return new Promise(function (resolve)
-            {
+            return new Promise(function (resolve) {
                 // If scheduler already initiated return/resolve
                 if (self.schedulerReady) {
                     resolve();
@@ -148,10 +150,17 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
 
                     // Can the current User edit the calendar?
                     // Throws error if not editable
-                    Calendars.canUserEditCalendar(self.calID).catch(function ()
-                    {
+                    Calendars.canUserEditCalendar(self.calID).catch(function () {
                         console.log('User cant edit this calendar');
                         self.Scheduler.config.readonly = true;
+                    });
+
+                    Calendars.canUserEditCalendarsEvents(self.calID).then(function (result) {
+                        self.setAttribute('canUserEditEvents', result);
+                    });
+
+                    Calendars.canUserDeleteCalendarsEvents(self.calID).then(function (result) {
+                        self.setAttribute('canUserDeleteEvents', result);
                     });
 
                     // Set date format
@@ -165,10 +174,22 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
 
                     // Event description
                     self.Scheduler.config.lightbox.sections = [
-                        {name:QUILocale.get(lg, 'calendar.window.addevent.event.title'), height:30, map_to:"text", type:"textarea" , focus:true},
-                        {name:"description", height:200, map_to:"description", type:"textarea"},
-                        {name:QUILocale.get(lg, 'calendar.window.addevent.event.url'), height:50, map_to:"url", type:"textarea"},
-                        {name:"time", height:72, type:"time", map_to:"auto"}
+                        {
+                            name  : QUILocale.get(lg, 'calendar.window.addevent.event.title'),
+                            height: 30,
+                            map_to: "text",
+                            type  : "textarea",
+                            focus : true
+                        },
+                        {name: "description", height: 200, map_to: "description", type: "textarea"},
+                        {
+                            name  : QUILocale.get(lg, 'calendar.window.addevent.event.url'),
+                            height: 50,
+                            map_to: "url",
+                            type  : "textarea"
+                        },
+                        {name: "recurring", height: 115, type: "recurring", map_to: "rec_type", button: "recurring"},
+                        {name: "time", height: 72, type: "time", map_to: "auto"}
                     ];
 
                     // Remove all events from calendar (if another scheduler was opened previously)
@@ -181,35 +202,29 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
 
                     self.Loader.show();
 
-                    Calendars.getCalendar(self.calID).then(function (calendarData)
-                    {
+                    Calendars.getCalendar(self.calID).then(function (calendarData) {
                         self.calendarData = calendarData;
 
                         var calendarColor = calendarData.color;
                         var textColor = CH.getSchedulerTextColor(calendarColor);
 
-                        Calendars.getEventsAsJson(self.calID).then(function (events)
-                        {
+                        Calendars.getEventsAsJson(self.calID).then(function (events) {
                             // Set events colors
                             events = JSON.parse(events);
-                            events.forEach(function (event)
-                            {
+                            events.forEach(function (event) {
                                 event.color = calendarColor;
                                 event.textColor = textColor;
                             });
                             events = JSON.stringify(events);
 
-                            self.parseEventsIntoScheduler(events).then(function ()
-                            {
+                            self.parseEventsIntoScheduler(events).then(function () {
                                 self.schedulerReady = true;
                                 self.Loader.hide();
                             });
-                        }).catch(function (error)
-                        {
+                        }).catch(function (error) {
                             console.error('Error getting events:', error);
                         });
-                    }).catch(function (error)
-                    {
+                    }).catch(function (error) {
                         console.error('Error getting calendar data:', error);
                     });
                 });
@@ -224,11 +239,9 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
          * @param {string} events - events as JSON string
          * @return {Promise} - Resolves when parsing completed.
          */
-        parseEventsIntoScheduler: function (events)
-        {
+        parseEventsIntoScheduler: function (events) {
             var self = this;
-            return new Promise(function (resolve)
-            {
+            return new Promise(function (resolve) {
                 self.Scheduler.parse(events, 'json');
                 resolve();
             });
@@ -239,8 +252,7 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
          * Updates the scheduler size when the window is resized
          * event : on resize
          */
-        $onResize: function ()
-        {
+        $onResize: function () {
             if (this.schedulerReady) {
                 this.Scheduler.update_view();
             }
@@ -253,8 +265,7 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
          * @param {Number} width
          * @param {Number} height
          */
-        setDimensions: function (width, height)
-        {
+        setDimensions: function (width, height) {
             if (width < 0 || height < 0) {
                 return;
             }
@@ -270,8 +281,7 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
          * @param {Date|string} data.start_date - Start date and time of the event, if string in format '%Y-%m-%d %H:%i'
          * @param {Date|string} data.end_date   - End date and time of the event, if string in format '%Y-%m-%d %H:%i'
          */
-        addEventToScheduler: function (data)
-        {
+        addEventToScheduler: function (data) {
             this.Scheduler.addEvent(data);
         },
 
@@ -279,13 +289,25 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
         /**
          * Attaches add, edit, delete Event events to the Scheduler
          */
-        attachEvents: function ()
-        {
+        attachEvents: function () {
             var self = this;
 
+            this.BeforeChangeEventInCalendarEvent = this.Scheduler.attachEvent('onBeforeEventChanged', function () {
+                if (self.getAttribute('canUserEditEvents')) {
+                    return true;
+                }
+
+                QUI.getMessageHandler().then(function (MH) {
+                    MH.addError(QUILocale.get(lg, 'exception.calendar.permission.message.general', {
+                        permission: QUILocale.get(lg, 'permission.quiqqer.calendar.event.edit')
+                    }));
+                });
+
+                return false;
+            });
+
             // Run when an event is edited in the scheduler
-            this.ChangeEventInCalendarEvent = this.Scheduler.attachEvent('onEventChanged', function (id, ev)
-            {
+            this.ChangeEventInCalendarEvent = this.Scheduler.attachEvent('onEventChanged', function (id, ev) {
                 Calendars.editEvent(
                     self.calID,
                     ev.id,
@@ -298,8 +320,7 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
             });
 
             // Run when an event is added to the scheduler
-            this.AddEventToCalendarEvent = this.Scheduler.attachEvent('onEventAdded', function (id, ev)
-            {
+            this.AddEventToCalendarEvent = this.Scheduler.attachEvent('onEventAdded', function (id, ev) {
                 Calendars.addEvent(
                     self.calID,
                     ev.text,
@@ -307,8 +328,7 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
                     ev.start_date.getTime() / 1000,
                     ev.end_date.getTime() / 1000,
                     ev.url
-                ).then(function (result)
-                {
+                ).then(function (result) {
                     if (result == null) {
                         return;
                     }
@@ -320,22 +340,46 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
 
                     self.Scheduler.changeEventId(id, parseInt(result));
 
+                }).catch(function () {
+                    // Remove the event from the Scheduler without triggering any callbacks.
+                    // As presented by Daniel P. Henry on DHTMLX Scheduler docs (http://disq.us/p/1i73xt6)
+                    var temp = self.Scheduler._events[id];
+                    self.Scheduler._select_id = null;
+                    delete self.Scheduler._events[id];
+                    self.Scheduler.event_updated(temp);
                 });
             });
 
+            // Run before an event is deleted from the scheduler
+            this.BeforeDeleteEventFromCalendarEvent = this.Scheduler.attachEvent('onBeforeEventDelete', function () {
+                if (self.getAttribute('canUserDeleteEvents')) {
+                    return true;
+                }
+
+                QUI.getMessageHandler().then(function (MH) {
+                    MH.addError(QUILocale.get(lg, 'exception.calendar.permission.message.general', {
+                        permission: QUILocale.get(lg, 'permission.quiqqer.calendar.event.delete')
+                    }));
+                });
+
+                return false;
+            });
+
             // Run when an event is deleted from scheduler
-            this.DeleteEventFromCalendarEvent = this.Scheduler.attachEvent('onEventDeleted', function (id)
-            {
+            this.DeleteEventFromCalendarEvent = this.Scheduler.attachEvent('onEventDeleted', function (id) {
                 Calendars.deleteEvent(self.calID, id);
             });
         },
 
 
-        detachEvents: function ()
-        {
+        detachEvents: function () {
             if (this.schedulerReady) {
                 this.Scheduler.detachEvent(this.AddEventToCalendarEvent);
+
+                this.Scheduler.detachEvent(this.BeforeChangeEventInCalendarEvent);
                 this.Scheduler.detachEvent(this.ChangeEventInCalendarEvent);
+
+                this.Scheduler.detachEvent(this.BeforeDeleteEventFromCalendarEvent);
                 this.Scheduler.detachEvent(this.DeleteEventFromCalendarEvent);
             }
         }

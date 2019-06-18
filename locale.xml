@@ -152,9 +152,19 @@
 
 
         <!-- Exceptions -->
+        <locale name="exception.calendar.permission.message.general">
+            <de><![CDATA[Dir fehlt die Berechtigung '[permission]'.]]></de>
+            <en><![CDATA[You are lacking the permission '[permission]'.]]></en>
+        </locale>
+
         <locale name="exception.calendar.permission.view">
             <de><![CDATA[Du hast keine Berechtigung die Termine von einem dieser Kalender anzusehen.]]></de>
             <en><![CDATA[You have no permission to view the events from one of these calendars.]]></en>
+        </locale>
+
+        <locale name="exception.calendar.permission.create">
+            <de><![CDATA[Du hast keine Berechtigung Kalender anzulegen.]]></de>
+            <en><![CDATA[You have no permission to create calendars.]]></en>
         </locale>
 
         <locale name="exception.calendar.permission.edit">

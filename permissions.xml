@@ -1,16 +1,37 @@
 <permissions>
+    <!-- region Calendar -->
+    <permission name="quiqqer.calendar.view" type="bool">
+        <defaultvalue>1</defaultvalue>
+    </permission>
 
-    <!-- Calendar -->
-    <permission name="quiqqer.calendar.view" type="bool" />
-    <permission name="quiqqer.calendar.create" type="bool" />
-    <permission name="quiqqer.calendar.edit"   type="bool" />
-    <permission name="quiqqer.calendar.delete" type="bool" />
+    <permission name="quiqqer.calendar.create" type="bool">
+        <defaultvalue>1</defaultvalue>
+    </permission>
 
-    <permission name="quiqqer.calendar.admin" type="bool" />
+    <permission name="quiqqer.calendar.edit" type="bool">
+        <defaultvalue>1</defaultvalue>
+    </permission>
 
-    <!-- Events -->
-    <permission name="quiqqer.calendar.event.create" type="bool" />
-    <permission name="quiqqer.calendar.event.edit"   type="bool" />
-    <permission name="quiqqer.calendar.event.delete" type="bool" />
+    <permission name="quiqqer.calendar.delete" type="bool">
+        <defaultvalue>1</defaultvalue>
+    </permission>
 
+    <permission name="quiqqer.calendar.admin" type="bool">
+        <defaultvalue>1</defaultvalue>
+    </permission>
+    <!-- endregion -->
+
+    <!-- region Events -->
+    <permission name="quiqqer.calendar.event.create" type="bool">
+        <defaultvalue>1</defaultvalue>
+    </permission>
+
+    <permission name="quiqqer.calendar.event.edit" type="bool">
+        <defaultvalue>1</defaultvalue>
+    </permission>
+
+    <permission name="quiqqer.calendar.event.delete" type="bool">
+        <defaultvalue>1</defaultvalue>
+    </permission>
+    <!-- endregion -->
 </permissions>
