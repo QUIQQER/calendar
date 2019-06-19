@@ -26,5 +26,6 @@ QUI::$Ajax->registerFunction(
 
         return (int)$eventID;
     },
-    array('calendarID', 'title', 'desc', 'start', 'end', 'eventurl')
+    ['calendarID', 'title', 'desc', 'start', 'end', 'eventurl'],
+    'Permission::checkUser'
 );

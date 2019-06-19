@@ -11,9 +11,9 @@ QUI::$Ajax->registerFunction(
     function ($calendarID, $eventID) {
         $Calendar = \QUI\Calendar\Handler::getCalendar($calendarID);
         $Calendar->checkInternal();
-        
+
         $Calendar->removeCalendarEvent($eventID);
     },
-    array('calendarID', 'eventID'),
-    'quiqqer.calendar.event.delete'
+    ['calendarID', 'eventID'],
+    'Permission::checkUser'
 );

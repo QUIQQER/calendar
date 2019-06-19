@@ -8,7 +8,7 @@
  * Returns area list
  *
  * @param string $freeText - Freetext search, String to search
- * @param string $params - JSON query params
+ * @param string $params   - JSON query params
  *
  * @return array
  */
@@ -32,6 +32,6 @@ QUI::$Ajax->registerFunction(
 
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     },
-    array('freeText'),
-    'Permission::checkAdminUser'
+    ['freeText'],
+    'Permission::checkUser'
 );
