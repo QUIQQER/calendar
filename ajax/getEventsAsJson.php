@@ -7,11 +7,14 @@
  *
  * @return String - The calendars events as JSON string
  */
+
+use QUI\Calendar\Handler;
+
 QUI::$Ajax->registerFunction(
     'package_quiqqer_calendar_ajax_getEventsAsJson',
     function ($calendarID) {
-        return \QUI\Calendar\Handler::getCalendar($calendarID)->toJSON();
+        return Handler::getCalendar($calendarID)->toJSON();
     },
-    array('calendarID'),
+    ['calendarID'],
     false
 );

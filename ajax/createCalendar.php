@@ -8,6 +8,9 @@
  * @param boolean $isPublic - Is the calendar public or private?
  * @param string  $color    - The calendars color in hex format (leading #)
  */
+
+use QUI\Calendar\Handler;
+
 QUI::$Ajax->registerFunction(
     'package_quiqqer_calendar_ajax_createCalendar',
     function ($name, $userid, $isPublic, $color) {
@@ -16,7 +19,7 @@ QUI::$Ajax->registerFunction(
         } catch (Exception $ex) {
             return null;
         }
-        \QUI\Calendar\Handler::createCalendar($name, $User, $isPublic, $color);
+        Handler::createCalendar($name, $User, $isPublic, $color);
 
         QUI::getMessagesHandler()->addSuccess(
             QUI::getLocale()->get(

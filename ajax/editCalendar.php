@@ -8,10 +8,13 @@
  * @param boolean $isPublic   - Is the calendar public or private?
  * @param string  $color      - The calendars color in hex format (leading #)
  */
+
+use QUI\Calendar\Handler;
+
 QUI::$Ajax->registerFunction(
     'package_quiqqer_calendar_ajax_editCalendar',
     function ($calendarID, $name, $isPublic, $color = '#2F8FC6') {
-        \QUI\Calendar\Handler::getCalendar($calendarID)->editCalendar($name, $isPublic, $color);
+        Handler::getCalendar($calendarID)->editCalendar($name, $isPublic, $color);
     },
     ['calendarID', 'name', 'isPublic', 'color'],
     'Permission::checkUser'

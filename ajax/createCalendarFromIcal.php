@@ -6,6 +6,9 @@
  * @param String $name   - The name of the calendar
  * @param int    $userid - The ID of the owner.
  */
+
+use QUI\Calendar\Handler;
+
 QUI::$Ajax->registerFunction(
     'package_quiqqer_calendar_ajax_createCalendarFromIcal',
     function ($icalUrl, $userid) {
@@ -14,7 +17,7 @@ QUI::$Ajax->registerFunction(
         } catch (Exception $ex) {
             return null;
         }
-        \QUI\Calendar\Handler::createCalendarFromIcal($icalUrl, $User);
+        Handler::createCalendarFromIcal($icalUrl, $User);
 
         QUI::getMessagesHandler()->addSuccess(
             QUI::getLocale()->get(

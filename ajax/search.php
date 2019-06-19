@@ -4,6 +4,8 @@
  * This file contains package_quiqqer_calendar_ajax_search
  */
 
+use QUI\Calendar\Handler;
+
 /**
  * Returns area list
  *
@@ -19,7 +21,7 @@ QUI::$Ajax->registerFunction(
         $PDO = QUI::getPDO();
 
         $freeText          = "%$freeText%";
-        $calendarTableName = \QUI\Calendar\Handler::tableCalendars();
+        $calendarTableName = Handler::tableCalendars();
 
         $statement = $PDO->prepare("
           SELECT `id`, `name` AS `title`, `isExternal`, 'fa fa-calendar' AS `icon` 

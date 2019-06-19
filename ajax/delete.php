@@ -5,11 +5,14 @@
  *
  * @param string $ids - JSON array of event IDs
  */
+
+use QUI\Calendar\Handler;
+
 QUI::$Ajax->registerFunction(
     'package_quiqqer_calendar_ajax_delete',
     function ($ids) {
         $ids = json_decode($ids, true);
-        \QUI\Calendar\Handler::deleteCalendars($ids);
+        Handler::deleteCalendars($ids);
     },
     ['ids'],
     'Permission::checkUser'
