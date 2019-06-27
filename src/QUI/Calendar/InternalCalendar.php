@@ -373,16 +373,18 @@ class InternalCalendar extends AbstractCalendar
         $tableRecurrence = Handler::tableCalendarsEventsRecurrence();
 
         $sql = "
-            SELECT events.*, recurrence.end AS recurrence_end, recurrence.interval AS recurrence_interval 
+            SELECT events.*, 
+                   recurrence.end      AS recurrence_end, 
+                   recurrence.interval AS recurrence_interval 
             FROM {$tableEvents} events
-            LEFT JOIN {$tableRecurrence} recurrence
-                ON events.eventid = recurrence.eventid
+                LEFT JOIN {$tableRecurrence} recurrence
+                    ON events.eventid = recurrence.eventid
             WHERE 
-              calendarid = :calendarID AND 
-              start >= :startDate AND 
-              (
-                (recurrence.end >= :currentDate OR recurrence.end IS NULL)               
-              )
+                calendarid = :calendarID
+                AND (
+                    (start >= :startDate AND recurrence.end IS NULL) OR
+                    (recurrence.end >= :currentDate)
+                )
             ORDER BY start ASC
         ";
 
