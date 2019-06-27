@@ -195,12 +195,6 @@ abstract class AbstractCalendar
         return $this->isPublic;
     }
 
-    /**
-     * Returns all events in a calendar as an array
-     *
-     * @return array - array of events
-     */
-    abstract public function getEvents();
 
     /**
      * Returns all events for a given date (day).

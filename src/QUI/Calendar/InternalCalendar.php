@@ -223,39 +223,6 @@ class InternalCalendar extends AbstractCalendar
 
 
     /**
-     * Returns all events in a calendar as an array
-     *
-     * @return \QUI\Calendar\Event[] - array of events
-     *
-     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
-     * @throws QUI\Calendar\Exception\Database - Couldn't fetch events' data from the database
-     */
-    public function getEvents()
-    {
-        $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
-
-        try {
-            $eventsRaw = QUI::getDataBase()->fetch(array(
-                'from'  => Handler::tableCalendarsEvents(),
-                'where' => array(
-                    'calendarid' => (int)$this->getId()
-                )
-            ));
-        } catch (QUI\Database\Exception $Exception) {
-            QUI\System\Log::writeException($Exception);
-            throw new QUI\Calendar\Exception\Database();
-        }
-
-        $events = array();
-        foreach ($eventsRaw as $event) {
-            $events[] = \QUI\Calendar\Event::fromDatabaseArray($event);
-        }
-
-        return $events;
-    }
-
-
-    /**
      * @inheritdoc
      *
      * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
