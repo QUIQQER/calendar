@@ -12,7 +12,7 @@ use QUI;
  * Class CalendarDisplay
  *
  * @package QUI\Calendar
- * @author www.pcsg.de (Jan Wennrich)
+ * @author  www.pcsg.de (Jan Wennrich)
  */
 class CalendarDisplay extends QUI\Control
 {

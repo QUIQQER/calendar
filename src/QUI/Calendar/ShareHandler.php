@@ -6,6 +6,7 @@
 
 namespace QUI\Calendar;
 
+use QUI;
 use QUI\Calendar\Exception\Database;
 use QUI\Calendar\Exception\NoPermission;
 use QUI\Calendar\Exception\Share;
@@ -14,6 +15,7 @@ use QUI\Users\User;
 
 /**
  * Class Share
+ *
  * @package QUI\Calendar
  */
 class ShareHandler
@@ -24,7 +26,7 @@ class ShareHandler
      * By passing a user as an argument the URL for a specific user can be retrieved.
      *
      * @param AbstractCalendar $Calendar - A calendar to get the share URL for
-     * @param User $User - The user to get the URL for
+     * @param User             $User     - The user to get the URL for
      *
      * @return string
      *
@@ -35,19 +37,19 @@ class ShareHandler
     public static function getShareUrlForCalendar(AbstractCalendar $Calendar, User $User = null)
     {
         if (is_null($User)) {
-            $User = \QUI::getUserBySession();
+            $User = QUI::getUserBySession();
         }
 
         $Calendar->checkPermission($Calendar::PERMISSION_VIEW_CALENDAR, $User);
 
         // Check if there is already a share hash for this calendar and user
         try {
-            $shareData = \QUI::getDataBase()->fetch([
+            $shareData = QUI::getDataBase()->fetch([
                 'from'  => Handler::tableCalendarsShares(),
-                'where' => array(
+                'where' => [
                     'calendarid' => (int)$Calendar->getId(),
                     'userid'     => $User->getId()
-                ),
+                ],
                 'limit' => 1
             ]);
         } catch (\QUI\Database\Exception $Exception) {
@@ -62,7 +64,7 @@ class ShareHandler
         $hash = self::generateShareHash();
 
         try {
-            \QUI::getDataBase()->insert(
+            QUI::getDataBase()->insert(
                 Handler::tableCalendarsShares(),
                 [
                     'calendarid'   => $Calendar->getId(),
@@ -104,7 +106,7 @@ class ShareHandler
      */
     protected static function generateShareUrlForHash($hash)
     {
-        $host  = \QUI::conf('globals', 'host') . "/";
+        $host  = QUI::conf('globals', 'host') . "/";
         $path  = "packages/quiqqer/calendar/bin/iCalExport.php";
         $query = "?hash=" . $hash;
 
@@ -117,15 +119,15 @@ class ShareHandler
      *
      * @param string $hash - The calendars share hash
      *
-     * @throws Database - Couldn't fetch the calendar data from the database
+     * @return AbstractCalendar
      * @throws Exception - No calendar for this hash in the database
      *
-     * @return AbstractCalendar
+     * @throws Database - Couldn't fetch the calendar data from the database
      */
     public static function getCalendarFromHash($hash)
     {
         try {
-            $calendarData = \QUI::getDataBase()->fetch([
+            $calendarData = QUI::getDataBase()->fetch([
                 'select' => ['calendarid'],
                 'from'   => Handler::tableCalendarsShares(),
                 'where'  => [

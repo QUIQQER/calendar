@@ -2,6 +2,8 @@
 
 namespace QUI\Calendar;
 
+use DateTime;
+use DateTimeImmutable;
 use ICal\ICal;
 use QUI;
 
@@ -206,7 +208,7 @@ class ExternalCalendar extends AbstractCalendar
         $ICal->initString($this->toICal());
 
         $eventsRaw = $ICal->events();
-        $events    = array();
+        $events    = [];
 
         foreach ($eventsRaw as $key => $Event) {
             $start = Event::timestampToSchedulerFormat((int)$ICal->iCalDateToUnixTimestamp($Event->dtstart));
@@ -225,7 +227,7 @@ class ExternalCalendar extends AbstractCalendar
      * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
      * @throws \Exception - Something went wrong converting the given date to timestamps
      */
-    public function getEventsForDate(\DateTime $Date, $ignoreTime)
+    public function getEventsForDate(DateTime $Date, $ignoreTime)
     {
         $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
 
@@ -233,7 +235,7 @@ class ExternalCalendar extends AbstractCalendar
         $timestampEnd   = $timestampStart;
 
         if ($ignoreTime) {
-            $DateImmutable = \DateTimeImmutable::createFromMutable($Date);
+            $DateImmutable = DateTimeImmutable::createFromMutable($Date);
 
             $timestampStart = $DateImmutable->setTime(0, 0, 0)->format(DATE_ISO8601);
             $timestampEnd   = $DateImmutable->setTime(23, 59, 59)->format(DATE_ISO8601);
@@ -270,7 +272,7 @@ class ExternalCalendar extends AbstractCalendar
      * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
      * @throws \Exception - Something went wrong converting the given date to timestamps
      */
-    public function getEventsBetweenDates(\DateTime $StartDate, \DateTime $EndDate, $ignoreTime)
+    public function getEventsBetweenDates(DateTime $StartDate, DateTime $EndDate, $ignoreTime)
     {
         $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
 
@@ -278,10 +280,10 @@ class ExternalCalendar extends AbstractCalendar
         $timestampEndDate   = $EndDate->format(DATE_ISO8601);
 
         if ($ignoreTime) {
-            $StartDateImmutable = \DateTimeImmutable::createFromMutable($StartDate);
+            $StartDateImmutable = DateTimeImmutable::createFromMutable($StartDate);
             $timestampStartDate = $StartDateImmutable->setTime(0, 0, 0)->format(DATE_ISO8601);
 
-            $EndDateImmutable = \DateTimeImmutable::createFromMutable($EndDate);
+            $EndDateImmutable = DateTimeImmutable::createFromMutable($EndDate);
             $timestampEndDate = $EndDateImmutable->setTime(23, 59, 59)->format(DATE_ISO8601);
         }
 
@@ -338,7 +340,7 @@ class ExternalCalendar extends AbstractCalendar
             $amount = PHP_INT_MAX;
         }
 
-        $count  = 0;
+        $count           = 0;
         $EventCollection = new EventCollection();
         foreach ($eventsRaw as $key => $Event) {
             if ($count >= $amount) {
@@ -360,6 +362,7 @@ class ExternalCalendar extends AbstractCalendar
      * Checks if an iCal string is valid
      *
      * @param string $icalString - The iCal string to check
+     *
      * @return boolean - Is the iCal string valid
      */
     public static function isValidIcal($icalString)

@@ -10,6 +10,7 @@ use QUI\Collection;
 
 /**
  * Class EventCollection
+ *
  * @package QUI\Calendar
  */
 class EventCollection extends Collection

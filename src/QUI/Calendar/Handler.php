@@ -12,6 +12,7 @@ use QUI\Users\User;
 
 /**
  * Class Handler
+ *
  * @package QUI\Calendar
  */
 class Handler
@@ -19,10 +20,10 @@ class Handler
     /**
      * Creates a new Calendar
      *
-     * @param string $name - Calendar name
-     * @param User $User - Owner of the calendar
-     * @param bool $isPublic - Is the calendar private or public?
-     * @param string $color - The calendars color in hex format (leading #)
+     * @param string $name     - Calendar name
+     * @param User   $User     - Owner of the calendar
+     * @param bool   $isPublic - Is the calendar private or public?
+     * @param string $color    - The calendars color in hex format (leading #)
      *
      * @return InternalCalendar - The created calendar
      *
@@ -60,7 +61,7 @@ class Handler
      * Creates a new calendar (with events) from an iCal URL
      *
      * @param string $icalUrl - The iCal URL
-     * @param User $User - The calendar owner
+     * @param User   $User    - The calendar owner
      *
      * @return InternalCalendar - The created calendar object
      *
@@ -78,7 +79,7 @@ class Handler
         $calendarTranslation = QUI::getLocale()->get('quiqqer/calendar', 'calendar');
 
         $IcalCalendar = new ICal($icalUrl);
-        $Calendar     = self::createCalendar($User->getName()." ".$calendarTranslation, $User);
+        $Calendar     = self::createCalendar($User->getName() . " " . $calendarTranslation, $User);
 
         $eventsFromIcal = $IcalCalendar->events();
 
@@ -102,10 +103,10 @@ class Handler
      * Adds an external calendar to the system.
      *
      * @param string $calendarName - Name of the calendar
-     * @param string $icalUrl - URL of the iCal (.ics) file
-     * @param User $User - Owner of the calendar
-     * @param bool $isPublic - Is the calendar private or public?
-     * @param string $color - The calendars color in hex format (leading #)
+     * @param string $icalUrl      - URL of the iCal (.ics) file
+     * @param User   $User         - Owner of the calendar
+     * @param bool   $isPublic     - Is the calendar private or public?
+     * @param string $color        - The calendars color in hex format (leading #)
      *
      * @return ExternalCalendar
      *

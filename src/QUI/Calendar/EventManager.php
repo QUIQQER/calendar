@@ -2,6 +2,7 @@
 
 namespace QUI\Calendar;
 
+use QUI;
 use QUI\Calendar\Exception\Database;
 use QUI\Calendar\Exception\NoPermission;
 use QUI\Permissions\Permission;
@@ -21,13 +22,13 @@ class EventManager
     public static function getEventById($id)
     {
         try {
-            $data = \QUI::getDataBase()->fetch(array(
+            $data = QUI::getDataBase()->fetch([
                 'from'  => Handler::tableCalendarsEvents(),
-                'where' => array(
+                'where' => [
                     'eventid' => $id
-                ),
+                ],
                 'limit' => 1
-            ));
+            ]);
         } catch (\QUI\Database\Exception $Exception) {
             Log::writeException($Exception);
             throw new Database();
@@ -53,7 +54,7 @@ class EventManager
     /**
      * Returns the specified amount of events for an array of calendar ids
      *
-     * @param int[] $ids - Array of calendar IDs of which upcoming events should be retrieved
+     * @param int[]    $ids   - Array of calendar IDs of which upcoming events should be retrieved
      * @param int|bool $limit - Maximum amount of events to get
      *
      * @return Event[] - An array of upcoming events
@@ -89,7 +90,8 @@ class EventManager
      * Returns the specified amount of events for an array of calendar ids
      *
      * @param AbstractCalendar[] $calendars - Array of calendars of which upcoming events should be retrieved
-     * @param int|bool $limit - Maximum amount of events to get
+     * @param int|bool           $limit     - Maximum amount of events to get
+     *
      * @return Event[] - An array of upcoming events
      */
     public static function getUpcomingEventsForCalendars(array $calendars, $limit = false)
@@ -120,15 +122,15 @@ class EventManager
         }
 
         try {
-            $eventsDataRaw = \QUI::getDataBase()->fetch(array(
+            $eventsDataRaw = QUI::getDataBase()->fetch([
                 'from' => Handler::tableCalendarsEvents()
-            ));
+            ]);
         } catch (\QUI\Database\Exception $Exception) {
             Log::writeException($Exception);
             throw new Database();
         }
 
-        $events = array();
+        $events = [];
         foreach ($eventsDataRaw as $key => $eventData) {
             $events[] = Event::fromDatabaseArray($eventData);
         }

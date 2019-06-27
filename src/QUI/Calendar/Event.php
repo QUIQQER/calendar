@@ -43,13 +43,14 @@ class Event
 
     /**
      * Event constructor.
+     *
      * @param string $title
      * @param string $desc
      * @param string $start - The events start time/date in format YYYY-MM-DD HH:mm
-     * @param string $end - The events end time/date in format YYYY-MM-DD HH:mm
-     * @param int $id
-     * @param int $calendarid
-     * @param string $url - Link to further information about the event
+     * @param string $end   - The events end time/date in format YYYY-MM-DD HH:mm
+     * @param int    $id
+     * @param int    $calendarid
+     * @param string $url   - Link to further information about the event
      */
     public function __construct($title, $desc, $start, $end, $id = -1, $calendarid = -1, $url = "")
     {
@@ -87,6 +88,7 @@ class Event
      * Converts a UNIX timestamp to the format for DHTMLX Scheduler
      *
      * @param $timestamp int - A unix timestamp
+     *
      * @return false|string  - The converted timestamp or false on error
      */
     public static function timestampToSchedulerFormat($timestamp)

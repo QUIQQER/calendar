@@ -5,10 +5,14 @@
 
 namespace QUI\Calendar;
 
+use DateTime;
+use DateTimeImmutable;
 use function DusanKasan\Knapsack\last;
 use Eluceo\iCal\Component\Calendar;
 use Eluceo\iCal\Component\Event;
+use PDO;
 use QUI;
+use function usort;
 
 /**
  * Class Calendar
@@ -36,10 +40,10 @@ class InternalCalendar extends AbstractCalendar
      * Adds an event to the calendar.
      *
      * @param string $title - Event title
-     * @param string $desc - Event description
-     * @param int $start - Unix timestamp when the event starts
-     * @param int $end - Unix timestamp when the event ends
-     * @param string $url - Link to further information about the event
+     * @param string $desc  - Event description
+     * @param int    $start - Unix timestamp when the event starts
+     * @param int    $end   - Unix timestamp when the event ends
+     * @param string $url   - Link to further information about the event
      *
      * @return int - The ID the event got assigned from the database
      *
@@ -51,14 +55,14 @@ class InternalCalendar extends AbstractCalendar
         $this->checkPermission(self::PERMISSION_ADD_EVENT);
 
         try {
-            QUI::getDataBase()->insert(Handler::tableCalendarsEvents(), array(
+            QUI::getDataBase()->insert(Handler::tableCalendarsEvents(), [
                 'title'      => $title,
                 'desc'       => $desc,
                 'start'      => $start,
                 'end'        => $end,
                 'url'        => $url,
                 'calendarid' => $this->getId()
-            ));
+            ]);
         } catch (QUI\Database\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
             throw new QUI\Calendar\Exception\Database();
@@ -108,12 +112,12 @@ class InternalCalendar extends AbstractCalendar
     /**
      * Edits an event in the calendar.
      *
-     * @param int $eventID - ID of the event to edit
-     * @param string $title - Event title
-     * @param string $desc - Event description
-     * @param int $start - Unix timestamp when the event starts
-     * @param int $end - Unix timestamp when the event ends
-     * @param string $url - Link to further information about the event
+     * @param int    $eventID - ID of the event to edit
+     * @param string $title   - Event title
+     * @param string $desc    - Event description
+     * @param int    $start   - Unix timestamp when the event starts
+     * @param int    $end     - Unix timestamp when the event ends
+     * @param string $url     - Link to further information about the event
      *
      * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
      * @throws QUI\Calendar\Exception\Database - Couldn't update event in the database
@@ -123,15 +127,15 @@ class InternalCalendar extends AbstractCalendar
         $this->checkPermission(self::PERMISSION_EDIT_EVENT);
 
         try {
-            QUI::getDataBase()->update(Handler::tableCalendarsEvents(), array(
+            QUI::getDataBase()->update(Handler::tableCalendarsEvents(), [
                 'title' => $title,
                 'desc'  => $desc,
                 'start' => $start,
                 'end'   => $end,
                 'url'   => $url
-            ), array(
+            ], [
                 'eventid' => $eventID
-            ));
+            ]);
         } catch (QUI\Database\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
             throw new QUI\Calendar\Exception\Database();
@@ -151,9 +155,9 @@ class InternalCalendar extends AbstractCalendar
         $this->checkPermission(self::PERMISSION_REMOVE_EVENT);
 
         try {
-            QUI::getDataBase()->delete(Handler::tableCalendarsEvents(), array(
+            QUI::getDataBase()->delete(Handler::tableCalendarsEvents(), [
                 'eventid' => $eventID
-            ));
+            ]);
         } catch (QUI\Database\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
             throw new QUI\Calendar\Exception\Database();
@@ -176,10 +180,10 @@ class InternalCalendar extends AbstractCalendar
 
         foreach ($events as $Event) {
             try {
-                $start = new \DateTime();
+                $start = new DateTime();
                 $start->setTimestamp(strtotime($Event->start_date));
 
-                $end = new \DateTime();
+                $end = new DateTime();
                 $end->setTimestamp(strtotime($Event->end_date));
             } catch (\Exception $Exception) {
                 // This should never happen since DateTime is instantiated without parameters
@@ -227,7 +231,7 @@ class InternalCalendar extends AbstractCalendar
      *
      * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
      */
-    public function getEventsForDate(\DateTime $Date, $ignoreTime)
+    public function getEventsForDate(DateTime $Date, $ignoreTime)
     {
         $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
 
@@ -246,7 +250,7 @@ class InternalCalendar extends AbstractCalendar
         ];
 
         if ($ignoreTime) {
-            $DateImmutable = \DateTimeImmutable::createFromMutable($Date);
+            $DateImmutable = DateTimeImmutable::createFromMutable($Date);
 
             $timestampDayStart = $DateImmutable->setTime(0, 0, 0)->getTimestamp();
             $timestampDayEnd   = $DateImmutable->setTime(23, 59, 59)->getTimestamp();
@@ -259,10 +263,10 @@ class InternalCalendar extends AbstractCalendar
         }
 
         try {
-            $eventsRaw = QUI::getDataBase()->fetch(array(
+            $eventsRaw = QUI::getDataBase()->fetch([
                 'from'  => Handler::tableCalendarsEvents(),
                 'where' => $where
-            ));
+            ]);
         } catch (QUI\Database\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
             $eventsRaw = [];
@@ -282,7 +286,7 @@ class InternalCalendar extends AbstractCalendar
      *
      * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
      */
-    public function getEventsBetweenDates(\DateTime $StartDate, \DateTime $EndDate, $ignoreTime)
+    public function getEventsBetweenDates(DateTime $StartDate, DateTime $EndDate, $ignoreTime)
     {
         $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
 
@@ -290,15 +294,15 @@ class InternalCalendar extends AbstractCalendar
         $timestampEndDate   = $EndDate->getTimestamp();
 
         if ($ignoreTime) {
-            $StartDateImmutable = \DateTimeImmutable::createFromMutable($StartDate);
+            $StartDateImmutable = DateTimeImmutable::createFromMutable($StartDate);
             $timestampStartDate = $StartDateImmutable->setTime(0, 0, 0)->getTimestamp();
 
-            $EndDateImmutable = \DateTimeImmutable::createFromMutable($EndDate);
+            $EndDateImmutable = DateTimeImmutable::createFromMutable($EndDate);
             $timestampEndDate = $EndDateImmutable->setTime(23, 59, 59)->getTimestamp();
         }
 
         try {
-            $eventsRaw = QUI::getDataBase()->fetch(array(
+            $eventsRaw = QUI::getDataBase()->fetch([
                 'from'  => Handler::tableCalendarsEvents(),
                 'where' => [
                     'calendarid' => (int)$this->getId(),
@@ -311,7 +315,7 @@ class InternalCalendar extends AbstractCalendar
                         'value' => $timestampStartDate
                     ]
                 ]
-            ));
+            ]);
         } catch (QUI\Database\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
             $eventsRaw = [];
@@ -359,11 +363,11 @@ class InternalCalendar extends AbstractCalendar
             ORDER BY start ASC
         ";
 
-        $parameters = array(
+        $parameters = [
             ':calendarID'  => (int)$this->getId(),
             ':startDate'   => time(),
             ':currentDate' => date("Y-m-d H:i:s")
-        );
+        ];
 
         $limit = (int)$amount;
         $sql   .= "LIMIT {$limit}";
@@ -371,7 +375,7 @@ class InternalCalendar extends AbstractCalendar
         $Statement = QUI::getDataBase()->getPDO()->prepare($sql);
         $Statement->execute($parameters);
 
-        $eventsRaw = $Statement->fetchAll(\PDO::FETCH_ASSOC);
+        $eventsRaw = $Statement->fetchAll(PDO::FETCH_ASSOC);
         $eventsRaw = static::processEventDatabaseData($eventsRaw, $amount);
 
         $EventCollection = new EventCollection();
@@ -390,7 +394,7 @@ class InternalCalendar extends AbstractCalendar
      * This takes care of generating recurring events, etc.
      *
      * @param array $eventDataArray
-     * @param int $limit - The maximum amount of events this method should return
+     * @param int   $limit - The maximum amount of events this method should return
      *
      * @return EventCollection
      */
@@ -412,10 +416,10 @@ class InternalCalendar extends AbstractCalendar
             }
 
             // The start and end of the current event. Using a DateTime object here to add the recurrence interval later
-            $CurrentEventDateStart = new \DateTime();
+            $CurrentEventDateStart = new DateTime();
             $CurrentEventDateStart->setTimestamp($eventData['start']);
 
-            $CurrentEventDateEnd   = new \DateTime();
+            $CurrentEventDateEnd = new DateTime();
             $CurrentEventDateEnd->setTimestamp($eventData['end']);
 
             $recurrenceInterval = $eventData['recurrence_interval'];
@@ -436,7 +440,7 @@ class InternalCalendar extends AbstractCalendar
         }
 
         // The events might be out of order so we have to sort them again
-        \usort($result, function ($eventAData, $eventBData) {
+        usort($result, function ($eventAData, $eventBData) {
             return ($eventAData['start'] - $eventBData['start']);
         });
 

@@ -10,6 +10,7 @@ use QUI;
 
 /**
  * Setup routine for calendar package
+ *
  * @package QUI\Calendar\Setup
  */
 class Setup

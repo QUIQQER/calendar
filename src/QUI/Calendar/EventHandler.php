@@ -1,4 +1,5 @@
 <?php
+
 namespace QUI\Calendar;
 
 class EventHandler
