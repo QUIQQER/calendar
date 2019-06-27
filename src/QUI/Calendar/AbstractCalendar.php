@@ -246,7 +246,7 @@ abstract class AbstractCalendar
      *
      * @param int - Amount of upcoming events to get. Leave empty or set to -1 to get all upcoming events.
      *
-     * @return Event[] - Array of upcoming events
+     * @return EventCollection - Collection of upcoming events
      */
     abstract public function getUpcomingEvents($amount = -1);
 

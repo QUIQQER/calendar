@@ -328,7 +328,11 @@ class InternalCalendar extends AbstractCalendar
 
 
     /**
-     * @inheritdoc
+     * @inheritDoc
+     *
+     * @param int $amount
+     *
+     * @return EventCollection
      *
      * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
      */
@@ -370,12 +374,14 @@ class InternalCalendar extends AbstractCalendar
         $eventsRaw = $Statement->fetchAll(\PDO::FETCH_ASSOC);
         $eventsRaw = static::processEventDatabaseData($eventsRaw, $amount);
 
-        $events = [];
+        $EventCollection = new EventCollection();
         foreach ($eventsRaw as $event) {
-            $events[] = \QUI\Calendar\Event::fromDatabaseArray($event);
+            $EventCollection->append(
+                \QUI\Calendar\Event::fromDatabaseArray($event)
+            );
         }
 
-        return $events;
+        return $EventCollection;
     }
 
 

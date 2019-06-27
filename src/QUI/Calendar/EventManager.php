@@ -64,7 +64,7 @@ class EventManager
         $events = [];
         foreach ($ids as $calendarID) {
             try {
-                $calendarsEvents = Handler::getCalendar($calendarID)->getUpcomingEvents($limit);
+                $calendarsEvents = Handler::getCalendar($calendarID)->getUpcomingEvents($limit)->toArray();
                 $events          = array_merge($events, $calendarsEvents);
             } catch (\QUI\Exception $exception) {
                 continue;
