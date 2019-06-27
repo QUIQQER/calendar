@@ -51,41 +51,6 @@ class EventManager
 
 
     /**
-     * Returns the specified amount of events for a calendar id
-     *
-     * @param int $id - ID of a calendar of which upcoming events should be retrieved
-     * @param bool $limit - Maximum amount of events to get
-     *
-     * @return Event[] - An array of upcoming events
-     *
-     * @throws NoPermission - Current user isn't allowed to view the calendar
-     * @throws \QUI\Exception - Calendar with the given ID doesn't exist or is not accessible
-     *
-     * @deprecated - Use getUpcomingEvents() of a AbstractCalendar instance instead
-     */
-    public static function getUpcomingEventsForCalendarId($id, $limit = false)
-    {
-        return Handler::getCalendar($id)->getUpcomingEvents($limit);
-    }
-
-
-    /**
-     * Returns the specified amount of events for a calendar
-     *
-     * @param AbstractCalendar $Calendar - Calendar of which upcoming events should be retrieved
-     * @param bool $limit - Maximum amount of events to get
-     *
-     * @return Event[] - An array of upcoming events
-     *
-     * @deprecated - Use getUpcomingEvents() of a AbstractCalendar instance instead
-     */
-    public function getUpcomingEventsForCalendar(AbstractCalendar $Calendar, $limit = false)
-    {
-        return $Calendar->getUpcomingEvents($limit);
-    }
-
-
-    /**
      * Returns the specified amount of events for an array of calendar ids
      *
      * @param int[] $ids - Array of calendar IDs of which upcoming events should be retrieved
