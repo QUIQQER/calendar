@@ -28,7 +28,7 @@
     "php": ">=7.1",
     "quiqqer/quiqqer": "^1.3.0|dev-master|dev-dev",
     "quiqqer/calendar-controls": "1.2.*|dev-master|dev-dev",
-    "quiqqer/utils": "^1.15.1|dev-master|dev-dev",
+    "quiqqer/utils": ">1.17.0|dev-master|dev-dev",
     "eluceo/ical": "0.11.0",
     "johngrogg/ics-parser": "2.1.5"
   },
