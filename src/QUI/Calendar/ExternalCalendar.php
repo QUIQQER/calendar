@@ -272,7 +272,7 @@ class ExternalCalendar extends AbstractCalendar
      * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
      * @throws \Exception - Something went wrong converting the given date to timestamps
      */
-    public function getEventsBetweenDates(DateTime $StartDate, DateTime $EndDate, $ignoreTime)
+    public function getEventsBetweenDates(DateTime $StartDate, DateTime $EndDate, $ignoreTime, $limit)
     {
         $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
 

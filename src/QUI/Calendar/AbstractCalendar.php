@@ -220,18 +220,19 @@ abstract class AbstractCalendar
      *
      * The second parameter determines whether the exact point in time should be used or the entire day.
      *
-     * @param DateTime $StartDate
-     * @param DateTime $EndDate
-     * @param boolean   $ignoreTime
+     * @param DateTime $IntervalStart
+     * @param DateTime $IntervalEnd
+     * @param boolean  $ignoreTime
+     *
+     * @param          $limit
      *
      * @return EventCollection
      * @example
      * passed date objects: 20.04.2042 13:37 and 06.09.2042 04:20
      * second parameter true: Returns all events that occur between 20.04.2042 00:00 and 06.09.2042 23:59
      * second parameter false: Returns all events that occur between 20.04.2042 13:37 and 06.09.2042 04:20
-     *
      */
-    abstract public function getEventsBetweenDates(DateTime $StartDate, DateTime $EndDate, $ignoreTime);
+    abstract public function getEventsBetweenDates(DateTime $IntervalStart, DateTime $IntervalEnd, $ignoreTime, $limit);
 
     /**
      * Returns the calendars color in hex format.

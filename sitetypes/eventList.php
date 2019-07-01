@@ -15,7 +15,7 @@ if (!is_array($calendarIDs)) {
 
 foreach ($calendarIDs as $calendarID) {
     try {
-        $eventsCurrent = Handler::getCalendar($calendarID)->getEventsBetweenDates($startDate, $endDate, true);
+        $eventsCurrent = Handler::getCalendar($calendarID)->getEventsBetweenDates($startDate, $endDate, true, 1000);
         $events        = \array_merge($events, $eventsCurrent->toArray());
     } catch (QUI\Exception $Exception) {
         QUI\System\Log::addDebug($Exception->getMessage());

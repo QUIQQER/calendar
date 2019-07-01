@@ -284,10 +284,16 @@ class InternalCalendar extends AbstractCalendar
     /**
      * @inheritdoc
      *
+     * @param int           $limit
+     *
      * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
      */
-    public function getEventsBetweenDates(DateTime $StartDate, DateTime $EndDate, $ignoreTime)
-    {
+    public function getEventsBetweenDates(
+        DateTime $StartDate,
+        DateTime $EndDate,
+        $ignoreTime,
+        $limit = 1000
+    ) {
         $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
 
         $timestampStartDate = $StartDate->getTimestamp();
