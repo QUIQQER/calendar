@@ -321,8 +321,8 @@ class InternalCalendar extends AbstractCalendar
 
         $sql = "
             SELECT events.*, 
-                   recurrence.end      AS recurrence_end, 
-                   recurrence.interval AS recurrence_interval 
+                   recurrence_end, 
+                   recurrence_interval 
             FROM {$tableEvents} events
                 LEFT JOIN {$tableRecurrence} recurrence
                     ON events.eventid = recurrence.eventid
@@ -331,9 +331,9 @@ class InternalCalendar extends AbstractCalendar
                 events.start <= :interval_end AND
                 ((                     
                     events.end >= :interval_start AND 
-                    recurrence.end IS NULL
+                    recurrence_end IS NULL
                 ) OR (
-                    recurrence.end >= :interval_start
+                    recurrence_end >= :interval_start
                 ))
             ORDER BY start ASC
         ";

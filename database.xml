@@ -23,8 +23,8 @@
 
         <table name="calendars_events_recurrence">
             <field type="INT( 5 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY">eventid</field>
-            <field type="VARCHAR( 5 )">interval</field>
-            <field type="DATETIME NULL">end</field>
+            <field type="VARCHAR( 5 )">recurrence_interval</field>
+            <field type="DATETIME NULL">recurrence_end</field>
         </table>
 
         <table name="calendars_shares">
