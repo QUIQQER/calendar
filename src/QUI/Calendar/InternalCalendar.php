@@ -371,50 +371,7 @@ class InternalCalendar extends AbstractCalendar
      */
     public function getUpcomingEvents($amount = 1000)
     {
-        $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
-
-        $tableEvents     = Handler::tableCalendarsEvents();
-        $tableRecurrence = Handler::tableCalendarsEventsRecurrence();
-
-        $sql = "
-            SELECT events.*, 
-                   recurrence.end      AS recurrence_end, 
-                   recurrence.interval AS recurrence_interval 
-            FROM {$tableEvents} events
-                LEFT JOIN {$tableRecurrence} recurrence
-                    ON events.eventid = recurrence.eventid
-            WHERE 
-                calendarid = :calendarID
-                AND (
-                    (start >= :startDate AND recurrence.end IS NULL) OR
-                    (recurrence.end >= :currentDate)
-                )
-            ORDER BY start ASC
-        ";
-
-        $parameters = [
-            ':calendarID'  => (int)$this->getId(),
-            ':startDate'   => time(),
-            ':currentDate' => date("Y-m-d H:i:s")
-        ];
-
-        $limit = (int)$amount;
-        $sql   .= "LIMIT {$limit}";
-
-        $Statement = QUI::getDataBase()->getPDO()->prepare($sql);
-        $Statement->execute($parameters);
-
-        $eventsRaw = $Statement->fetchAll(PDO::FETCH_ASSOC);
-        $eventsRaw = static::processEventDatabaseData($eventsRaw, $amount);
-
-        $EventCollection = new EventCollection();
-        foreach ($eventsRaw as $event) {
-            $EventCollection->append(
-                \QUI\Calendar\Event::fromDatabaseArray($event)
-            );
-        }
-
-        return $EventCollection;
+        return $this->getEventsBetweenDates(new DateTime(), null, false, $amount);
     }
 
 
