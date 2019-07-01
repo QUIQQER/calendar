@@ -57,13 +57,15 @@ abstract class AbstractCalendar
     public function __construct($calendarId)
     {
         try {
-            $result = QUI::getDataBase()->fetch([
-                'from'  => Handler::tableCalendars(),
-                'where' => [
-                    'id' => (int)$calendarId
-                ],
-                'limit' => 1
-            ]);
+            $result = QUI::getDataBase()->fetch(
+                [
+                    'from'  => Handler::tableCalendars(),
+                    'where' => [
+                        'id' => (int)$calendarId
+                    ],
+                    'limit' => 1
+                ]
+            );
         } catch (QUI\Database\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
             throw new QUI\Calendar\Exception\Database();
@@ -71,10 +73,12 @@ abstract class AbstractCalendar
 
 
         if (!isset($result[0])) {
-            throw new QUI\Calendar\Exception([
-                'quiqqer/calendar',
-                'exception.calendar.not_found'
-            ]);
+            throw new QUI\Calendar\Exception(
+                [
+                    'quiqqer/calendar',
+                    'exception.calendar.not_found'
+                ]
+            );
         }
 
         $this->id = $calendarId;
@@ -204,14 +208,13 @@ abstract class AbstractCalendar
      * The second parameter determines whether the exact point in time should be used or the entire day.
      *
      * @param DateTime $Date
-     * @param boolean   $ignoreTime
+     * @param boolean  $ignoreTime
      *
-     * @return Collection
+     * @return  Collection
      * @example
      * passed date object: 20.04.2042 13:37
      * second parameter true: Returns all events that occur on 20.04.2042
      * second parameter false: Returns all events that occur on 20.04.2042 at 13:37
-     *
      */
     abstract public function getEventsForDate(DateTime $Date, $ignoreTime);
 
@@ -226,7 +229,7 @@ abstract class AbstractCalendar
      *
      * @param          $limit
      *
-     * @return Collection
+     * @return  Collection
      * @example
      * passed date objects: 20.04.2042 13:37 and 06.09.2042 04:20
      * second parameter true: Returns all events that occur between 20.04.2042 00:00 and 06.09.2042 23:59
@@ -337,10 +340,12 @@ abstract class AbstractCalendar
                     return true;
                 }
 
-                throw new NoPermission([
-                    $localeGroup,
-                    'exception.calendar.permission.view'
-                ]);
+                throw new NoPermission(
+                    [
+                        $localeGroup,
+                        'exception.calendar.permission.view'
+                    ]
+                );
 
                 break;
 
@@ -350,10 +355,12 @@ abstract class AbstractCalendar
                     return true;
                 }
 
-                throw new NoPermission([
-                    $localeGroup,
-                    'exception.calendar.permission.create'
-                ]);
+                throw new NoPermission(
+                    [
+                        $localeGroup,
+                        'exception.calendar.permission.create'
+                    ]
+                );
 
                 break;
 
@@ -377,10 +384,12 @@ abstract class AbstractCalendar
                 throw new NoPermission($message);
         }
 
-        throw new NoPermission([
-            $localeGroup,
-            'exception.calendar.permission.edit'
-        ]);
+        throw new NoPermission(
+            [
+                $localeGroup,
+                'exception.calendar.permission.edit'
+            ]
+        );
     }
 
     /**
@@ -412,10 +421,12 @@ abstract class AbstractCalendar
     public function checkInternal()
     {
         if (!$this->isInternal()) {
-            throw new Exception([
-                'quiqqer/calendar',
-                'exception.calendar.notInternal'
-            ]);
+            throw new Exception(
+                [
+                    'quiqqer/calendar',
+                    'exception.calendar.notInternal'
+                ]
+            );
         }
     }
 
@@ -428,10 +439,12 @@ abstract class AbstractCalendar
     public function checkExternal()
     {
         if ($this->isInternal()) {
-            throw new Exception([
-                'quiqqer/calendar',
-                'exception.calendar.notExternal'
-            ]);
+            throw new Exception(
+                [
+                    'quiqqer/calendar',
+                    'exception.calendar.notExternal'
+                ]
+            );
         }
     }
 

@@ -44,14 +44,16 @@ class ShareHandler
 
         // Check if there is already a share hash for this calendar and user
         try {
-            $shareData = QUI::getDataBase()->fetch([
+            $shareData = QUI::getDataBase()->fetch(
+                [
                 'from'  => Handler::tableCalendarsShares(),
                 'where' => [
                     'calendarid' => (int)$Calendar->getId(),
                     'userid'     => $User->getId()
                 ],
                 'limit' => 1
-            ]);
+                ]
+            );
         } catch (\QUI\Database\Exception $Exception) {
             Log::writeException($Exception);
             throw new Database();
@@ -127,14 +129,16 @@ class ShareHandler
     public static function getCalendarFromHash($hash)
     {
         try {
-            $calendarData = QUI::getDataBase()->fetch([
+            $calendarData = QUI::getDataBase()->fetch(
+                [
                 'select' => ['calendarid'],
                 'from'   => Handler::tableCalendarsShares(),
                 'where'  => [
                     'hash' => $hash
                 ],
                 'limit'  => 1
-            ]);
+                ]
+            );
         } catch (\QUI\Exception $Exception) {
             Log::writeException($Exception);
             throw new Database();

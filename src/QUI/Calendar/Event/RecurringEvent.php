@@ -51,18 +51,18 @@ class RecurringEvent extends Event
     /**
      * RecurringEvent constructor.
      *
-     * @param string $title
-     * @param int    $start
-     * @param int    $end
-     * @param string $recurrenceInterval
+     * @param string    $title
+     * @param \DateTime $start
+     * @param \DateTime $end
+     * @param string    $recurrenceInterval
      */
     public function __construct(
         string $title,
-        int $start,
-        int $end,
+        \DateTime $start,
+        \DateTime $end,
         string $recurrenceInterval
     ) {
-        parent::__construct($title, "", $start, $end);
+        parent::__construct($title, $start, $end);
 
         $this->setRecurrenceInterval($recurrenceInterval);
     }

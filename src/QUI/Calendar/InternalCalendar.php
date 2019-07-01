@@ -12,7 +12,6 @@ use Eluceo\iCal\Component\Calendar;
 use Eluceo\iCal\Component\Event;
 use PDO;
 use QUI;
-use function usort;
 
 /**
  * Class Calendar
@@ -55,14 +54,17 @@ class InternalCalendar extends AbstractCalendar
         $this->checkPermission(self::PERMISSION_ADD_EVENT);
 
         try {
-            QUI::getDataBase()->insert(Handler::tableCalendarsEvents(), [
-                'title'      => $title,
-                'desc'       => $desc,
-                'start'      => $start,
-                'end'        => $end,
-                'url'        => $url,
-                'calendarid' => $this->getId()
-            ]);
+            QUI::getDataBase()->insert(
+                Handler::tableCalendarsEvents(),
+                [
+                    'title'      => $title,
+                    'desc'       => $desc,
+                    'start'      => $start,
+                    'end'        => $end,
+                    'url'        => $url,
+                    'calendarid' => $this->getId()
+                ]
+            );
         } catch (QUI\Database\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
             throw new QUI\Calendar\Exception\Database();
@@ -90,14 +92,17 @@ class InternalCalendar extends AbstractCalendar
         $sql      = "INSERT INTO " . Handler::tableCalendarsEvents() . " (title, `desc`, `url`, start, `end`, calendarid) VALUES ";
         $lastElem = last($events);
         foreach ($events as $Event) {
-            $data = implode(',', [
-                "'" . $Event->text . "'",
-                "'" . $Event->description . "'",
-                "'" . $Event->url . "'",
-                $Event->start_date,
-                $Event->end_date,
-                $this->getId()
-            ]);
+            $data = implode(
+                ',',
+                [
+                    "'" . $Event->getTitle() . "'",
+                    "'" . $Event->getDescription() . "'",
+                    "'" . $Event->getUrl() . "'",
+                    $Event->start_date,
+                    $Event->end_date,
+                    $this->getId()
+                ]
+            );
             $sql  = $sql . "($data)";
             if ($Event != $lastElem) {
                 $sql = $sql . ",";
@@ -127,15 +132,19 @@ class InternalCalendar extends AbstractCalendar
         $this->checkPermission(self::PERMISSION_EDIT_EVENT);
 
         try {
-            QUI::getDataBase()->update(Handler::tableCalendarsEvents(), [
-                'title' => $title,
-                'desc'  => $desc,
-                'start' => $start,
-                'end'   => $end,
-                'url'   => $url
-            ], [
-                'eventid' => $eventID
-            ]);
+            QUI::getDataBase()->update(
+                Handler::tableCalendarsEvents(),
+                [
+                    'title' => $title,
+                    'desc'  => $desc,
+                    'start' => $start,
+                    'end'   => $end,
+                    'url'   => $url
+                ],
+                [
+                    'eventid' => $eventID
+                ]
+            );
         } catch (QUI\Database\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
             throw new QUI\Calendar\Exception\Database();
@@ -155,9 +164,12 @@ class InternalCalendar extends AbstractCalendar
         $this->checkPermission(self::PERMISSION_REMOVE_EVENT);
 
         try {
-            QUI::getDataBase()->delete(Handler::tableCalendarsEvents(), [
-                'eventid' => $eventID
-            ]);
+            QUI::getDataBase()->delete(
+                Handler::tableCalendarsEvents(),
+                [
+                    'eventid' => $eventID
+                ]
+            );
         } catch (QUI\Database\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
             throw new QUI\Calendar\Exception\Database();
@@ -263,10 +275,12 @@ class InternalCalendar extends AbstractCalendar
         }
 
         try {
-            $eventsRaw = QUI::getDataBase()->fetch([
-                'from'  => Handler::tableCalendarsEvents(),
-                'where' => $where
-            ]);
+            $eventsRaw = QUI::getDataBase()->fetch(
+                [
+                    'from'  => Handler::tableCalendarsEvents(),
+                    'where' => $where
+                ]
+            );
         } catch (QUI\Database\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
             $eventsRaw = [];
@@ -274,7 +288,7 @@ class InternalCalendar extends AbstractCalendar
 
         $Events = new Collection();
         foreach ($eventsRaw as $event) {
-            $Events->append(\QUI\Calendar\Event::fromDatabaseArray($event));
+            $Events->append(Event\Utils::fromDatabaseArray($event));
         }
 
         return $Events;
@@ -284,10 +298,11 @@ class InternalCalendar extends AbstractCalendar
     /**
      * @inheritdoc
      *
-     * @param DateTime $IntervalStart
+     * @param DateTime      $IntervalStart
      * @param DateTime|null $IntervalEnd
      * @param bool          $ignoreTime
      * @param int           $limit
+     * @param bool          $inflateRecurringEvents - Create child-events for recurring events (default) or not
      *
      * @return Collection
      * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
@@ -296,7 +311,8 @@ class InternalCalendar extends AbstractCalendar
         DateTime $IntervalStart,
         DateTime $IntervalEnd = null,
         $ignoreTime = true,
-        $limit = 1000
+        $limit = 1000,
+        bool $inflateRecurringEvents = true
     ) {
         $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
 
@@ -340,20 +356,34 @@ class InternalCalendar extends AbstractCalendar
         // LIMIT happens by using "static::processEventDatabaseData()" below
 
         $Statement = QUI::getDataBase()->getPDO()->prepare($sql);
-        $Statement->execute([
-            ':calendar_id'    => (int)$this->getId(),
-            ':interval_start' => $timestampIntervalStart,
-            ':interval_end'   => $timestampIntervalEnd
-        ]);
+        $Statement->execute(
+            [
+                ':calendar_id'    => (int)$this->getId(),
+                ':interval_start' => $timestampIntervalStart,
+                ':interval_end'   => $timestampIntervalEnd
+            ]
+        );
 
         $eventsRaw = $Statement->fetchAll(PDO::FETCH_ASSOC);
-        $eventsRaw = static::processEventDatabaseData($eventsRaw, $limit);
 
         $EventCollection = new Collection();
         foreach ($eventsRaw as $event) {
-            $EventCollection->append(
-                \QUI\Calendar\Event::fromDatabaseArray($event)
-            );
+            try {
+                $Event = QUI\Calendar\Event\Utils::createEventFromDatabaseArray($eventsRaw);
+            } catch (\Exception $Exception) {
+                QUI\System\Log::writeException($Exception);
+                continue;
+            }
+
+            $EventCollection->append($Event);
+        }
+
+        if ($inflateRecurringEvents) {
+            try {
+                QUI\Calendar\Event\Utils::inflateRecurringEvents($EventCollection, $limit);
+            } catch (\Exception $Exception) {
+                QUI\System\Log::writeException($Exception);
+            }
         }
 
         return $EventCollection;
@@ -372,65 +402,6 @@ class InternalCalendar extends AbstractCalendar
     public function getUpcomingEvents($amount = 1000)
     {
         return $this->getEventsBetweenDates(new DateTime(), null, false, $amount);
-    }
-
-
-    /**
-     * Processes the event-data from the database to an Event-Collection.
-     * This takes care of generating recurring events, etc.
-     *
-     * @param array $eventDataArray
-     * @param int   $limit - The maximum amount of events this method should return
-     *
-     * @return Collection
-     */
-    private static function processEventDatabaseData($eventDataArray, $limit = 1000)
-    {
-        $result = [];
-
-        foreach ($eventDataArray as $eventData) {
-            // If there is no recurrence for the current event, don't do anything
-            if (empty($eventData['recurrence_interval'])) {
-                $result[] = $eventData;
-                continue;
-            }
-
-            // Determine the end of the recurrence, if none is set, use the maximum integer
-            $recurrenceEndTimestamp = PHP_INT_MAX;
-            if (isset($eventData['recurrence_end'])) {
-                $recurrenceEndTimestamp = strtotime($eventData['recurrence_end']);
-            }
-
-            // The start and end of the current event. Using a DateTime object here to add the recurrence interval later
-            $CurrentEventDateStart = new DateTime();
-            $CurrentEventDateStart->setTimestamp($eventData['start']);
-
-            $CurrentEventDateEnd = new DateTime();
-            $CurrentEventDateEnd->setTimestamp($eventData['end']);
-
-            $recurrenceInterval = $eventData['recurrence_interval'];
-
-            // Generate the events
-            $eventCounter = 0;
-            while (($CurrentEventDateStart->getTimestamp() < $recurrenceEndTimestamp) && (++$eventCounter <= $limit)) {
-                // Calculate the event's start and end
-                $currentEventData          = $eventData;
-                $currentEventData['start'] = $CurrentEventDateStart->getTimestamp();
-                $currentEventData['end']   = $CurrentEventDateEnd->getTimestamp();
-                $result[]                  = $currentEventData;
-
-                // Add the recurrence interval to generate the next event
-                $CurrentEventDateStart->modify("+ 1 {$recurrenceInterval}");
-                $CurrentEventDateEnd->modify("+ 1 {$recurrenceInterval}");
-            }
-        }
-
-        // The events might be out of order so we have to sort them again
-        usort($result, function ($eventAData, $eventBData) {
-            return ($eventAData['start'] - $eventBData['start']);
-        });
-
-        return array_slice($result, 0, $limit);
     }
 
 

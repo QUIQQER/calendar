@@ -23,9 +23,11 @@ class CalendarDisplay extends QUI\Control
             $height = $this->getAttribute('height');
         }
 
-        $this->setStyles([
+        $this->setStyles(
+            [
             'height' => $height
-        ]);
+            ]
+        );
 
         $this->setJavaScriptControl('package/quiqqer/calendar/bin/controls/CalendarDisplay');
         $this->setJavaScriptControlOption('calendarids', $this->getAttribute('calendarIDs'));

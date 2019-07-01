@@ -171,10 +171,14 @@ class Utils
      */
     protected function sortEventArrayByStartDateComparisonFunction(Event $EventA, Event $EventB)
     {
-        /** @var Event $EventA */
+        /**
+         * @var Event $EventA
+         */
         $StartDateEventA = $EventA->getStartDate();
 
-        /** @var Event $EventB */
+        /**
+         * @var Event $EventB
+         */
         $StartDateEventB = $EventB->getStartDate();
 
         if ($StartDateEventA == $StartDateEventB) {

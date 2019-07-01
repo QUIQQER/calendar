@@ -22,13 +22,15 @@ class Manager
     public static function getEventById($id)
     {
         try {
-            $data = QUI::getDataBase()->fetch([
-                'from'  => Handler::tableCalendarsEvents(),
-                'where' => [
-                    'eventid' => $id
-                ],
-                'limit' => 1
-            ]);
+            $data = QUI::getDataBase()->fetch(
+                [
+                    'from'  => Handler::tableCalendarsEvents(),
+                    'where' => [
+                        'eventid' => $id
+                    ],
+                    'limit' => 1
+                ]
+            );
         } catch (\QUI\Database\Exception $Exception) {
             Log::writeException($Exception);
             throw new Database();
@@ -38,7 +40,7 @@ class Manager
             return null;
         }
 
-        $Event = Event::fromDatabaseArray($data[0]);
+        $Event = Event\Utils::createEventFromDatabaseArray($data[0]);
 
         try {
             $Calendar = Handler::getCalendar($Event->calendar_id);
@@ -61,7 +63,9 @@ class Manager
      */
     public static function getUpcomingEventsForCalendarIds(array $ids, $limit = false)
     {
-        /** @var Event[] $events */
+        /**
+         * @var Event[] $events
+         */
         $events = [];
         foreach ($ids as $calendarID) {
             try {
@@ -72,11 +76,18 @@ class Manager
             }
         }
 
-        usort($events, function ($EventA, $EventB) {
-            /** @var Event $EventA */
-            /** @var Event $EventB */
-            return strcmp($EventA->start_date, $EventB->start_date);
-        });
+        usort(
+            $events,
+            function ($EventA, $EventB) {
+                /**
+                 * @var Event $EventA
+                 */
+                /**
+                 * @var Event $EventB
+                 */
+                return strcmp($EventA->start_date, $EventB->start_date);
+            }
+        );
 
         if (is_int($limit) && $limit > 0) {
             $events = array_slice($events, 0, $limit);
@@ -122,9 +133,11 @@ class Manager
         }
 
         try {
-            $eventsDataRaw = QUI::getDataBase()->fetch([
-                'from' => Handler::tableCalendarsEvents()
-            ]);
+            $eventsDataRaw = QUI::getDataBase()->fetch(
+                [
+                    'from' => Handler::tableCalendarsEvents()
+                ]
+            );
         } catch (\QUI\Database\Exception $Exception) {
             Log::writeException($Exception);
             throw new Database();
@@ -132,7 +145,7 @@ class Manager
 
         $events = [];
         foreach ($eventsDataRaw as $key => $eventData) {
-            $events[] = Event::fromDatabaseArray($eventData);
+            $events[] = Event\Utils::createEventFromDatabaseArray($eventData);
         }
 
         // Return array with new indexes starting at 0
