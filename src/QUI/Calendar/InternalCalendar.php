@@ -284,56 +284,79 @@ class InternalCalendar extends AbstractCalendar
     /**
      * @inheritdoc
      *
+     * @param DateTime $IntervalStart
+     * @param DateTime|null $IntervalEnd
+     * @param bool          $ignoreTime
      * @param int           $limit
      *
+     * @return EventCollection
      * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
      */
     public function getEventsBetweenDates(
-        DateTime $StartDate,
-        DateTime $EndDate,
-        $ignoreTime,
+        DateTime $IntervalStart,
+        DateTime $IntervalEnd = null,
+        $ignoreTime = true,
         $limit = 1000
     ) {
         $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
 
-        $timestampStartDate = $StartDate->getTimestamp();
-        $timestampEndDate   = $EndDate->getTimestamp();
+        if (is_null($IntervalEnd)) {
+            $IntervalEnd = new DateTime();
+            $IntervalEnd->setTimestamp(PHP_INT_MAX);
+        }
+
+        $timestampIntervalStart = $IntervalStart->getTimestamp();
+        $timestampIntervalEnd   = $IntervalEnd->getTimestamp();
 
         if ($ignoreTime) {
-            $StartDateImmutable = DateTimeImmutable::createFromMutable($StartDate);
-            $timestampStartDate = $StartDateImmutable->setTime(0, 0, 0)->getTimestamp();
+            $IntervalStartImmutable = DateTimeImmutable::createFromMutable($IntervalStart);
+            $timestampIntervalStart = $IntervalStartImmutable->setTime(0, 0, 0, 0)->getTimestamp();
 
-            $EndDateImmutable = DateTimeImmutable::createFromMutable($EndDate);
-            $timestampEndDate = $EndDateImmutable->setTime(23, 59, 59)->getTimestamp();
+            $IntervalEndImmutable = DateTimeImmutable::createFromMutable($IntervalEnd);
+            $timestampIntervalEnd = $IntervalEndImmutable->setTime(23, 59, 59, 999999)->getTimestamp();
         }
 
-        try {
-            $eventsRaw = QUI::getDataBase()->fetch([
-                'from'  => Handler::tableCalendarsEvents(),
-                'where' => [
-                    'calendarid' => (int)$this->getId(),
-                    'start'      => [
-                        'type'  => '<=',
-                        'value' => $timestampEndDate
-                    ],
-                    'end'        => [
-                        'type'  => '>=',
-                        'value' => $timestampStartDate
-                    ]
-                ]
-            ]);
-        } catch (QUI\Database\Exception $Exception) {
-            QUI\System\Log::writeException($Exception);
-            $eventsRaw = [];
-        }
+        $tableEvents     = Handler::tableCalendarsEvents();
+        $tableRecurrence = Handler::tableCalendarsEventsRecurrence();
 
+        $sql = "
+            SELECT events.*, 
+                   recurrence.end      AS recurrence_end, 
+                   recurrence.interval AS recurrence_interval 
+            FROM {$tableEvents} events
+                LEFT JOIN {$tableRecurrence} recurrence
+                    ON events.eventid = recurrence.eventid
+            WHERE 
+                calendarid = :calendar_id AND
+                events.start <= :interval_end AND
+                ((                     
+                    events.end >= :interval_start AND 
+                    recurrence.end IS NULL
+                ) OR (
+                    recurrence.end >= :interval_start
+                ))
+            ORDER BY start ASC
+        ";
+        // LIMIT happens by using "static::processEventDatabaseData()" below
 
-        $Events = new EventCollection();
+        $Statement = QUI::getDataBase()->getPDO()->prepare($sql);
+        $Statement->execute([
+            ':calendar_id'    => (int)$this->getId(),
+            ':interval_start' => $timestampIntervalStart,
+            ':interval_end'   => $timestampIntervalEnd
+        ]);
+
+        $eventsRaw = $Statement->fetchAll(PDO::FETCH_ASSOC);
+        $eventsRaw = static::processEventDatabaseData($eventsRaw, $limit);
+
+        $EventCollection = new EventCollection();
         foreach ($eventsRaw as $event) {
-            $Events->append(\QUI\Calendar\Event::fromDatabaseArray($event));
+            $EventCollection->append(
+                \QUI\Calendar\Event::fromDatabaseArray($event)
+            );
         }
 
-        return $Events;
+        return $EventCollection;
     }
 
 
