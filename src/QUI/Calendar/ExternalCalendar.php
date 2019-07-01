@@ -246,7 +246,7 @@ class ExternalCalendar extends AbstractCalendar
 
         $eventsRaw = $ICal->eventsFromRange($timestampStart, $timestampEnd);
 
-        $Events = new EventCollection();
+        $Events = new Collection();
         foreach ($eventsRaw as $eventData) {
             $start = Event::timestampToSchedulerFormat((int)$ICal->iCalDateToUnixTimestamp($eventData->dtstart));
             $end   = Event::timestampToSchedulerFormat((int)$ICal->iCalDateToUnixTimestamp($eventData->dtend));
@@ -292,7 +292,7 @@ class ExternalCalendar extends AbstractCalendar
 
         $eventsRaw = $ICal->eventsFromRange($timestampStartDate, $timestampEndDate);
 
-        $Events = new EventCollection();
+        $Events = new Collection();
         foreach ($eventsRaw as $eventData) {
             $start = Event::timestampToSchedulerFormat((int)$ICal->iCalDateToUnixTimestamp($eventData->dtstart));
             $end   = Event::timestampToSchedulerFormat((int)$ICal->iCalDateToUnixTimestamp($eventData->dtend));
@@ -317,7 +317,7 @@ class ExternalCalendar extends AbstractCalendar
      *
      * @param int $amount
      *
-     * @return EventCollection
+     * @return Collection
      *
      * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
      * @throws QUI\Exception - Calendar's iCal could not be loaded (URL is not reachable or content invalid)
@@ -341,7 +341,7 @@ class ExternalCalendar extends AbstractCalendar
         }
 
         $count           = 0;
-        $EventCollection = new EventCollection();
+        $EventCollection = new Collection();
         foreach ($eventsRaw as $key => $Event) {
             if ($count >= $amount) {
                 break;

@@ -272,7 +272,7 @@ class InternalCalendar extends AbstractCalendar
             $eventsRaw = [];
         }
 
-        $Events = new EventCollection();
+        $Events = new Collection();
         foreach ($eventsRaw as $event) {
             $Events->append(\QUI\Calendar\Event::fromDatabaseArray($event));
         }
@@ -289,7 +289,7 @@ class InternalCalendar extends AbstractCalendar
      * @param bool          $ignoreTime
      * @param int           $limit
      *
-     * @return EventCollection
+     * @return Collection
      * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
      */
     public function getEventsBetweenDates(
@@ -349,7 +349,7 @@ class InternalCalendar extends AbstractCalendar
         $eventsRaw = $Statement->fetchAll(PDO::FETCH_ASSOC);
         $eventsRaw = static::processEventDatabaseData($eventsRaw, $limit);
 
-        $EventCollection = new EventCollection();
+        $EventCollection = new Collection();
         foreach ($eventsRaw as $event) {
             $EventCollection->append(
                 \QUI\Calendar\Event::fromDatabaseArray($event)
@@ -365,7 +365,7 @@ class InternalCalendar extends AbstractCalendar
      *
      * @param int $amount
      *
-     * @return EventCollection
+     * @return Collection
      *
      * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
      */
@@ -382,7 +382,7 @@ class InternalCalendar extends AbstractCalendar
      * @param array $eventDataArray
      * @param int   $limit - The maximum amount of events this method should return
      *
-     * @return EventCollection
+     * @return Collection
      */
     private static function processEventDatabaseData($eventDataArray, $limit = 1000)
     {

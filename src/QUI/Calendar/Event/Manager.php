@@ -8,7 +8,7 @@ use QUI\Calendar\Exception\NoPermission;
 use QUI\Permissions\Permission;
 use QUI\System\Log;
 
-class EventManager
+class Manager
 {
     /**
      * Returns the event for a given ID or null if not found

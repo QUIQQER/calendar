@@ -6,14 +6,12 @@
 
 namespace QUI\Calendar;
 
-use QUI\Collection;
-
 /**
- * Class EventCollection
+ * Class Collection
  *
  * @package QUI\Calendar
  */
-class EventCollection extends Collection
+class Collection extends \QUI\Collection
 {
     protected $allowed = [Event::class];
 }

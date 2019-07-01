@@ -206,7 +206,7 @@ abstract class AbstractCalendar
      * @param DateTime $Date
      * @param boolean   $ignoreTime
      *
-     * @return EventCollection
+     * @return Collection
      * @example
      * passed date object: 20.04.2042 13:37
      * second parameter true: Returns all events that occur on 20.04.2042
@@ -226,7 +226,7 @@ abstract class AbstractCalendar
      *
      * @param          $limit
      *
-     * @return EventCollection
+     * @return Collection
      * @example
      * passed date objects: 20.04.2042 13:37 and 06.09.2042 04:20
      * second parameter true: Returns all events that occur between 20.04.2042 00:00 and 06.09.2042 23:59
@@ -249,7 +249,7 @@ abstract class AbstractCalendar
      *
      * @param int - Amount of upcoming events to get. Leave empty or set to -1 to get all upcoming events.
      *
-     * @return EventCollection - Collection of upcoming events
+     * @return Collection - Collection of upcoming events
      */
     abstract public function getUpcomingEvents($amount = -1);
 

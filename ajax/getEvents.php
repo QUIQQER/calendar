@@ -8,7 +8,7 @@
 QUI::$Ajax->registerFunction(
     'package_quiqqer_calendar_ajax_getEvents',
     function () {
-        return \QUI\Calendar\EventManager::getAllEvents();
+        return \QUI\Calendar\Manager::getAllEvents();
     },
     false
 );
