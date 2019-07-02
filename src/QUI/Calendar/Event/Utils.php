@@ -83,7 +83,7 @@ class Utils
         $result = \array_merge($EventCollection->toArray(), $inflatedEvents);
 
         // The events might be out of order so we have to sort them again
-        \usort($result, "sortEventArrayByStartDateComparisonFunction");
+        \usort($result, [static::class, 'sortEventArrayByStartDateComparisonFunction']);
 
         // Return only the first x elements depending on the given limit
         $result = \array_slice($result, 0, $limit);
@@ -182,7 +182,7 @@ class Utils
      *
      * @return int
      */
-    protected function sortEventArrayByStartDateComparisonFunction(Event $EventA, Event $EventB)
+    protected static function sortEventArrayByStartDateComparisonFunction(Event $EventA, Event $EventB)
     {
         /**
          * @var Event $EventA
