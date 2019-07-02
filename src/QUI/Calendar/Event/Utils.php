@@ -152,8 +152,9 @@ class Utils
             $Event->setUrl($data['url']);
         }
 
-        if (isset($data['recurrence_end'])) {
-            $Event->setRecurrenceEnd(new \DateTime(strtotime($data['recurrence_end'])));
+        if (isset($data['recurrence_end']) && !empty($data['recurrence_end'])) {
+            $RecurrenceEnd = new \DateTime($data['recurrence_end']);
+            $Event->setRecurrenceEnd($RecurrenceEnd);
         }
 
         return $Event;
