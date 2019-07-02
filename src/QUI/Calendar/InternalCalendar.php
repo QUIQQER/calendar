@@ -243,55 +243,22 @@ class InternalCalendar extends AbstractCalendar
      *
      * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
      */
-    public function getEventsForDate(DateTime $Date, $ignoreTime)
+    public function getEventsForDate(DateTime $Date, $ignoreTime, $limit = 1000): QUI\Calendar\Event\Collection
     {
-        $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
-
-        $timestamp = $Date->getTimestamp();
-
-        $where = [
-            'calendarid' => (int)$this->getId(),
-            'start'      => [
-                'type'  => '<=',
-                'value' => $timestamp
-            ],
-            'end'        => [
-                'type'  => '>=',
-                'value' => $timestamp
-            ]
-        ];
+        $StartDate = clone $Date;
+        $EndDate   = clone $Date;
 
         if ($ignoreTime) {
-            $DateImmutable = DateTimeImmutable::createFromMutable($Date);
-
-            $timestampDayStart = $DateImmutable->setTime(0, 0, 0)->getTimestamp();
-            $timestampDayEnd   = $DateImmutable->setTime(23, 59, 59)->getTimestamp();
-
-            // Values are correctly assigned and not swapped (!)
-            // The event has to start before the end of this day
-            // The event has to end after the start of this day
-            $where['start']['value'] = $timestampDayEnd;
-            $where['end']['value']   = $timestampDayStart;
+            $StartDate->setTime(0, 0, 0, 0);
+            $EndDate->setTime(23, 59, 59, 999999);
         }
 
-        try {
-            $eventsRaw = QUI::getDataBase()->fetch(
-                [
-                    'from'  => Handler::tableCalendarsEvents(),
-                    'where' => $where
-                ]
-            );
-        } catch (QUI\Database\Exception $Exception) {
-            QUI\System\Log::writeException($Exception);
-            $eventsRaw = [];
-        }
-
-        $Events = new Collection();
-        foreach ($eventsRaw as $event) {
-            $Events->append(Event\Utils::fromDatabaseArray($event));
-        }
-
-        return $Events;
+        return $this->getEventsBetweenDates(
+            $StartDate,
+            $EndDate,
+            $ignoreTime,
+            $limit
+        );
     }
 
 
