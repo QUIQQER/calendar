@@ -43,14 +43,14 @@ class Event
      * Event constructor.
      *
      * @param string    $title
-     * @param \DateTime $start - The events start time/date in format YYYY-MM-DD HH:mm
-     * @param \DateTime $end   - The events end time/date in format YYYY-MM-DD HH:mm
+     * @param \DateTime $StartDate - The events start time/date in format YYYY-MM-DD HH:mm
+     * @param \DateTime $EndDate   - The events end time/date in format YYYY-MM-DD HH:mm
      */
-    public function __construct(string $title, \DateTime $start, \DateTime $end)
+    public function __construct(string $title, \DateTime $StartDate, \DateTime $EndDate)
     {
         $this->title      = $title;
-        $this->start_date = $start;
-        $this->end_date   = $end;
+        $this->start_date = $StartDate;
+        $this->end_date   = $EndDate;
     }
 
     /**
