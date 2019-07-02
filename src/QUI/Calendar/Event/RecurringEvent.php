@@ -116,9 +116,9 @@ class RecurringEvent extends Event
     /**
      * Returns when the events recurrence ends.
      *
-     * @return \DateTime
+     * @return \DateTime|null
      */
-    public function getRecurrenceEnd(): \DateTime
+    public function getRecurrenceEnd(): ?\DateTime
     {
         return $this->recurrenceEnd;
     }

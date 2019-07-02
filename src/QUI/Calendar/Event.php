@@ -76,7 +76,7 @@ class Event
     /**
      * @return string
      */
-    public function getDescription(): string
+    public function getDescription(): ?string
     {
         return $this->description;
     }
@@ -134,9 +134,9 @@ class Event
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -154,9 +154,9 @@ class Event
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getCalendarId(): int
+    public function getCalendarId(): ?int
     {
         return $this->calendar_id;
     }
@@ -174,9 +174,9 @@ class Event
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getUrl(): string
+    public function getUrl(): ?string
     {
         return $this->url;
     }
@@ -193,7 +193,9 @@ class Event
         return $this;
     }
 
-
+    /**
+     * @return array
+     */
     public function toArray(): array
     {
         return get_object_vars($this);
