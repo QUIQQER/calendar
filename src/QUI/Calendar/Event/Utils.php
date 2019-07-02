@@ -7,6 +7,7 @@
 namespace QUI\Calendar\Event;
 
 use QUI\Calendar\Event;
+use QUI\Calendar\Exception;
 
 /**
  * Class Utils
@@ -98,8 +99,9 @@ class Utils
         ];
 
         // check if all required keys exist
-        if (!\array_diff_key(\array_flip($requiredKeys), $data)) {
-            return null;
+        if (count(array_diff($requiredKeys, array_keys($data))) !== 0) {
+            $message = 'Not all required keys where set when trying to create an event from an database array.';
+            throw new Exception\InvalidArgumentException($message);
         }
 
         $StartDate = new \DateTime();

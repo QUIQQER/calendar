@@ -7,6 +7,7 @@
 namespace QUI\Calendar\Event;
 
 use QUI\Calendar\Event;
+use QUI\Calendar\Exception\InvalidArgumentException;
 
 /**
  * Class RecurringEvent
@@ -60,6 +61,8 @@ class RecurringEvent extends Event
      * @param \DateTime $start
      * @param \DateTime $end
      * @param string    $recurrenceInterval
+     *
+     * @throws InvalidArgumentException
      */
     public function __construct(
         string $title,
@@ -89,7 +92,9 @@ class RecurringEvent extends Event
      *
      * @param string $recurrenceInterval - The interval; Has to be one of the "INTERVAL_"-constants
      *
-     * @return RecurringEvent|null
+     * @return RecurringEvent
+     *
+     * @throws InvalidArgumentException
      */
     public function setRecurrenceInterval($recurrenceInterval): RecurringEvent
     {
@@ -104,7 +109,7 @@ class RecurringEvent extends Event
                 return $this;
         }
 
-        return null;
+        throw new InvalidArgumentException("The recurrence interval '{$recurrenceInterval}' is invalid.");
     }
 
 
