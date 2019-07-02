@@ -56,10 +56,21 @@ class Utils
                     $CurrentEventDateEnd
                 );
 
-                $CurrentEvent->setUrl($Event->getUrl())
-                    ->setDescription($Event->getDescription())
-                    ->setCalendarId($Event->getCalendarId())
-                    ->setId($Event->getId());
+                if (!empty($Event->getUrl())) {
+                    $CurrentEvent->setUrl($Event->getUrl());
+                }
+
+                if (!empty($Event->getDescription())) {
+                    $CurrentEvent->setDescription($Event->getDescription());
+                }
+
+                if (!empty($Event->getCalendarId())) {
+                    $CurrentEvent->setCalendarId($Event->getCalendarId());
+                }
+
+                if (!empty($Event->getId())) {
+                    $CurrentEvent->setId($Event->getId());
+                }
 
                 $inflatedEvents[] = $CurrentEvent;
 
@@ -125,19 +136,19 @@ class Utils
             );
         }
 
-        if (isset($data['eventid'])) {
+        if (isset($data['eventid']) && !empty($data['eventid'])) {
             $Event->setId($data['eventid']);
         }
 
-        if (isset($data['desc'])) {
+        if (isset($data['desc']) && !empty($data['desc'])) {
             $Event->setDescription($data['desc']);
         }
 
-        if (isset($data['calendarid'])) {
+        if (isset($data['calendarid']) && !empty($data['calendarid'])) {
             $Event->setCalendarId($data['calendarid']);
         }
 
-        if (isset($data['url'])) {
+        if (isset($data['url']) && !empty($data['url'])) {
             $Event->setUrl($data['url']);
         }
 
