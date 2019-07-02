@@ -27,6 +27,11 @@ class RecurringEvent extends Event
     const INTERVAL_MONTH = "month";
 
     /**
+     * @var string - Value for weekly interval
+     */
+    const INTERVAL_WEEK = "week";
+
+    /**
      * @var string - Value for daily interval
      */
     const INTERVAL_DAY = "day";
@@ -91,6 +96,7 @@ class RecurringEvent extends Event
         switch ($recurrenceInterval) {
             case self::INTERVAL_YEAR:
             case self::INTERVAL_MONTH:
+            case self::INTERVAL_WEEK:
             case self::INTERVAL_DAY:
             case self::INTERVAL_HOUR:
                 $this->recurrenceInterval = $recurrenceInterval;
