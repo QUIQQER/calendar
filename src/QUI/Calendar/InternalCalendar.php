@@ -304,7 +304,7 @@ class InternalCalendar extends AbstractCalendar
      * @param int           $limit
      * @param bool          $inflateRecurringEvents - Create child-events for recurring events (default) or not
      *
-     * @return Collection
+     * @return QUI\Calendar\Event\Collection
      * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
      */
     public function getEventsBetweenDates(
@@ -313,7 +313,7 @@ class InternalCalendar extends AbstractCalendar
         $ignoreTime = true,
         $limit = 1000,
         bool $inflateRecurringEvents = true
-    ) {
+    ): QUI\Calendar\Event\Collection {
         $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
 
         if (is_null($IntervalEnd)) {
@@ -395,11 +395,11 @@ class InternalCalendar extends AbstractCalendar
      *
      * @param int $amount
      *
-     * @return Collection
+     * @return QUI\Calendar\Event\Collection
      *
      * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
      */
-    public function getUpcomingEvents($amount = 1000)
+    public function getUpcomingEvents($amount = 1000): QUI\Calendar\Event\Collection
     {
         return $this->getEventsBetweenDates(new DateTime(), null, false, $amount);
     }
