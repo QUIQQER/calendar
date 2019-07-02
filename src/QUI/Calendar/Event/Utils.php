@@ -22,10 +22,11 @@ class Utils
      * @param Collection $EventCollection
      * @param int        $limit
      *
-     * @return Collection
+     * @return void
+     *
      * @throws \Exception
      */
-    public static function inflateRecurringEvents(Collection $EventCollection, $limit = 1000): Collection
+    public static function inflateRecurringEvents(Collection &$EventCollection, $limit = 1000): void
     {
         $inflatedEvents = [];
 
@@ -88,7 +89,8 @@ class Utils
         // Return only the first x elements depending on the given limit
         $result = \array_slice($result, 0, $limit);
 
-        return new Collection($result);
+        // The value is passed by reference (&) so we have to overwrite it
+        $EventCollection = new Collection($result);
     }
 
     /**
