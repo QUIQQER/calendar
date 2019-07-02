@@ -51,10 +51,16 @@ class Utils
             // Generate the events
             $eventCounter = 0;
             while (($CurrentEventDateStart->getTimestamp() < $recurrenceEndTimestamp) && (++$eventCounter <= $limit)) {
+                // Add the recurrence interval to generate the next event
+                $CurrentEventDateStart->modify("+ 1 {$recurrenceInterval}");
+                $CurrentEventDateEnd->modify("+ 1 {$recurrenceInterval}");
+
+                // For some odd reason we have to use 'clone' here
+                // Otherwise using modify above edits all Dates
                 $CurrentEvent = new Event(
                     $Event->getTitle(),
-                    $CurrentEventDateStart,
-                    $CurrentEventDateEnd
+                    clone $CurrentEventDateStart,
+                    clone $CurrentEventDateEnd
                 );
 
                 if (!empty($Event->getUrl())) {
@@ -74,10 +80,6 @@ class Utils
                 }
 
                 $inflatedEvents[] = $CurrentEvent;
-
-                // Add the recurrence interval to generate the next event
-                $CurrentEventDateStart->modify("+ 1 {$recurrenceInterval}");
-                $CurrentEventDateEnd->modify("+ 1 {$recurrenceInterval}");
             }
         }
 
