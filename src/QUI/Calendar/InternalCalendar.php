@@ -380,11 +380,28 @@ class InternalCalendar extends AbstractCalendar
 
         if ($inflateRecurringEvents) {
             try {
-                QUI\Calendar\Event\Utils::inflateRecurringEvents($EventCollection, $limit);
+                QUI\Calendar\Event\Utils::inflateRecurringEvents($EventCollection, $limit, $IntervalEnd);
             } catch (\Exception $Exception) {
                 QUI\System\Log::writeException($Exception);
             }
         }
+
+        $eventCounter = 0;
+
+        // Remove events that are out of range and reduce the event amount to the given limit
+        $EventCollection = $EventCollection->filter(function ($Event) use (
+            &$eventCounter,
+            $limit,
+            $IntervalEnd,
+            $IntervalStart
+        ) {
+            /** @var \QUI\Calendar\Event $Event */
+            return (
+                $Event->getStartDate() <= $IntervalEnd &&
+                $Event->getEndDate() >= $IntervalStart &&
+                ++$eventCounter <= $limit
+            );
+        });
 
         return $EventCollection;
     }
