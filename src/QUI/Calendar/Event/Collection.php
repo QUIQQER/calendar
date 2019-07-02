@@ -4,7 +4,9 @@
  * @author PCSG (Jan Wennrich)
  */
 
-namespace QUI\Calendar;
+namespace QUI\Calendar\Event;
+
+use QUI\Calendar\Event;
 
 /**
  * Class Collection

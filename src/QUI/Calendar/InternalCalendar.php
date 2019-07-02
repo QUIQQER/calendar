@@ -366,10 +366,10 @@ class InternalCalendar extends AbstractCalendar
 
         $eventsRaw = $Statement->fetchAll(PDO::FETCH_ASSOC);
 
-        $EventCollection = new Collection();
-        foreach ($eventsRaw as $event) {
+        $EventCollection = new QUI\Calendar\Event\Collection();
+        foreach ($eventsRaw as $eventRaw) {
             try {
-                $Event = QUI\Calendar\Event\Utils::createEventFromDatabaseArray($eventsRaw);
+                $Event = QUI\Calendar\Event\Utils::createEventFromDatabaseArray($eventRaw);
             } catch (\Exception $Exception) {
                 QUI\System\Log::writeException($Exception);
                 continue;

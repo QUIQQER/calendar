@@ -1,6 +1,6 @@
 <?php
 
-namespace QUI\Calendar;
+namespace QUI\Calendar\Event;
 
 class Handler
 {

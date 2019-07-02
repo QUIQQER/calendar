@@ -6,7 +6,6 @@
 
 namespace QUI\Calendar\Event;
 
-use QUI\Calendar\Collection;
 use QUI\Calendar\Event;
 
 /**
