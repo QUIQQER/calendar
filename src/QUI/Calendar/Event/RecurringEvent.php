@@ -81,7 +81,7 @@ class RecurringEvent extends Event
      *
      * @return string
      */
-    public function getRecurrenceInterval(): bool
+    public function getRecurrenceInterval(): string
     {
         return $this->recurrenceInterval;
     }
