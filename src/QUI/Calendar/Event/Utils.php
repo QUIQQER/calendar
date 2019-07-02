@@ -17,17 +17,21 @@ use QUI\Calendar\Exception;
 class Utils
 {
     /**
-     * Creates single events from the given EventCollection's recurring events and adds them back to the collection.
+     * Creates single events from the given EventCollection's recurring events and adds them to the given collection.
      *
      * @param Collection $EventCollection
-     * @param int        $limit
+     * @param int        $maxInflationPerEvent - How many events at max should be spawned from a recurring event? (Default: 100)
+     * @param \DateTime  $UntilDate            - When should the recurrence stop? (Default: date from timestamp with value PHP_INT_MAX)
      *
      * @return void
      *
      * @throws \Exception
      */
-    public static function inflateRecurringEvents(Collection &$EventCollection, $limit = 1000): void
-    {
+    public static function inflateRecurringEvents(
+        Collection &$EventCollection,
+        $maxInflationPerEvent = 1000,
+        \DateTime $UntilDate = null
+    ): void {
         $inflatedEvents = [];
 
         foreach ($EventCollection as $Event) {
@@ -37,26 +41,27 @@ class Utils
             }
 
             // Determine the end of the recurrence, if none is set, use the maximum integer
-            $recurrenceEndTimestamp = PHP_INT_MAX;
-
-            if ($Event->getRecurrenceEnd()) {
-                $recurrenceEndTimestamp = $Event->getRecurrenceEnd()->getTimestamp();
+            if (!$UntilDate) {
+                $UntilDate->setTimestamp(PHP_INT_MAX);
+            } else {
+                // UntilDate given and recurrence ends before the UntilDate
+                if ($Event->getRecurrenceEnd() && $Event->getRecurrenceEnd() < $UntilDate) {
+                    $UntilDate = $Event->getRecurrenceEnd();
+                }
             }
-
-            // The start and end of the current event. Using a DateTime object here to add the recurrence interval later
-            $CurrentEventDateStart = $Event->getStartDate();
-            $CurrentEventDateEnd   = $Event->getEndDate();
 
             $recurrenceInterval = $Event->getRecurrenceInterval();
 
+            // Increase the start beforehand to maybe ignore the while-loop later
+            $CurrentEventDateStart = $Event->getStartDate();
+            $CurrentEventDateStart->modify("+ 1 {$recurrenceInterval}");
+
+            // Increase the start beforehand to maybe ignore the while-loop later
+            $CurrentEventDateEnd = $Event->getEndDate();
+            $CurrentEventDateEnd->modify("+ 1 {$recurrenceInterval}");
+
             // Generate the events
-            $eventCounter = 0;
-
-            while (($CurrentEventDateStart->getTimestamp() < $recurrenceEndTimestamp) && (++$eventCounter <= $limit)) {
-                // Add the recurrence interval to generate the next event
-                $CurrentEventDateStart->modify("+ 1 {$recurrenceInterval}");
-                $CurrentEventDateEnd->modify("+ 1 {$recurrenceInterval}");
-
+            while (($CurrentEventDateStart < $UntilDate) && (count($inflatedEvents) <= $maxInflationPerEvent)) {
                 // For some odd reason we have to use 'clone' here
                 // Otherwise using modify above edits all Dates
                 $CurrentEvent = new Event(
@@ -82,6 +87,10 @@ class Utils
                 }
 
                 $inflatedEvents[] = $CurrentEvent;
+
+                // Add the recurrence interval to generate the next event
+                $CurrentEventDateStart->modify("+ 1 {$recurrenceInterval}");
+                $CurrentEventDateEnd->modify("+ 1 {$recurrenceInterval}");
             }
         }
 
@@ -89,9 +98,6 @@ class Utils
 
         // The events might be out of order so we have to sort them again
         \usort($result, [static::class, 'sortEventArrayByStartDateComparisonFunction']);
-
-        // Return only the first x elements depending on the given limit
-        $result = \array_slice($result, 0, $limit);
 
         // The value is passed by reference (&) so we have to overwrite it
         $EventCollection = new Collection($result);
