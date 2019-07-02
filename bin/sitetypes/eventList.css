@@ -1,12 +1,13 @@
 .quiqqer-eventList {
     margin: 0 auto;
     max-width: 800px;
+    padding: 40px 0;
 }
 
 .quiqqer-eventList-entry {
     align-items: center;
     display: flex;
-    margin: 1rem 0;
+    position: relative;
 }
 
 .quiqqer-eventList-entry-date {
@@ -17,39 +18,88 @@
     flex-shrink: 0;
     justify-content: center;
     margin-top: 1rem;
-    padding: 1rem;
+    padding: 0.75rem 1rem;
     text-align: center;
-    width: 100px;
-}
-
-.quiqqer-eventList-entry:hover .quiqqer-eventList-entry-data {
-    box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
 }
 
 .quiqqer-eventList-entry-date time {
-    opacity: 0.75;
+    height: 60px;
+    position: relative;
+    width: 60px;
+}
+
+.quiqqer-eventList-entry-date time:before {
+    background: #9880b7;
+    border-radius: 50%;
+    content: '';
+    height: 14px;
+    position: absolute;
+    right: calc(-50% - 3px);
+    top: 10px;
+    width: 14px;
+    z-index: 1;
+}
+
+.status-future .quiqqer-eventList-entry-date time:before,
+.status-past .quiqqer-eventList-entry-date time:before {
+    background: #ddd;
 }
 
 .quiqqer-eventList-entry-date-day {
     display: block;
-    font-size: 2rem;
-    line-height: 2rem;
+    font-size: 1.5rem;
+    line-height: 1.5rem;
     opacity: inherit;
 }
 
 .quiqqer-eventList-entry-date-month {
     display: block;
-    font-size: 1rem;
+    font-size: 0.8rem;
     letter-spacing: 2px;
 }
 
 .quiqqer-eventList-entry-data {
-    border: 1px solid #ddd;
-    border-left: 5px solid #d7c3f0;
-    border-radius: 5px;
-    flex-grow: 1;
-    margin: 1rem 1rem;
-    padding: 0.5rem 1.5rem;
+    border-left: 3px solid #ddd;
+    margin-left: auto;
+    padding: 1.5rem 1.5rem 1.5rem 3rem;
+    position: relative;
+    width: calc(100% - 100px);
+}
+
+.status-now .quiqqer-eventList-entry-data:before,
+.status-now .quiqqer-eventList-entry-data:after {
+    background: linear-gradient(45deg, #9880b7, transparent);
+    content: '';
+    height: 50px;
+    left: -3px;
+    position: absolute;
+    top: -50px;
+    width: 3px;
+}
+
+.status-now .quiqqer-eventList-entry-data:after {
+    background: linear-gradient(45deg, transparent, #9880b7);
+    bottom: -40px;
+    height: 40px;
+    top: initial;
+    z-index: 1;
+}
+
+.quiqqer-eventList-entry:first-child .quiqqer-eventList-entry-data:before,
+.quiqqer-eventList-entry:last-child .quiqqer-eventList-entry-data:before {
+    background: linear-gradient(45deg, #ddd, transparent);
+    content: '';
+    height: 30px;
+    left: -3px;
+    position: absolute;
+    top: -30px;
+    width: 3px;
+}
+
+.quiqqer-eventList-entry:last-child .quiqqer-eventList-entry-data:before {
+    background: linear-gradient(45deg, transparent, #ddd);
+    bottom: -30px;
+    top: initial;
 }
 
 .quiqqer-eventList-entry-data header {
@@ -62,8 +112,8 @@
 }
 
 .quiqqer-eventList-entry-data-footer {
-    margin-top: 1rem;
     font-size: 0.75rem;
+    margin-top: 1rem;
 }
 
 .quiqqer-eventList-entry-data-footer-label {
@@ -76,20 +126,100 @@
 
 /* inactive */
 .quiqqer-eventList-entry.status-past {
-    opacity: 0.5;
-}
-
-.quiqqer-eventList-entry.status-past .quiqqer-eventList-entry-data {
-    /*background: #fafafa;*/
+    opacity: 0.7;
 }
 
 /* now / today */
 .quiqqer-eventList-entry.status-now .quiqqer-eventList-entry-date time {
-    opacity: 1;
     font-weight: normal;
+    opacity: 1;
 }
 
 .quiqqer-eventList-entry.status-now .quiqqer-eventList-entry-data {
-    /*background: #f7f3fd;*/
     border-left-color: #9880b7;
+}
+
+@media screen and (max-width: 767px) {
+    .quiqqer-eventList-entry {
+        border-left: 3px solid #ddd;
+        flex-wrap: wrap;
+        margin-left: 1rem;
+    }
+
+    .quiqqer-eventList-entry.status-now {
+        border-left-color: #9880b7;
+    }
+
+
+    .quiqqer-eventList-entry-data {
+        border: none;
+        padding: 1rem 0 1rem 2rem;
+        width: 100%;
+    }
+
+    .quiqqer-eventList-entry-date {
+        padding: 0 2rem;
+        text-align: left;
+    }
+
+    .status-now .quiqqer-eventList-entry-data:before,
+    .status-now .quiqqer-eventList-entry-data:after {
+        display: none;
+    }
+
+    .quiqqer-eventList-entry-date time {
+        height: auto;
+        width: 3rem;
+    }
+
+    .quiqqer-eventList-entry-date time:before {
+        left: calc(-2rem - 8px);
+        top: 10px;
+        width: 14px;
+    }
+
+    .status-now.quiqqer-eventList-entry:before,
+    .status-now.quiqqer-eventList-entry:after {
+        background: linear-gradient(45deg, #9880b7, transparent);
+        content: '';
+        height: 50px;
+        left: -3px;
+        position: absolute;
+        top: -50px;
+        width: 3px;
+    }
+
+    .status-now.quiqqer-eventList-entry:after {
+        background: linear-gradient(45deg, transparent, #9880b7);
+        bottom: -40px;
+        height: 40px;
+        top: initial;
+        z-index: 1;
+    }
+
+    .quiqqer-eventList-entry-data header {
+        font-size: 1.125rem;
+    }
+
+    .quiqqer-eventList-entry:last-child .quiqqer-eventList-entry-data:before {
+        display: none;
+    }
+
+    .quiqqer-eventList-entry:first-child:before,
+    .quiqqer-eventList-entry:last-child:before {
+        background: linear-gradient(45deg, #ddd, transparent);
+        content: '';
+        height: 30px;
+        left: -3px;
+        position: absolute;
+        top: -30px;
+        width: 3px;
+    }
+
+    .quiqqer-eventList-entry:last-child:before {
+        background: linear-gradient(45deg, transparent, #ddd);
+        bottom: -30px;
+        top: initial;
+    }
+
 }

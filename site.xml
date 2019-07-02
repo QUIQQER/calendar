@@ -80,6 +80,7 @@
 
             <attributes>
                 <attribute>calendar.settings.ids</attribute>
+                <attribute>calendar.settings.template</attribute>
             </attributes>
 
             <settings>
@@ -88,6 +89,18 @@
                         <title>
                             <locale group="quiqqer/calendar" var="calendar.settings.title"/>
                         </title>
+
+                        <select conf="calendar.settings.template">
+                            <text>
+                                <locale group="quiqqer/calendar" var="calendar.settings.template"/>
+                            </text>
+                            <option value="list">
+                                <locale group="quiqqer/calendar" var="calendar.settings.template.list"/>
+                            </option>
+                            <option value="timeline">
+                                <locale group="quiqqer/calendar" var="calendar.settings.template.timeline"/>
+                            </option>
+                        </select>
 
                         <input conf="calendar.settings.ids"
                                type="hidden"
@@ -121,6 +134,8 @@
                         <title>
                             <locale group="quiqqer/calendar" var="calendar.settings.title"/>
                         </title>
+
+
 
                         <input conf="calendar.settings.ids"
                                type="hidden"

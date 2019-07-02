@@ -297,6 +297,19 @@
             <en><![CDATA[Select the calendars that should be shown on the page]]></en>
         </locale>
 
+        <locale name="calendar.settings.template">
+            <de><![CDATA[Vorlage]]></de>
+            <en><![CDATA[Template]]></en>
+        </locale>
+        <locale name="calendar.settings.template.list">
+            <de><![CDATA[Liste]]></de>
+            <en><![CDATA[List]]></en>
+        </locale>
+        <locale name="calendar.settings.template.timeline">
+            <de><![CDATA[Timeline]]></de>
+            <en><![CDATA[Timeline]]></en>
+        </locale>
+
         <locale name="calendarEdit.settings.title">
             <de><![CDATA[Kalender Einstellungen]]></de>
             <en><![CDATA[Calendar settings]]></en>
