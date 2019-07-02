@@ -38,6 +38,7 @@ class Utils
 
             // Determine the end of the recurrence, if none is set, use the maximum integer
             $recurrenceEndTimestamp = PHP_INT_MAX;
+
             if ($Event->getRecurrenceEnd()) {
                 $recurrenceEndTimestamp = $Event->getRecurrenceEnd()->getTimestamp();
             }
@@ -50,6 +51,7 @@ class Utils
 
             // Generate the events
             $eventCounter = 0;
+
             while (($CurrentEventDateStart->getTimestamp() < $recurrenceEndTimestamp) && (++$eventCounter <= $limit)) {
                 // Add the recurrence interval to generate the next event
                 $CurrentEventDateStart->modify("+ 1 {$recurrenceInterval}");
