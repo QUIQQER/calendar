@@ -52,7 +52,7 @@ class RecurringEvent extends Event
     /**
      * @var \DateTime - End of the recurrence
      */
-    protected $recurrenceEnd;
+    protected $RecurrenceEnd;
 
     /**
      * RecurringEvent constructor.
@@ -120,19 +120,19 @@ class RecurringEvent extends Event
      */
     public function getRecurrenceEnd(): ?\DateTime
     {
-        return $this->recurrenceEnd;
+        return $this->RecurrenceEnd;
     }
 
     /**
      * Sets the end of the events recurrence.
      *
-     * @param \DateTime $recurrenceEnd
+     * @param \DateTime $RecurrenceEnd
      *
      * @return RecurringEvent
      */
-    public function setRecurrenceEnd(\DateTime $recurrenceEnd): RecurringEvent
+    public function setRecurrenceEnd(\DateTime $RecurrenceEnd): RecurringEvent
     {
-        $this->recurrenceEnd = $recurrenceEnd;
+        $this->RecurrenceEnd = $RecurrenceEnd;
 
         return $this;
     }
