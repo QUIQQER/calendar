@@ -194,10 +194,25 @@ class Event
     }
 
     /**
+     * Returns the event's data in an multidimensional array formatted for usage with the database.
+     * The array's first dimension represents the table name.
+     * The array's second dimension represent the tables column names.
+     * The array's third dimension holds the event's data
+     *
      * @return array
      */
-    public function toArray(): array
+    public function toArrayForDatabase(): array
     {
-        return get_object_vars($this);
+        $result[Handler::tableCalendarsEvents()] = [
+            'eventid'    => $this->getId(),
+            'title'      => $this->getTitle(),
+            'desc'       => $this->getDescription(),
+            'start'      => $this->getStartDate()->getTimestamp(),
+            'end'        => $this->getEndDate()->getTimestamp(),
+            'calendarid' => $this->getCalendarId(),
+            'url'        => $this->getUrl()
+        ];
+
+        return $result;
     }
 }

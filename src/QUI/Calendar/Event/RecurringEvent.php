@@ -8,6 +8,7 @@ namespace QUI\Calendar\Event;
 
 use QUI\Calendar\Event;
 use QUI\Calendar\Exception\InvalidArgumentException;
+use QUI\Utils\Convert;
 
 /**
  * Class RecurringEvent
@@ -136,4 +137,31 @@ class RecurringEvent extends Event
 
         return $this;
     }
+
+    /**
+     * @inheritDoc
+     *
+     * @return array
+     */
+    public function toArrayForDatabase(): array
+    {
+        $result = parent::toArrayForDatabase();
+
+        // Table used for recurring events
+        $tableRecurrence = \QUI\Calendar\Handler::tableCalendarsEventsRecurrence();
+
+        $RecurrenceEnd = $this->getRecurrenceEnd();
+
+        $result[$tableRecurrence]['eventid']             = $this->getId();
+        $result[$tableRecurrence]['recurrence_interval'] = $this->getRecurrenceInterval();
+        $result[$tableRecurrence]['recurrence_end']      = null;
+
+        if ($RecurrenceEnd) {
+            $result[$tableRecurrence]['recurrence_end'] = Convert::convertToMysqlDatetime($RecurrenceEnd);
+        }
+
+        return $result;
+    }
+
+
 }
