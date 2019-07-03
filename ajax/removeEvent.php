@@ -12,7 +12,7 @@ QUI::$Ajax->registerFunction(
         $Calendar = \QUI\Calendar\Handler::getCalendar($calendarID);
         $Calendar->checkInternal();
         
-        $Calendar->removeCalendarEvent($eventID);
+        $Calendar->removeEvent($eventID);
     },
     array('calendarID', 'eventID'),
     'quiqqer.calendar.event.delete'

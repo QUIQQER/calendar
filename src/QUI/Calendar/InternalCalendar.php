@@ -82,28 +82,43 @@ class InternalCalendar extends AbstractCalendar
     }
 
     /**
-     * Removes an event from the calendar.
+     * Removes the given event from the calendar/database.
      *
-     * @param int $eventID - ID of the event to remove
+     * Throws an exception if something goes wrong.
      *
-     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to remove events from the calendar
-     * @throws QUI\Calendar\Exception\Database - Couldn't delete the event from the database
+     * @param \QUI\Calendar\Event $Event
+     *
+     * @throws Exception\Database
+     * @throws Exception\NoPermission
      */
-    public function removeCalendarEvent($eventID)
+    public function removeEvent(\QUI\Calendar\Event $Event): void
     {
         $this->checkPermission(self::PERMISSION_REMOVE_EVENT);
 
+        $PDO = QUI::getPDO();
+
+        $PDO->beginTransaction();
         try {
-            QUI::getDataBase()->delete(
-                Handler::tableCalendarsEvents(),
-                [
-                    'eventid' => $eventID
-                ]
-            );
+            $eventData      = $Event->toArrayForDatabase();
+            $tableEventData = Handler::tableCalendarsEvents();
+
+            QUI::getDataBase()->delete($tableEventData, $eventData[$tableEventData]);
+
+            // Recurring event?
+            if ($Event instanceof QUI\Calendar\Event\RecurringEvent) {
+                $tableRecurringEventData = Handler::tableCalendarsEventsRecurrence();
+
+                QUI::getDataBase()->delete($tableRecurringEventData, $eventData[$tableRecurringEventData]);
+            }
         } catch (QUI\Database\Exception $Exception) {
+            // Undo the previous queries
+            $PDO->rollBack();
+
             QUI\System\Log::writeException($Exception);
             throw new QUI\Calendar\Exception\Database();
         }
+        // Everything is fine, now commit the data to the database
+        $PDO->commit();
     }
 
     /**
