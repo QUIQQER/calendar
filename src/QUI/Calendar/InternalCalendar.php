@@ -7,7 +7,6 @@ namespace QUI\Calendar;
 
 use DateTime;
 use DateTimeImmutable;
-use function DusanKasan\Knapsack\last;
 use Eluceo\iCal\Component\Calendar;
 use Eluceo\iCal\Component\Event;
 use PDO;
