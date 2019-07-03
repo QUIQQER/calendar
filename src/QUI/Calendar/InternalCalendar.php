@@ -383,7 +383,6 @@ class InternalCalendar extends AbstractCalendar
 
                 QUI::getDataBase()->replace(
                     $tableRecurringEventData,
-
                     // Re-fetching the data here because the event's id is set now
                     $Event->toArrayForDatabase()[$tableRecurringEventData]
                 );

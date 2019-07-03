@@ -162,6 +162,4 @@ class RecurringEvent extends Event
 
         return $result;
     }
-
-
 }
