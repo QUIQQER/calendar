@@ -38,6 +38,7 @@ class InternalCalendar extends AbstractCalendar
     /**
      * Adds an event to the calendar.
      * The event is not allowed to have an ID yet.
+     * The calendar ID has to be set already.
      *
      * On success, the event gets it's ID assigned (parameter passed by reference).
      * On error, the event's ID does not change.
