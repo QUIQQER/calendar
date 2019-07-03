@@ -60,80 +60,25 @@ class InternalCalendar extends AbstractCalendar
 
 
     /**
-     * Adds multiple events at once to the calendar.
+     * Updates/Overwrites an event in the calendar.
+     * The event is must have an ID yet.
      *
-     * @param \QUI\Calendar\Event[] $events
-     *
-     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to add events to the calendar
-     */
-    public function addCalendarEvents($events)
-    {
-        $this->checkPermission(self::PERMISSION_ADD_EVENT);
-
-        if (!is_array($events) || empty($events)) {
-            return;
-        }
-
-        $sql      = "INSERT INTO " . Handler::tableCalendarsEvents() . " (title, `desc`, `url`, start, `end`, calendarid) VALUES ";
-        $lastElem = last($events);
-        foreach ($events as $Event) {
-            $data = implode(
-                ',',
-                [
-                    "'" . $Event->getTitle() . "'",
-                    "'" . $Event->getDescription() . "'",
-                    "'" . $Event->getUrl() . "'",
-                    $Event->start_date,
-                    $Event->end_date,
-                    $this->getId()
-                ]
-            );
-            $sql  = $sql . "($data)";
-            if ($Event != $lastElem) {
-                $sql = $sql . ",";
-            }
-        }
-
-        $sql = $sql . ";";
-
-        QUI::getDataBase()->getPDO()->prepare($sql)->execute();
-    }
-
-    /**
-     * Edits an event in the calendar.
-     *
-     * @param int    $eventID - ID of the event to edit
-     * @param string $title   - Event title
-     * @param string $desc    - Event description
-     * @param int    $start   - Unix timestamp when the event starts
-     * @param int    $end     - Unix timestamp when the event ends
-     * @param string $url     - Link to further information about the event
+     * @param \QUI\Calendar\Event $Event - The event to add
      *
      * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
-     * @throws QUI\Calendar\Exception\Database - Couldn't update event in the database
+     * @throws QUI\Calendar\Exception\Database - Couldn't insert event into the database
+     * @throws QUI\Calendar\Exception\InvalidArgumentException - Event already has it's own ID or calendar ID.
      */
-    public function editCalendarEvent($eventID, $title, $desc, $start, $end, $url)
+    public function updateEvent(\QUI\Calendar\Event $Event)
     {
         $this->checkPermission(self::PERMISSION_EDIT_EVENT);
 
-        try {
-            QUI::getDataBase()->update(
-                Handler::tableCalendarsEvents(),
-                [
-                    'title' => $title,
-                    'desc'  => $desc,
-                    'start' => $start,
-                    'end'   => $end,
-                    'url'   => $url
-                ],
-                [
-                    'eventid' => $eventID
-                ]
-            );
-        } catch (QUI\Database\Exception $Exception) {
-            QUI\System\Log::writeException($Exception);
-            throw new QUI\Calendar\Exception\Database();
+        if (\is_null($Event->getId())) {
+            $message = "The event has no ID. Can not update the event in the database.";
+            throw new QUI\Calendar\Exception\InvalidArgumentException($message);
         }
+
+        $this->writeEventToDatabase($Event);
     }
 
     /**

@@ -15,7 +15,7 @@ QUI::$Ajax->registerFunction(
         $Calendar = \QUI\Calendar\Handler::getCalendar($calendarID);
         $Calendar->checkInternal();
 
-        $Calendar->editCalendarEvent($eventID, $title, $desc, $start, $end, $eventurl);
+        $Calendar->updateEvent($eventID, $title, $desc, $start, $end, $eventurl);
     },
     array('calendarID', 'eventID', 'title', 'desc', 'start', 'end', 'eventurl')
 );
