@@ -22,7 +22,7 @@ QUI::$Ajax->registerFunction(
 
         $Calendar->checkInternal();
 
-        $eventID = $Calendar->addCalendarEvent($title, $desc, $start, $end, $eventurl);
+        $eventID = $Calendar->addEvent($title, $desc, $start, $end, $eventurl);
 
         return (int)$eventID;
     },

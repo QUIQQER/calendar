@@ -37,40 +37,64 @@ class InternalCalendar extends AbstractCalendar
 
     /**
      * Adds an event to the calendar.
+     * On success, the event gets it's ID assigned (parameter passed by reference).
+     * On error, the event's ID does not change.
      *
-     * @param string $title - Event title
-     * @param string $desc  - Event description
-     * @param int    $start - Unix timestamp when the event starts
-     * @param int    $end   - Unix timestamp when the event ends
-     * @param string $url   - Link to further information about the event
-     *
-     * @return int - The ID the event got assigned from the database
+     * @param \QUI\Calendar\Event $Event - The event to add
      *
      * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
      * @throws QUI\Calendar\Exception\Database - Couldn't insert event into the database
+     * @throws QUI\Calendar\Exception\InvalidArgumentException - Event already has it's own ID or calendar ID.
      */
-    public function addCalendarEvent($title, $desc, $start, $end, $url = "")
+    public function addEvent(\QUI\Calendar\Event &$Event): void
     {
         $this->checkPermission(self::PERMISSION_ADD_EVENT);
 
+        if ($Event->getId()) {
+            $message = "The event already has the ID '{$Event->getId()}'. It should have none yet.";
+            throw new QUI\Calendar\Exception\InvalidArgumentException($message);
+        }
+
+        if ($Event->getCalendarId() != $this->getId()) {
+            $message = "The event's calendar ID '{$Event->getCalendarId()}' doesn't match the calendar's ID '{$this->getId()}'";
+            throw new QUI\Calendar\Exception\InvalidArgumentException($message);
+        }
+
+        $EventClone = clone $Event;
+
+        $PDO = QUI::getPDO();
+
+        $PDO->beginTransaction();
         try {
-            QUI::getDataBase()->insert(
-                Handler::tableCalendarsEvents(),
-                [
-                    'title'      => $title,
-                    'desc'       => $desc,
-                    'start'      => $start,
-                    'end'        => $end,
-                    'url'        => $url,
-                    'calendarid' => $this->getId()
-                ]
-            );
+            $tableEventData = Handler::tableCalendarsEvents();
+
+            QUI::getDataBase()->insert($tableEventData, $Event->toArrayForDatabase()[$tableEventData]);
+
+            $Event->setId($PDO->lastInsertId('eventid'));
+
+            // Recurring event?
+            if ($Event instanceof QUI\Calendar\Event\RecurringEvent) {
+                $tableRecurringEventData = Handler::tableCalendarsEventsRecurrence();
+
+                QUI::getDataBase()->insert(
+                    $tableRecurringEventData,
+
+                    // Re-fetching the data here because the event's id is set now
+                    $Event->toArrayForDatabase()[$tableRecurringEventData]
+                );
+            }
         } catch (QUI\Database\Exception $Exception) {
+            // Undo the previous queries
+            $PDO->rollBack();
+
+            // Reset the event
+            $Event = $EventClone;
+
             QUI\System\Log::writeException($Exception);
             throw new QUI\Calendar\Exception\Database();
         }
-
-        return QUI::getDataBase()->getPDO()->lastInsertId('eventid');
+        // Everything is fine, now commit the data to the database
+        $PDO->commit();
     }
 
 
