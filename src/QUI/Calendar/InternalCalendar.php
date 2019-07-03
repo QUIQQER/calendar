@@ -50,51 +50,12 @@ class InternalCalendar extends AbstractCalendar
     {
         $this->checkPermission(self::PERMISSION_ADD_EVENT);
 
-        if ($Event->getId()) {
+        if (!\is_null($Event->getId())) {
             $message = "The event already has the ID '{$Event->getId()}'. It should have none yet.";
             throw new QUI\Calendar\Exception\InvalidArgumentException($message);
         }
 
-        if ($Event->getCalendarId() != $this->getId()) {
-            $message = "The event's calendar ID '{$Event->getCalendarId()}' doesn't match the calendar's ID '{$this->getId()}'";
-            throw new QUI\Calendar\Exception\InvalidArgumentException($message);
-        }
-
-        $EventClone = clone $Event;
-
-        $PDO = QUI::getPDO();
-
-        $PDO->beginTransaction();
-        try {
-            $tableEventData = Handler::tableCalendarsEvents();
-
-            QUI::getDataBase()->insert($tableEventData, $Event->toArrayForDatabase()[$tableEventData]);
-
-            $Event->setId($PDO->lastInsertId('eventid'));
-
-            // Recurring event?
-            if ($Event instanceof QUI\Calendar\Event\RecurringEvent) {
-                $tableRecurringEventData = Handler::tableCalendarsEventsRecurrence();
-
-                QUI::getDataBase()->insert(
-                    $tableRecurringEventData,
-
-                    // Re-fetching the data here because the event's id is set now
-                    $Event->toArrayForDatabase()[$tableRecurringEventData]
-                );
-            }
-        } catch (QUI\Database\Exception $Exception) {
-            // Undo the previous queries
-            $PDO->rollBack();
-
-            // Reset the event
-            $Event = $EventClone;
-
-            QUI\System\Log::writeException($Exception);
-            throw new QUI\Calendar\Exception\Database();
-        }
-        // Everything is fine, now commit the data to the database
-        $PDO->commit();
+        $this->writeEventToDatabase($Event);
     }
 
 
@@ -419,5 +380,63 @@ class InternalCalendar extends AbstractCalendar
     public function isInternal()
     {
         return true;
+    }
+
+
+    /**
+     * (Over)Writes an event in the database.
+     * If the event has an ID, assigned the event is overwritten in the database.
+     * If the event has no ID, it's added to the database.
+     *
+     * On success, the event gets it's ID assigned (parameter passed by reference).
+     * On error, the event's ID does not change.
+     *
+     * @param \QUI\Calendar\Event $Event - The event to add
+     *
+     * @throws QUI\Calendar\Exception\Database - Couldn't insert event into the database
+     * @throws QUI\Calendar\Exception\InvalidArgumentException - Event already has it's own ID or calendar ID.
+     */
+    protected function writeEventToDatabase(\QUI\Calendar\Event &$Event): void
+    {
+        if ($Event->getCalendarId() != $this->getId()) {
+            $message = "The event's calendar ID '{$Event->getCalendarId()}' doesn't match the calendar's ID '{$this->getId()}'";
+            throw new QUI\Calendar\Exception\InvalidArgumentException($message);
+        }
+
+        $EventClone = clone $Event;
+
+        $PDO = QUI::getPDO();
+
+        $PDO->beginTransaction();
+        try {
+            $tableEventData = Handler::tableCalendarsEvents();
+
+            QUI::getDataBase()->replace($tableEventData, $Event->toArrayForDatabase()[$tableEventData]);
+
+            $Event->setId($PDO->lastInsertId('eventid'));
+
+            // Recurring event?
+            if ($Event instanceof QUI\Calendar\Event\RecurringEvent) {
+                $tableRecurringEventData = Handler::tableCalendarsEventsRecurrence();
+
+                QUI::getDataBase()->replace(
+                    $tableRecurringEventData,
+
+                    // Re-fetching the data here because the event's id is set now
+                    $Event->toArrayForDatabase()[$tableRecurringEventData]
+                );
+            }
+        } catch (QUI\Database\Exception $Exception) {
+            // Undo the previous queries
+            $PDO->rollBack();
+
+            // Reset the event
+            $Event = $EventClone;
+
+            QUI\System\Log::writeException($Exception);
+            throw new QUI\Calendar\Exception\Database();
+        }
+        // Everything is fine, now commit the data to the database
+        $PDO->commit();
     }
 }
