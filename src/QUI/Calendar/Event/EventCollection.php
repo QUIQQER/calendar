@@ -17,4 +17,9 @@ use QUI\Collection;
 class EventCollection extends Collection
 {
     protected $allowed = [Event::class];
+
+    public function sortByStartDate()
+    {
+        \usort($this->children, [EventUtils::class, 'sortEventArrayByStartDateComparisonFunction']);
+    }
 }
