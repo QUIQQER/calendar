@@ -128,7 +128,7 @@ class ExternalCalendar extends AbstractCalendar
     /**
      * @inheritdoc
      *
-     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
+     * @throws QUI\Calendar\Exception\NoPermissionException - Current user isn't allowed to view the calendar
      * @throws QUI\Exception - External calendar's URL can not be reached or is invalid
      */
     public function toICal()
@@ -142,7 +142,7 @@ class ExternalCalendar extends AbstractCalendar
     /**
      * @inheritdoc
      *
-     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
+     * @throws QUI\Calendar\Exception\NoPermissionException - Current user isn't allowed to view the calendar
      * @throws QUI\Exception - Calendar's iCal could not be loaded (URL is not reachable or content invalid)
      */
     public function toJSON()
@@ -159,8 +159,8 @@ class ExternalCalendar extends AbstractCalendar
      * @param string $externalUrl - URL to an iCal file
      *
      * @throws Exception - URL is not reachable/valid
-     * @throws QUI\Calendar\Exception\Database - Could not update the external URL in the database
-     * @throws Exception\NoPermission - User is not permitted to edit the calendar
+     * @throws QUI\Calendar\Exception\DatabaseException - Could not update the external URL in the database
+     * @throws Exception\NoPermissionException - User is not permitted to edit the calendar
      */
     public function setExternalUrl($externalUrl)
     {
@@ -185,7 +185,7 @@ class ExternalCalendar extends AbstractCalendar
                 );
             } catch (\QUI\Database\Exception $Exception) {
                 QUI\System\Log::writeException($Exception);
-                throw new QUI\Calendar\Exception\Database();
+                throw new QUI\Calendar\Exception\DatabaseException();
             }
 
             // Clear cache entry since the URL has changed -> different data
@@ -197,7 +197,7 @@ class ExternalCalendar extends AbstractCalendar
     /**
      * @inheritdoc
      *
-     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
+     * @throws QUI\Calendar\Exception\NoPermissionException - Current user isn't allowed to view the calendar
      * @throws QUI\Exception - Calendar's iCal could not be loaded (URL is not reachable or content invalid)
      */
     public function getEvents()
@@ -211,8 +211,8 @@ class ExternalCalendar extends AbstractCalendar
         $events    = [];
 
         foreach ($eventsRaw as $key => $Event) {
-            $start = Event\Utils::timestampToSchedulerFormat((int)$ICal->iCalDateToUnixTimestamp($Event->dtstart));
-            $end   = Event\Utils::timestampToSchedulerFormat((int)$ICal->iCalDateToUnixTimestamp($Event->dtend));
+            $start = Event\EventUtils::timestampToSchedulerFormat((int)$ICal->iCalDateToUnixTimestamp($Event->dtstart));
+            $end   = Event\EventUtils::timestampToSchedulerFormat((int)$ICal->iCalDateToUnixTimestamp($Event->dtend));
 
             $events[] = new Event($Event->summary, $start, $end, $Event->uid, $this->getId());
         }
@@ -224,7 +224,7 @@ class ExternalCalendar extends AbstractCalendar
     /**
      * @inheritdoc
      *
-     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
+     * @throws QUI\Calendar\Exception\NoPermissionException - Current user isn't allowed to view the calendar
      * @throws \Exception - Something went wrong converting the given date to timestamps
      */
     public function getEventsForDate(DateTime $Date, $ignoreTime)
@@ -248,8 +248,8 @@ class ExternalCalendar extends AbstractCalendar
 
         $Events = new Collection();
         foreach ($eventsRaw as $eventData) {
-            $start = Event\Utils::timestampToSchedulerFormat((int)$ICal->iCalDateToUnixTimestamp($eventData->dtstart));
-            $end   = Event\Utils::timestampToSchedulerFormat((int)$ICal->iCalDateToUnixTimestamp($eventData->dtend));
+            $start = Event\EventUtils::timestampToSchedulerFormat((int)$ICal->iCalDateToUnixTimestamp($eventData->dtstart));
+            $end   = Event\EventUtils::timestampToSchedulerFormat((int)$ICal->iCalDateToUnixTimestamp($eventData->dtend));
 
             $Event = new Event($eventData->summary, $start, $end, $eventData->uid, $this->getId());
             $Events->append($Event);
@@ -262,7 +262,7 @@ class ExternalCalendar extends AbstractCalendar
     /**
      * @inheritdoc
      *
-     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
+     * @throws QUI\Calendar\Exception\NoPermissionException - Current user isn't allowed to view the calendar
      * @throws \Exception - Something went wrong converting the given date to timestamps
      */
     public function getEventsBetweenDates(DateTime $IntervalStart, DateTime $IntervalEnd, $ignoreTime, $limit)
@@ -287,8 +287,8 @@ class ExternalCalendar extends AbstractCalendar
 
         $Events = new Collection();
         foreach ($eventsRaw as $eventData) {
-            $start = Event\Utils::timestampToSchedulerFormat((int)$ICal->iCalDateToUnixTimestamp($eventData->dtstart));
-            $end   = Event\Utils::timestampToSchedulerFormat((int)$ICal->iCalDateToUnixTimestamp($eventData->dtend));
+            $start = Event\EventUtils::timestampToSchedulerFormat((int)$ICal->iCalDateToUnixTimestamp($eventData->dtstart));
+            $end   = Event\EventUtils::timestampToSchedulerFormat((int)$ICal->iCalDateToUnixTimestamp($eventData->dtend));
 
             $Event = new Event($eventData->summary, $start, $end, $eventData->uid, $this->getId());
             $Events->append($Event);
@@ -305,7 +305,7 @@ class ExternalCalendar extends AbstractCalendar
      *
      * @return Collection
      *
-     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
+     * @throws QUI\Calendar\Exception\NoPermissionException - Current user isn't allowed to view the calendar
      * @throws QUI\Exception - Calendar's iCal could not be loaded (URL is not reachable or content invalid)
      */
     public function getUpcomingEvents($amount = -1)
@@ -333,8 +333,8 @@ class ExternalCalendar extends AbstractCalendar
                 break;
             }
 
-            $start = Event\Utils::timestampToSchedulerFormat((int)$ICal->iCalDateToUnixTimestamp($Event->dtstart));
-            $end   = Event\Utils::timestampToSchedulerFormat((int)$ICal->iCalDateToUnixTimestamp($Event->dtend));
+            $start = Event\EventUtils::timestampToSchedulerFormat((int)$ICal->iCalDateToUnixTimestamp($Event->dtstart));
+            $end   = Event\EventUtils::timestampToSchedulerFormat((int)$ICal->iCalDateToUnixTimestamp($Event->dtend));
 
             $Event = new Event($Event->summary, $start, $end, $Event->uid, $this->getId());
             $EventCollection->append($Event);

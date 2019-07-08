@@ -189,7 +189,7 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
 
 
         /**
-         * Called from Panel Handler.
+         * Called from Panel EventHandler.
          * Stores the data of the current panel in the workspace so the panel can be displayed after page reload.
          * @return {{type, attributes, calendarData: *}}
          */

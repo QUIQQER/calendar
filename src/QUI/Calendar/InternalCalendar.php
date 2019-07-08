@@ -45,8 +45,8 @@ class InternalCalendar extends AbstractCalendar
      *
      * @param \QUI\Calendar\Event $Event - The event to add
      *
-     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
-     * @throws QUI\Calendar\Exception\Database - Couldn't insert event into the database
+     * @throws QUI\Calendar\Exception\NoPermissionException - Current user isn't allowed to view the calendar
+     * @throws QUI\Calendar\Exception\DatabaseException - Couldn't insert event into the database
      * @throws QUI\Calendar\Exception\InvalidArgumentException - Event already has it's own ID or calendar ID.
      */
     public function addEvent(\QUI\Calendar\Event &$Event): void
@@ -68,8 +68,8 @@ class InternalCalendar extends AbstractCalendar
      *
      * @param \QUI\Calendar\Event $Event - The event to add
      *
-     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
-     * @throws QUI\Calendar\Exception\Database - Couldn't insert event into the database
+     * @throws QUI\Calendar\Exception\NoPermissionException - Current user isn't allowed to view the calendar
+     * @throws QUI\Calendar\Exception\DatabaseException - Couldn't insert event into the database
      * @throws QUI\Calendar\Exception\InvalidArgumentException - Event already has it's own ID or calendar ID.
      */
     public function updateEvent(\QUI\Calendar\Event $Event)
@@ -91,8 +91,8 @@ class InternalCalendar extends AbstractCalendar
      *
      * @param \QUI\Calendar\Event $Event
      *
-     * @throws Exception\Database
-     * @throws Exception\NoPermission
+     * @throws Exception\DatabaseException
+     * @throws Exception\NoPermissionException
      */
     public function removeEvent(\QUI\Calendar\Event $Event): void
     {
@@ -118,7 +118,7 @@ class InternalCalendar extends AbstractCalendar
             $PDO->rollBack();
 
             QUI\System\Log::writeException($Exception);
-            throw new QUI\Calendar\Exception\Database();
+            throw new QUI\Calendar\Exception\DatabaseException();
         }
         // Everything is fine, now commit the data to the database
         $PDO->commit();
@@ -129,7 +129,7 @@ class InternalCalendar extends AbstractCalendar
      *
      * @return string - The calendar in iCal format
      *
-     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
+     * @throws QUI\Calendar\Exception\NoPermissionException - Current user isn't allowed to view the calendar
      */
     public function toICal()
     {
@@ -174,7 +174,7 @@ class InternalCalendar extends AbstractCalendar
      *
      * @return string - The calendars events in JSON format
      *
-     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
+     * @throws QUI\Calendar\Exception\NoPermissionException - Current user isn't allowed to view the calendar
      */
     public function toJSON()
     {
@@ -189,9 +189,9 @@ class InternalCalendar extends AbstractCalendar
     /**
      * @inheritdoc
      *
-     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
+     * @throws QUI\Calendar\Exception\NoPermissionException - Current user isn't allowed to view the calendar
      */
-    public function getEventsForDate(DateTime $Date, $ignoreTime, $limit = 1000): QUI\Calendar\Event\Collection
+    public function getEventsForDate(DateTime $Date, $ignoreTime, $limit = 1000): QUI\Calendar\Event\EventCollection
     {
         $StartDate = clone $Date;
         $EndDate   = clone $Date;
@@ -219,8 +219,8 @@ class InternalCalendar extends AbstractCalendar
      * @param int           $limit
      * @param bool          $inflateRecurringEvents - Create child-events for recurring events (default) or not
      *
-     * @return QUI\Calendar\Event\Collection
-     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
+     * @return QUI\Calendar\Event\EventCollection
+     * @throws QUI\Calendar\Exception\NoPermissionException - Current user isn't allowed to view the calendar
      */
     public function getEventsBetweenDates(
         DateTime $IntervalStart,
@@ -228,7 +228,7 @@ class InternalCalendar extends AbstractCalendar
         $ignoreTime = true,
         $limit = 1000,
         bool $inflateRecurringEvents = true
-    ): QUI\Calendar\Event\Collection {
+    ): QUI\Calendar\Event\EventCollection {
         $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
 
         if (is_null($IntervalEnd)) {
@@ -281,10 +281,10 @@ class InternalCalendar extends AbstractCalendar
 
         $eventsRaw = $Statement->fetchAll(PDO::FETCH_ASSOC);
 
-        $EventCollection = new QUI\Calendar\Event\Collection();
+        $EventCollection = new QUI\Calendar\Event\EventCollection();
         foreach ($eventsRaw as $eventRaw) {
             try {
-                $Event = QUI\Calendar\Event\Utils::createEventFromDatabaseArray($eventRaw);
+                $Event = QUI\Calendar\Event\EventUtils::createEventFromDatabaseArray($eventRaw);
             } catch (\Exception $Exception) {
                 QUI\System\Log::writeException($Exception);
                 continue;
@@ -295,7 +295,7 @@ class InternalCalendar extends AbstractCalendar
 
         if ($inflateRecurringEvents) {
             try {
-                QUI\Calendar\Event\Utils::inflateRecurringEvents($EventCollection, $limit, $IntervalEnd);
+                QUI\Calendar\Event\EventUtils::inflateRecurringEvents($EventCollection, $limit, $IntervalEnd);
             } catch (\Exception $Exception) {
                 QUI\System\Log::writeException($Exception);
             }
@@ -327,11 +327,11 @@ class InternalCalendar extends AbstractCalendar
      *
      * @param int $amount
      *
-     * @return QUI\Calendar\Event\Collection
+     * @return QUI\Calendar\Event\EventCollection
      *
-     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
+     * @throws QUI\Calendar\Exception\NoPermissionException - Current user isn't allowed to view the calendar
      */
-    public function getUpcomingEvents($amount = 1000): QUI\Calendar\Event\Collection
+    public function getUpcomingEvents($amount = 1000): QUI\Calendar\Event\EventCollection
     {
         return $this->getEventsBetweenDates(new DateTime(), null, false, $amount);
     }
@@ -356,7 +356,7 @@ class InternalCalendar extends AbstractCalendar
      *
      * @param \QUI\Calendar\Event $Event - The event to add
      *
-     * @throws QUI\Calendar\Exception\Database - Couldn't insert event into the database
+     * @throws QUI\Calendar\Exception\DatabaseException - Couldn't insert event into the database
      * @throws QUI\Calendar\Exception\InvalidArgumentException - Event already has it's own ID or calendar ID.
      */
     protected function writeEventToDatabase(\QUI\Calendar\Event &$Event): void
@@ -396,7 +396,7 @@ class InternalCalendar extends AbstractCalendar
             $Event = $EventClone;
 
             QUI\System\Log::writeException($Exception);
-            throw new QUI\Calendar\Exception\Database();
+            throw new QUI\Calendar\Exception\DatabaseException();
         }
         // Everything is fine, now commit the data to the database
         $PDO->commit();

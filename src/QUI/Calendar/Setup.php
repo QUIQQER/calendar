@@ -18,7 +18,7 @@ class Setup
     /**
      * Only for udpates: Delete columns created in older versions of the package
      *
-     * @throws QUI\Calendar\Exception\Database - Couldn't delete calendar's without owner/userid from the database
+     * @throws QUI\Calendar\Exception\DatabaseException - Couldn't delete calendar's without owner/userid from the database
      */
     public static function run()
     {
@@ -38,7 +38,7 @@ class Setup
             $DB->delete($tableCalendarsName, ['userid' => null]);
         } catch (QUI\Database\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
-            throw new QUI\Calendar\Exception\Database();
+            throw new QUI\Calendar\Exception\DatabaseException();
         }
 
         // Delete Events without associated Calendar

@@ -7,6 +7,6 @@ use QUI;
 /**
  * Thrown when something (bad) happens with/inside the database
  */
-class Share extends QUI\Calendar\Exception
+class ShareException extends QUI\Calendar\Exception
 {
 }

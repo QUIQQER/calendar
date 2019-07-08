@@ -7,9 +7,9 @@
 namespace QUI\Calendar;
 
 use QUI;
-use QUI\Calendar\Exception\Database;
-use QUI\Calendar\Exception\NoPermission;
-use QUI\Calendar\Exception\Share;
+use QUI\Calendar\Exception\DatabaseException;
+use QUI\Calendar\Exception\NoPermissionException;
+use QUI\Calendar\Exception\ShareException;
 use QUI\System\Log;
 use QUI\Users\User;
 
@@ -30,9 +30,9 @@ class ShareHandler
      *
      * @return string
      *
-     * @throws NoPermission - The user is not permitted to view the calendar
-     * @throws Database - Couldn't read/write from/to database
-     * @throws Share - Couldn't generate a share-hash (missing entropy)
+     * @throws NoPermissionException - The user is not permitted to view the calendar
+     * @throws DatabaseException - Couldn't read/write from/to database
+     * @throws ShareException - Couldn't generate a share-hash (missing entropy)
      */
     public static function getShareUrlForCalendar(AbstractCalendar $Calendar, User $User = null)
     {
@@ -56,7 +56,7 @@ class ShareHandler
             );
         } catch (\QUI\Database\Exception $Exception) {
             Log::writeException($Exception);
-            throw new Database();
+            throw new DatabaseException();
         }
 
         if (isset($shareData[0]) && isset($shareData['hash'])) {
@@ -77,7 +77,7 @@ class ShareHandler
             );
         } catch (\QUI\Database\Exception $Exception) {
             Log::writeException($Exception);
-            throw new Database();
+            throw new DatabaseException();
         }
 
         return self::generateShareUrlForHash($hash);
@@ -87,14 +87,14 @@ class ShareHandler
     /**
      * Generates a new share hash.
      *
-     * @throws Share - Thrown when it's not possible to generate a share url (missing entropy)
+     * @throws ShareException - Thrown when it's not possible to generate a share url (missing entropy)
      */
     protected static function generateShareHash()
     {
         try {
             return bin2hex(random_bytes(16));
         } catch (\Exception $Exception) {
-            throw new Share();
+            throw new ShareException();
         }
     }
 
@@ -124,7 +124,7 @@ class ShareHandler
      * @return AbstractCalendar
      * @throws Exception - No calendar for this hash in the database
      *
-     * @throws Database - Couldn't fetch the calendar data from the database
+     * @throws DatabaseException - Couldn't fetch the calendar data from the database
      */
     public static function getCalendarFromHash($hash)
     {
@@ -141,7 +141,7 @@ class ShareHandler
             );
         } catch (\QUI\Exception $Exception) {
             Log::writeException($Exception);
-            throw new Database();
+            throw new DatabaseException();
         }
 
         if (!isset($calendarData[0])) {

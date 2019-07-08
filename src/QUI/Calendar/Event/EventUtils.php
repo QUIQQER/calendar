@@ -14,21 +14,21 @@ use QUI\Calendar\Exception;
  *
  * @package QUI\Calendar\Event
  */
-class Utils
+class EventUtils
 {
     /**
      * Creates single events from the given EventCollection's recurring events and adds them to the given collection.
      *
-     * @param Collection $EventCollection
-     * @param int        $maxInflationPerEvent - How many events at max should be spawned from a recurring event? (Default: 100)
-     * @param \DateTime  $UntilDate            - When should the recurrence stop? (Default: date from timestamp with value PHP_INT_MAX)
+     * @param EventCollection $EventCollection
+     * @param int             $maxInflationPerEvent - How many events at max should be spawned from a recurring event? (Default: 100)
+     * @param \DateTime       $UntilDate            - When should the recurrence stop? (Default: date from timestamp with value PHP_INT_MAX)
      *
      * @return void
      *
      * @throws \Exception
      */
     public static function inflateRecurringEvents(
-        Collection &$EventCollection,
+        EventCollection &$EventCollection,
         $maxInflationPerEvent = 1000,
         \DateTime $UntilDate = null
     ): void {
@@ -100,7 +100,7 @@ class Utils
         \usort($result, [static::class, 'sortEventArrayByStartDateComparisonFunction']);
 
         // The value is passed by reference (&) so we have to overwrite it
-        $EventCollection = new Collection($result);
+        $EventCollection = new EventCollection($result);
     }
 
     /**

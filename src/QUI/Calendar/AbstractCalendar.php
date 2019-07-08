@@ -4,7 +4,7 @@ namespace QUI\Calendar;
 
 use DateTime;
 use QUI;
-use QUI\Calendar\Exception\NoPermission;
+use QUI\Calendar\Exception\NoPermissionException;
 use QUI\Users\User;
 
 abstract class AbstractCalendar
@@ -52,7 +52,7 @@ abstract class AbstractCalendar
      * @param int - $calendarId
      *
      * @throws QUI\Calendar\Exception - Calendar does not exist
-     * @throws QUI\Calendar\Exception\Database - Couldn't fetch the calendar's data from the database
+     * @throws QUI\Calendar\Exception\DatabaseException - Couldn't fetch the calendar's data from the database
      */
     public function __construct($calendarId)
     {
@@ -68,7 +68,7 @@ abstract class AbstractCalendar
             );
         } catch (QUI\Database\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
-            throw new QUI\Calendar\Exception\Database();
+            throw new QUI\Calendar\Exception\DatabaseException();
         }
 
 
@@ -117,8 +117,8 @@ abstract class AbstractCalendar
      * @param $isPublic - Is the calendar public?
      * @param $color    - The calendars color
      *
-     * @throws NoPermission - Current user isn't allowed to edit the calendar
-     * @throws QUI\Calendar\Exception\Database - Couldn't update the event in the database
+     * @throws NoPermissionException - Current user isn't allowed to edit the calendar
+     * @throws QUI\Calendar\Exception\DatabaseException - Couldn't update the event in the database
      */
     public function editCalendar($name, $isPublic, $color)
     {
@@ -140,7 +140,7 @@ abstract class AbstractCalendar
             );
         } catch (QUI\Database\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
-            throw new QUI\Calendar\Exception\Database();
+            throw new QUI\Calendar\Exception\DatabaseException();
         }
     }
 
@@ -252,7 +252,7 @@ abstract class AbstractCalendar
      *
      * @param int - Amount of upcoming events to get. Leave empty or set to -1 to get all upcoming events.
      *
-     * @return Collection - Collection of upcoming events
+     * @return EventCollection - EventCollection of upcoming events
      */
     abstract public function getUpcomingEvents($amount = -1);
 
@@ -261,7 +261,7 @@ abstract class AbstractCalendar
      *
      * @return array
      *
-     * @throws NoPermission - Current user isn't allowed to view the calendar
+     * @throws NoPermissionException - Current user isn't allowed to view the calendar
      */
     public function toArray()
     {
@@ -290,7 +290,7 @@ abstract class AbstractCalendar
     {
         try {
             static::checkPermission($permission, $User);
-        } catch (NoPermission $Exception) {
+        } catch (NoPermissionException $Exception) {
             return false;
         }
 
@@ -309,7 +309,7 @@ abstract class AbstractCalendar
      *
      * @return boolean
      *
-     * @throws NoPermission
+     * @throws NoPermissionException
      */
     public function checkPermission($permission, User $User = null)
     {
@@ -340,7 +340,7 @@ abstract class AbstractCalendar
                     return true;
                 }
 
-                throw new NoPermission(
+                throw new NoPermissionException(
                     [
                         $localeGroup,
                         'exception.calendar.permission.view'
@@ -355,7 +355,7 @@ abstract class AbstractCalendar
                     return true;
                 }
 
-                throw new NoPermission(
+                throw new NoPermissionException(
                     [
                         $localeGroup,
                         'exception.calendar.permission.create'
@@ -381,10 +381,10 @@ abstract class AbstractCalendar
                     ['permission' => $permissionName]
                 );
 
-                throw new NoPermission($message);
+                throw new NoPermissionException($message);
         }
 
-        throw new NoPermission(
+        throw new NoPermissionException(
             [
                 $localeGroup,
                 'exception.calendar.permission.edit'
@@ -459,9 +459,9 @@ abstract class AbstractCalendar
      *
      * @return string
      *
-     * @throws NoPermission - The user has no permission to view the calendar
-     * @throws QUI\Calendar\Exception\Database - Couldn't read/write from/to database
-     * @throws QUI\Calendar\Exception\Share - Couldn't generate a share-hash (missing entropy)
+     * @throws NoPermissionException - The user has no permission to view the calendar
+     * @throws QUI\Calendar\Exception\DatabaseException - Couldn't read/write from/to database
+     * @throws QUI\Calendar\Exception\ShareException - Couldn't generate a share-hash (missing entropy)
      */
     public function getShareUrl(User $User = null)
     {

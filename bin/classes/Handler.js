@@ -1,5 +1,5 @@
 /**
- * Handler that handles Ajax communication for calendars.
+ * EventHandler that handles Ajax communication for calendars.
  *
  * @module package/quiqqer/calendar/bin/classes/Handler
  * @author www.pcsg.de (Jan Wennrich)

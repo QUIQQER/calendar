@@ -3,12 +3,12 @@
 namespace QUI\Calendar\Event;
 
 use QUI;
-use QUI\Calendar\Exception\Database;
-use QUI\Calendar\Exception\NoPermission;
+use QUI\Calendar\Exception\DatabaseException;
+use QUI\Calendar\Exception\NoPermissionException;
 use QUI\Permissions\Permission;
 use QUI\System\Log;
 
-class Manager
+class EventManager
 {
     /**
      * Returns the event for a given ID or null if not found
@@ -17,14 +17,14 @@ class Manager
      *
      * @return null|Event The event or null if event not found or no permission to view the events calendar
      *
-     * @throws Database - Couldn't fetch event's data from the database
+     * @throws DatabaseException - Couldn't fetch event's data from the database
      */
     public static function getEventById($id)
     {
         try {
             $data = QUI::getDataBase()->fetch(
                 [
-                    'from'  => Handler::tableCalendarsEvents(),
+                    'from'  => EventHandler::tableCalendarsEvents(),
                     'where' => [
                         'eventid' => $id
                     ],
@@ -33,7 +33,7 @@ class Manager
             );
         } catch (\QUI\Database\Exception $Exception) {
             Log::writeException($Exception);
-            throw new Database();
+            throw new DatabaseException();
         }
 
         if (empty($data)) {
@@ -43,7 +43,7 @@ class Manager
         $Event = Event\Utils::createEventFromDatabaseArray($data[0]);
 
         try {
-            $Calendar = Handler::getCalendar($Event->calendar_id);
+            $Calendar = EventHandler::getCalendar($Event->calendar_id);
             $Calendar->checkPermission($Calendar::PERMISSION_VIEW_CALENDAR);
         } catch (Exception $ex) {
             return null;
@@ -69,7 +69,7 @@ class Manager
         $events = [];
         foreach ($ids as $calendarID) {
             try {
-                $calendarsEvents = Handler::getCalendar($calendarID)->getUpcomingEvents($limit)->toArray();
+                $calendarsEvents = EventHandler::getCalendar($calendarID)->getUpcomingEvents($limit)->toArray();
                 $events          = array_merge($events, $calendarsEvents);
             } catch (\QUI\Exception $exception) {
                 continue;
@@ -121,26 +121,26 @@ class Manager
      *
      * @return array
      *
-     * @throws Database - Could not fetch event's data from the database
-     * @throws NoPermission
+     * @throws DatabaseException - Could not fetch event's data from the database
+     * @throws NoPermissionException
      */
     public static function getAllEvents()
     {
         try {
             Permission::checkPermission(AbstractCalendar::PERMISSION_IS_ADMIN);
         } catch (\QUI\Permissions\Exception $Exception) {
-            throw new NoPermission();
+            throw new NoPermissionException();
         }
 
         try {
             $eventsDataRaw = QUI::getDataBase()->fetch(
                 [
-                    'from' => Handler::tableCalendarsEvents()
+                    'from' => EventHandler::tableCalendarsEvents()
                 ]
             );
         } catch (\QUI\Database\Exception $Exception) {
             Log::writeException($Exception);
-            throw new Database();
+            throw new DatabaseException();
         }
 
         $events = [];
