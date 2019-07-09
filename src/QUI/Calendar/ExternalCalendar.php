@@ -6,6 +6,8 @@ use DateTime;
 use DateTimeImmutable;
 use ICal\ICal;
 use QUI;
+use QUI\Calendar\Event\EventUtils;
+use QUI\Calendar\Event\EventCollection;
 
 /**
  * Class Calendar
@@ -43,7 +45,7 @@ class ExternalCalendar extends AbstractCalendar
      *
      * @throws Exception - Given calendar data doesn't belong to an external calendar
      */
-    protected function construct($data)
+    protected function construct(array $data): void
     {
         if ($data['isExternal'] == 0) {
             throw new Exception('Calendar with ID ' . $this->getId() . ' is internal but was created as external');
@@ -57,29 +59,15 @@ class ExternalCalendar extends AbstractCalendar
 
 
     /**
-     * Returns a string in iCal format containing the calendar's events
+     * @inheritdoc
      *
-     * @return string
-     *
-     * @throws QUI\Exception - Calendar's URL is not reachable or contains invalid iCal
-     *
-     * @deprecated - Use toICal() instead.
+     * @throws QUI\Calendar\Exception\NoPermissionException - Current user isn't allowed to view the calendar
+     * @throws QUI\Exception - External calendar's URL can not be reached or is invalid
      */
-    public function getIcalData()
+    public function toICal(): string
     {
-        return $this->toICal();
-    }
+        $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
 
-
-    /**
-     * Returns a string in iCal format containing the calendar's events
-     *
-     * @return string
-     *
-     * @throws QUI\Exception - Calendar's URL is not reachable or contains invalid iCal
-     */
-    protected function fetchICal()
-    {
         try {
             return QUI\Cache\Manager::get($this->icalCacheKey);
         } catch (\Exception  $exception) {
@@ -111,41 +99,12 @@ class ExternalCalendar extends AbstractCalendar
 
 
     /**
-     * Determines whether a URL is reachable or not
-     *
-     * @param string $url - An URL
-     *
-     * @return boolean
-     *
-     * @deprecated Use QUI\Utils\Request\Url::isReachable() instead
-     */
-    public static function isUrlReachable($url)
-    {
-        return QUI\Utils\Request\Url::isReachable($url);
-    }
-
-
-    /**
-     * @inheritdoc
-     *
-     * @throws QUI\Calendar\Exception\NoPermissionException - Current user isn't allowed to view the calendar
-     * @throws QUI\Exception - External calendar's URL can not be reached or is invalid
-     */
-    public function toICal()
-    {
-        $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
-
-        return $this->fetchICal();
-    }
-
-
-    /**
      * @inheritdoc
      *
      * @throws QUI\Calendar\Exception\NoPermissionException - Current user isn't allowed to view the calendar
      * @throws QUI\Exception - Calendar's iCal could not be loaded (URL is not reachable or content invalid)
      */
-    public function toJSON()
+    public function toJSON(): string
     {
         $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
 
@@ -158,11 +117,13 @@ class ExternalCalendar extends AbstractCalendar
      *
      * @param string $externalUrl - URL to an iCal file
      *
+     * @return void
+     *
      * @throws Exception - URL is not reachable/valid
      * @throws QUI\Calendar\Exception\DatabaseException - Could not update the external URL in the database
      * @throws Exception\NoPermissionException - User is not permitted to edit the calendar
      */
-    public function setExternalUrl($externalUrl)
+    public function setExternalUrl(string $externalUrl): void
     {
         $this->checkPermission(self::PERMISSION_EDIT_CALENDAR);
 
@@ -199,8 +160,9 @@ class ExternalCalendar extends AbstractCalendar
      *
      * @throws QUI\Calendar\Exception\NoPermissionException - Current user isn't allowed to view the calendar
      * @throws QUI\Exception - Calendar's iCal could not be loaded (URL is not reachable or content invalid)
+     * @throws \Exception - Event has invalid date format
      */
-    public function getEvents()
+    public function getEvents(): EventCollection
     {
         $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
 
@@ -208,16 +170,16 @@ class ExternalCalendar extends AbstractCalendar
         $ICal->initString($this->toICal());
 
         $eventsRaw = $ICal->events();
-        $events    = [];
+        $Events    = new EventCollection();
+        foreach ($eventsRaw as $IcalEvent) {
+            /** @var \ICal\Event $IcalEvent */
+            $Event = EventUtils::createEventFromIcsParserEventData($IcalEvent);
+            $Event->setCalendarId($this->getId());
 
-        foreach ($eventsRaw as $key => $Event) {
-            $start = Event\EventUtils::timestampToSchedulerFormat((int)$ICal->iCalDateToUnixTimestamp($Event->dtstart));
-            $end   = Event\EventUtils::timestampToSchedulerFormat((int)$ICal->iCalDateToUnixTimestamp($Event->dtend));
-
-            $events[] = new Event($Event->summary, $start, $end, $Event->uid, $this->getId());
+            $Events->append($Event);
         }
 
-        return $events;
+        return $Events;
     }
 
 
@@ -227,7 +189,7 @@ class ExternalCalendar extends AbstractCalendar
      * @throws QUI\Calendar\Exception\NoPermissionException - Current user isn't allowed to view the calendar
      * @throws \Exception - Something went wrong converting the given date to timestamps
      */
-    public function getEventsForDate(DateTime $Date, $ignoreTime)
+    public function getEventsForDate(DateTime $Date, bool $ignoreTime): EventCollection
     {
         $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
 
@@ -246,27 +208,38 @@ class ExternalCalendar extends AbstractCalendar
 
         $eventsRaw = $ICal->eventsFromRange($timestampStart, $timestampEnd);
 
-        $Events = new Collection();
-        foreach ($eventsRaw as $eventData) {
-            $start = Event\EventUtils::timestampToSchedulerFormat((int)$ICal->iCalDateToUnixTimestamp($eventData->dtstart));
-            $end   = Event\EventUtils::timestampToSchedulerFormat((int)$ICal->iCalDateToUnixTimestamp($eventData->dtend));
+        $Events = new QUI\Calendar\Event\EventCollection();
+        foreach ($eventsRaw as $IcalEvent) {
+            /** @var \ICal\Event $IcalEvent */
+            $Event = EventUtils::createEventFromIcsParserEventData($IcalEvent);
+            $Event->setCalendarId($this->getId());
 
-            $Event = new Event($eventData->summary, $start, $end, $eventData->uid, $this->getId());
             $Events->append($Event);
         }
 
         return $Events;
     }
 
-
     /**
-     * @inheritdoc
+     * @inheritDoc
+     *
+     * @param DateTime $IntervalStart
+     * @param DateTime $IntervalEnd
+     * @param bool     $ignoreTime
+     * @param int      $limit
+     *
+     * @return Event\EventCollection
      *
      * @throws QUI\Calendar\Exception\NoPermissionException - Current user isn't allowed to view the calendar
      * @throws \Exception - Something went wrong converting the given date to timestamps
      */
-    public function getEventsBetweenDates(DateTime $IntervalStart, DateTime $IntervalEnd, $ignoreTime, $limit)
-    {
+    public function getEventsBetweenDates(
+        DateTime $IntervalStart,
+        DateTime $IntervalEnd,
+        bool $ignoreTime,
+        int $limit
+    ): EventCollection {
+
         $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
 
         $timestampStartDate = $IntervalStart->format(DATE_ISO8601);
@@ -285,12 +258,12 @@ class ExternalCalendar extends AbstractCalendar
 
         $eventsRaw = $ICal->eventsFromRange($timestampStartDate, $timestampEndDate);
 
-        $Events = new Collection();
-        foreach ($eventsRaw as $eventData) {
-            $start = Event\EventUtils::timestampToSchedulerFormat((int)$ICal->iCalDateToUnixTimestamp($eventData->dtstart));
-            $end   = Event\EventUtils::timestampToSchedulerFormat((int)$ICal->iCalDateToUnixTimestamp($eventData->dtend));
+        $Events = new EventCollection();
+        foreach ($eventsRaw as $IcalEvent) {
+            /** @var \ICal\Event $IcalEvent */
+            $Event = EventUtils::createEventFromIcsParserEventData($IcalEvent);
+            $Event->setCalendarId($this->getId());
 
-            $Event = new Event($eventData->summary, $start, $end, $eventData->uid, $this->getId());
             $Events->append($Event);
         }
 
@@ -303,12 +276,13 @@ class ExternalCalendar extends AbstractCalendar
      *
      * @param int $amount
      *
-     * @return Collection
+     * @return EventCollection
      *
      * @throws QUI\Calendar\Exception\NoPermissionException - Current user isn't allowed to view the calendar
      * @throws QUI\Exception - Calendar's iCal could not be loaded (URL is not reachable or content invalid)
+     * @throws \Exception - Invalid date format in an event
      */
-    public function getUpcomingEvents($amount = -1)
+    public function getUpcomingEvents(int $amount = -1): EventCollection
     {
         $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
 
@@ -326,22 +300,23 @@ class ExternalCalendar extends AbstractCalendar
             $amount = PHP_INT_MAX;
         }
 
-        $count           = 0;
-        $EventCollection = new Collection();
-        foreach ($eventsRaw as $key => $Event) {
+        $count  = 0;
+        $Events = new EventCollection();
+        foreach ($eventsRaw as $key => $IcalEvent) {
             if ($count >= $amount) {
                 break;
             }
 
-            $start = Event\EventUtils::timestampToSchedulerFormat((int)$ICal->iCalDateToUnixTimestamp($Event->dtstart));
-            $end   = Event\EventUtils::timestampToSchedulerFormat((int)$ICal->iCalDateToUnixTimestamp($Event->dtend));
+            /** @var \ICal\Event $IcalEvent */
+            $Event = EventUtils::createEventFromIcsParserEventData($IcalEvent);
+            $Event->setCalendarId($this->getId());
 
-            $Event = new Event($Event->summary, $start, $end, $Event->uid, $this->getId());
-            $EventCollection->append($Event);
+            $Events->append($Event);
+
             $count++;
         }
 
-        return $EventCollection;
+        return $Events;
     }
 
     /**
@@ -351,7 +326,7 @@ class ExternalCalendar extends AbstractCalendar
      *
      * @return boolean - Is the iCal string valid
      */
-    public static function isValidIcal($icalString)
+    public static function isValidIcal(string $icalString): bool
     {
         $icalString = trim($icalString);
 
@@ -368,7 +343,7 @@ class ExternalCalendar extends AbstractCalendar
     /**
      * @inheritdoc
      */
-    public function isInternal()
+    public function isInternal(): bool
     {
         return false;
     }
