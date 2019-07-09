@@ -25,7 +25,7 @@ class InternalCalendar extends AbstractCalendar
      *
      * @throws Exception - given calendar data belongs to an external calendar
      */
-    protected function construct($data)
+    protected function construct(array $data)
     {
         if ($data['isExternal'] == 1) {
             throw new Exception("Calendar with ID {$this->getId()} is external but was created as internal");
@@ -131,7 +131,7 @@ class InternalCalendar extends AbstractCalendar
      *
      * @throws QUI\Calendar\Exception\NoPermissionException - Current user isn't allowed to view the calendar
      */
-    public function toICal()
+    public function toICal(): string
     {
         $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
 
@@ -176,7 +176,7 @@ class InternalCalendar extends AbstractCalendar
      *
      * @throws QUI\Calendar\Exception\NoPermissionException - Current user isn't allowed to view the calendar
      */
-    public function toJSON()
+    public function toJSON(): string
     {
         $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
 
@@ -191,8 +191,11 @@ class InternalCalendar extends AbstractCalendar
      *
      * @throws QUI\Calendar\Exception\NoPermissionException - Current user isn't allowed to view the calendar
      */
-    public function getEventsForDate(DateTime $Date, $ignoreTime, $limit = 1000): QUI\Calendar\Event\EventCollection
-    {
+    public function getEventsForDate(
+        DateTime $Date,
+        bool $ignoreTime,
+        int $limit = 1000
+    ): QUI\Calendar\Event\EventCollection {
         $StartDate = clone $Date;
         $EndDate   = clone $Date;
 
@@ -225,8 +228,8 @@ class InternalCalendar extends AbstractCalendar
     public function getEventsBetweenDates(
         DateTime $IntervalStart,
         DateTime $IntervalEnd = null,
-        $ignoreTime = true,
-        $limit = 1000,
+        bool $ignoreTime = true,
+        int $limit = 1000,
         bool $inflateRecurringEvents = true
     ): QUI\Calendar\Event\EventCollection {
         $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
@@ -341,7 +344,7 @@ class InternalCalendar extends AbstractCalendar
      *
      * @throws QUI\Calendar\Exception\NoPermissionException - Current user isn't allowed to view the calendar
      */
-    public function getUpcomingEvents($amount = 1000): QUI\Calendar\Event\EventCollection
+    public function getUpcomingEvents(int $amount = 1000): QUI\Calendar\Event\EventCollection
     {
         return $this->getEventsBetweenDates(new DateTime(), null, false, $amount);
     }
@@ -350,7 +353,7 @@ class InternalCalendar extends AbstractCalendar
     /**
      * @inheritdoc
      */
-    public function isInternal()
+    public function isInternal(): bool
     {
         return true;
     }
