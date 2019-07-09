@@ -162,4 +162,29 @@ class RecurringEvent extends Event
 
         return $result;
     }
+
+    /**
+     * @inheritDoc
+     *
+     * @return array
+     */
+    public function toSchedulerFormat(): array
+    {
+        // Get the parent's data
+        $data = parent::toSchedulerFormat();
+
+        // End of recurrence has to become the events end date
+        $data['end_date'] = EventUtils::datetimeToSchedulerFormat($this->getRecurrenceEnd());
+
+        // Format according to https://docs.dhtmlx.com/scheduler/recurring_events.html
+        $data['rec_type'] = $this->getRecurrenceInterval() . '_1___';
+
+        // Determines how long the event is to calculate the end of each event
+        $data['event_length'] = $this->getEndDate()->getTimestamp() - $this->getStartDate()->getTimestamp();
+
+        // Custom attribute to later determine that the event is recurring via JS
+        $data['recurring'] = true;
+
+        return $data;
+    }
 }
