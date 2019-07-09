@@ -174,15 +174,15 @@ class EventUtils
     }
 
     /**
-     * Converts a UNIX timestamp to the format for DHTMLX Scheduler
+     * Converts a given DateTime object to the format used by the DHTMLX Scheduler
      *
-     * @param $timestamp int - A unix timestamp
+     * @param \DateTime $DateTime
      *
-     * @return false|string  - The converted timestamp or false on error
+     * @return string  - The converted timestamp or false on error
      */
-    public static function timestampToSchedulerFormat($timestamp)
+    public static function datetimeToSchedulerFormat(\DateTime $DateTime): string
     {
-        return \date("Y-m-d H:i", $timestamp);
+        return $DateTime->format("Y-m-d H:i");
     }
 
 
