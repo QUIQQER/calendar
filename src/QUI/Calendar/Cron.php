@@ -22,6 +22,8 @@ class Cron
      *
      * @param array   $params
      * @param Manager $CronManager
+     *
+     * @throws QUI\Calendar\Exception\DatabaseException
      */
     public static function syncExternalCalendars($params, $CronManager)
     {
