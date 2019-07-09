@@ -22,4 +22,17 @@ class EventCollection extends Collection
     {
         \usort($this->children, [EventUtils::class, 'sortEventArrayByStartDateComparisonFunction']);
     }
+
+    /**
+     * Converts all events in the collection to DHTMLX scheduler format.
+     *
+     * @return array
+     */
+    public function toSchedulerFormat(): array
+    {
+        return $this->map(function ($Event) {
+            /** @var Event $Event */
+            return $Event->toSchedulerFormat();
+        });
+    }
 }
