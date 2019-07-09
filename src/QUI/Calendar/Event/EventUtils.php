@@ -213,4 +213,33 @@ class EventUtils
 
         return ($StartDateEventA < $StartDateEventB) ? -1 : 1;
     }
+
+
+    /**
+     * Creates a quiqqer/calendar event from a johngrogg/ics-parser event
+     *
+     * @param \ICal\Event $IcalEvent
+     *
+     * @return Event
+     * @throws \Exception ICal Event has invalid dates.
+     *
+     */
+    public static function createEventFromIcsParserEventData(\ICal\Event $IcalEvent): Event
+    {
+        $Event = new Event(
+            $IcalEvent->summary,
+            new \DateTime($IcalEvent->dtstart),
+            new \DateTime($IcalEvent->dtend)
+        );
+
+        if ($IcalEvent->uid) {
+            $Event->setId($IcalEvent->uid);
+        }
+
+        if ($IcalEvent->description) {
+            $Event->setDescription($IcalEvent->description);
+        }
+
+        return $Event;
+    }
 }
