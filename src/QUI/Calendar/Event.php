@@ -2,6 +2,8 @@
 
 namespace QUI\Calendar;
 
+use QUI\Calendar\Event\EventUtils;
+
 class Event
 {
     /**
@@ -214,5 +216,24 @@ class Event
         ];
 
         return $result;
+    }
+
+
+    /**
+     * Converts the event to a format that can be used with the DHTMLX scheduler
+     *
+     * @return array
+     */
+    public function toSchedulerFormat(): array
+    {
+        return [
+            'calID'       => $this->getCalendarId(),
+            'id'          => $this->getId(),
+            'text'        => $this->getTitle(),
+            'description' => $this->getDescription(),
+            'start_date'  => EventUtils::datetimeToSchedulerFormat($this->getStartDate()),
+            'end_date'    => EventUtils::datetimeToSchedulerFormat($this->getEndDate()),
+            'url'         => $this->getUrl(),
+        ];
     }
 }
