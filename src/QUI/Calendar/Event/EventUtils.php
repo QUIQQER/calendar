@@ -62,8 +62,8 @@ class EventUtils
 
             // Generate the events
             while (($CurrentEventDateStart < $UntilDate) && (count($inflatedEvents) <= $maxInflationPerEvent)) {
-                // For some odd reason we have to use 'clone' here
-                // Otherwise using modify above edits all Dates
+                // For some odd reason we have to use 'clone' here.
+                // Using modify on a Date-object at the end of this loop would edit all currently instantiated dates.
                 $CurrentEvent = new Event(
                     $Event->getTitle(),
                     clone $CurrentEventDateStart,
@@ -114,6 +114,7 @@ class EventUtils
      */
     public static function createEventFromDatabaseArray($data): Event
     {
+        // Column names in the database
         $requiredKeys = [
             'title',
             'desc',

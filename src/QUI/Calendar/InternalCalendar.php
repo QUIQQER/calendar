@@ -250,6 +250,14 @@ class InternalCalendar extends AbstractCalendar
         $tableEvents     = Handler::tableCalendarsEvents();
         $tableRecurrence = Handler::tableCalendarsEventsRecurrence();
 
+        // Get all normal (first condition) and recurring events (second condition).
+        // An event is normal if it has no recurrence_end (IS NULL)
+        // If it's normal is has to start before the end of the requested interval
+        //
+        // An event is recurring if it has a recurrence_end set
+        // Since we (currently) can not calculate how often an event recurs and if it recurs in our interval via SQL,
+        // we query all events, except the once with a recurrence_end before the start of the requested interval.
+        // The filtering happens later via PHP-logic ("EventUtils::inflateRecurringEvents()").
         $sql = "
             SELECT events.*, 
                    recurrence_end, 
@@ -268,7 +276,7 @@ class InternalCalendar extends AbstractCalendar
                 ))
             ORDER BY start ASC
         ";
-        // LIMIT happens by using "static::processEventDatabaseData()" below
+        // LIMIT happens by using "EventUtils::inflateRecurringEvents()" below
 
         $Statement = QUI::getDataBase()->getPDO()->prepare($sql);
         $Statement->execute(
@@ -293,6 +301,7 @@ class InternalCalendar extends AbstractCalendar
             $EventCollection->append($Event);
         }
 
+        // Create/"Inflate" all recurring events
         if ($inflateRecurringEvents) {
             try {
                 QUI\Calendar\Event\EventUtils::inflateRecurringEvents($EventCollection, $limit, $IntervalEnd);
@@ -303,7 +312,8 @@ class InternalCalendar extends AbstractCalendar
 
         $eventCounter = 0;
 
-        // Remove events that are out of range and reduce the event amount to the given limit
+        // Remove events that are out of range and reduce the event amount to the given limit.
+        // The events are already sorted properly by "inflateRecurringEvents()" above.
         $EventCollection = $EventCollection->filter(function ($Event) use (
             &$eventCounter,
             $limit,
