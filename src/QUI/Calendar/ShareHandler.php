@@ -34,7 +34,7 @@ class ShareHandler
      * @throws DatabaseException - Couldn't read/write from/to database
      * @throws ShareException - Couldn't generate a share-hash (missing entropy)
      */
-    public static function getShareUrlForCalendar(AbstractCalendar $Calendar, User $User = null)
+    public static function getShareUrlForCalendar(AbstractCalendar $Calendar, User $User = null): string
     {
         if (is_null($User)) {
             $User = QUI::getUserBySession();
@@ -46,12 +46,12 @@ class ShareHandler
         try {
             $shareData = QUI::getDataBase()->fetch(
                 [
-                'from'  => Handler::tableCalendarsShares(),
-                'where' => [
-                    'calendarid' => (int)$Calendar->getId(),
-                    'userid'     => $User->getId()
-                ],
-                'limit' => 1
+                    'from'  => Handler::tableCalendarsShares(),
+                    'where' => [
+                        'calendarid' => (int)$Calendar->getId(),
+                        'userid'     => $User->getId()
+                    ],
+                    'limit' => 1
                 ]
             );
         } catch (\QUI\Database\Exception $Exception) {
@@ -89,7 +89,7 @@ class ShareHandler
      *
      * @throws ShareException - Thrown when it's not possible to generate a share url (missing entropy)
      */
-    protected static function generateShareHash()
+    protected static function generateShareHash(): string
     {
         try {
             return bin2hex(random_bytes(16));
@@ -106,7 +106,7 @@ class ShareHandler
      *
      * @return string
      */
-    protected static function generateShareUrlForHash($hash)
+    protected static function generateShareUrlForHash(string $hash): string
     {
         $host  = QUI::conf('globals', 'host') . "/";
         $path  = "packages/quiqqer/calendar/bin/iCalExport.php";
@@ -126,17 +126,17 @@ class ShareHandler
      *
      * @throws DatabaseException - Couldn't fetch the calendar data from the database
      */
-    public static function getCalendarFromHash($hash)
+    public static function getCalendarFromHash(string $hash): AbstractCalendar
     {
         try {
             $calendarData = QUI::getDataBase()->fetch(
                 [
-                'select' => ['calendarid'],
-                'from'   => Handler::tableCalendarsShares(),
-                'where'  => [
-                    'hash' => $hash
-                ],
-                'limit'  => 1
+                    'select' => ['calendarid'],
+                    'from'   => Handler::tableCalendarsShares(),
+                    'where'  => [
+                        'hash' => $hash
+                    ],
+                    'limit'  => 1
                 ]
             );
         } catch (\QUI\Exception $Exception) {

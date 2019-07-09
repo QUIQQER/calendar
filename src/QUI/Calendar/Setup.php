@@ -20,7 +20,7 @@ class Setup
      *
      * @throws QUI\Calendar\Exception\DatabaseException - Couldn't delete calendar's without owner/userid from the database
      */
-    public static function run()
+    public static function run(): void
     {
         $DB     = QUI::getDataBase();
         $Tables = $DB->table();
