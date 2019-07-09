@@ -170,23 +170,6 @@ class InternalCalendar extends AbstractCalendar
 
 
     /**
-     * Converts the calendars events to JSON format
-     *
-     * @return string - The calendars events in JSON format
-     *
-     * @throws QUI\Calendar\Exception\NoPermissionException - Current user isn't allowed to view the calendar
-     */
-    public function toJSON(): string
-    {
-        $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
-
-        $events = $this->getEvents();
-
-        return json_encode($events);
-    }
-
-
-    /**
      * @inheritdoc
      *
      * @throws QUI\Calendar\Exception\NoPermissionException - Current user isn't allowed to view the calendar

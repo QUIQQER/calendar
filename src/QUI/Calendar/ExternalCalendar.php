@@ -99,20 +99,6 @@ class ExternalCalendar extends AbstractCalendar
 
 
     /**
-     * @inheritdoc
-     *
-     * @throws QUI\Calendar\Exception\NoPermissionException - Current user isn't allowed to view the calendar
-     * @throws QUI\Exception - Calendar's iCal could not be loaded (URL is not reachable or content invalid)
-     */
-    public function toJSON(): string
-    {
-        $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
-
-        return json_encode($this->getEvents());
-    }
-
-
-    /**
      * Sets the URL to an iCal file that the calendar should use
      *
      * @param string $externalUrl - URL to an iCal file

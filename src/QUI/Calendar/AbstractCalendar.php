@@ -156,14 +156,6 @@ abstract class AbstractCalendar
 
 
     /**
-     * Converts the calendars events to JSON format
-     *
-     * @return string - The calendars events in JSON format
-     */
-    abstract public function toJSON(): string;
-
-
-    /**
      * Returns the calendars ID.
      *
      * @return int - the calendar ID
