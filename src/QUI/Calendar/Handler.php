@@ -8,6 +8,7 @@ namespace QUI\Calendar;
 
 use ICal\ICal;
 use QUI;
+use QUI\Calendar\Event\EventUtils;
 use QUI\Users\User;
 
 /**
@@ -30,8 +31,12 @@ class Handler
      * @throws Exception
      * @throws QUI\Calendar\Exception\DatabaseException - Could not insert calendar into the database
      */
-    public static function createCalendar($name, $User, $isPublic = false, $color = '#2F8FC6')
-    {
+    public static function createCalendar(
+        string $name,
+        User $User,
+        bool $isPublic = false,
+        string $color = '#2F8FC6'
+    ): InternalCalendar {
         try {
             QUI\Permissions\Permission::checkPermission(AbstractCalendar::PERMISSION_CREATE_CALENDAR);
         } catch (QUI\Permissions\Exception $Exception) {
@@ -71,8 +76,9 @@ class Handler
      * @return InternalCalendar - The created calendar object
      *
      * @throws Exception
+     * @throws \Exception - iCal has invalid date format
      */
-    public static function createCalendarFromIcal($icalUrl, $User)
+    public static function createCalendarFromIcal(string $icalUrl, User $User): InternalCalendar
     {
         try {
             QUI\Permissions\Permission::checkPermission(AbstractCalendar::PERMISSION_CREATE_CALENDAR);
@@ -88,16 +94,13 @@ class Handler
 
         $eventsFromIcal = $IcalCalendar->events();
 
-        $events = [];
         foreach ($eventsFromIcal as $IcalEvent) {
-            $events[] = new Event(
-                $IcalEvent->summary,
-                (int)$IcalCalendar->iCalDateToUnixTimestamp($IcalEvent->dtstart),
-                (int)$IcalCalendar->iCalDateToUnixTimestamp($IcalEvent->dtend)
-            );
-        }
+            /** @var \ICal\Event $IcalEvent */
+            $Event = EventUtils::createEventFromIcsParserEventData($IcalEvent);
+            $Event->setCalendarId($Calendar->getId());
 
-        $Calendar->addCalendarEvents($events);
+            $Calendar->addEvent($Event);
+        }
 
         return $Calendar;
     }
@@ -118,12 +121,12 @@ class Handler
      * @throws QUI\Calendar\Exception\DatabaseException - Couldn't insert calendar into the database
      */
     public static function addExternalCalendar(
-        $calendarName,
-        $icalUrl,
-        $User = null,
-        $isPublic = false,
-        $color = '#2F8FC6'
-    ) {
+        string $calendarName,
+        string $icalUrl,
+        User $User = null,
+        bool $isPublic = false,
+        string $color = '#2F8FC6'
+    ): ExternalCalendar {
         try {
             QUI\Permissions\Permission::checkPermission(AbstractCalendar::PERMISSION_CREATE_CALENDAR);
         } catch (QUI\Permissions\Exception $Exception) {
@@ -180,7 +183,7 @@ class Handler
      *
      * @throws Exception
      */
-    public static function isExternalCalendar($calendarID)
+    public static function isExternalCalendar(int $calendarID): bool
     {
         return !self::getCalendar($calendarID)->isInternal();
     }
@@ -191,7 +194,7 @@ class Handler
      *
      * @return string
      */
-    public static function tableCalendars()
+    public static function tableCalendars(): string
     {
         return QUI::getDBTableName('calendars');
     }
@@ -201,7 +204,7 @@ class Handler
      *
      * @return string
      */
-    public static function tableCalendarsEvents()
+    public static function tableCalendarsEvents(): string
     {
         return QUI::getDBTableName('calendars_events');
     }
@@ -211,7 +214,7 @@ class Handler
      *
      * @return string
      */
-    public static function tableCalendarsEventsRecurrence()
+    public static function tableCalendarsEventsRecurrence(): string
     {
         return QUI::getDBTableName('calendars_events_recurrence');
     }
@@ -221,7 +224,7 @@ class Handler
      *
      * @return string
      */
-    public static function tableCalendarsShares()
+    public static function tableCalendarsShares(): string
     {
         return QUI::getDBTableName('calendars_shares');
     }
@@ -235,7 +238,7 @@ class Handler
      * @throws Exception - One of the calendars could not be found
      * @throws QUI\Calendar\Exception\DatabaseException - Couldn't delete calendar from the database
      */
-    public static function deleteCalendars($ids)
+    public static function deleteCalendars(array $ids): void
     {
         $Database = QUI::getDataBase();
 
@@ -270,7 +273,7 @@ class Handler
      *
      * @throws QUI\Calendar\Exception\DatabaseException - Couldn't fetch calendars' data from the database
      */
-    public static function getCalendars()
+    public static function getCalendars(): array
     {
         try {
             $calendars = QUI::getDataBase()->fetch(
@@ -307,7 +310,7 @@ class Handler
      *
      * @throws QUI\Calendar\Exception\DatabaseException - Couldn't fetch external calendars' data from the database
      */
-    public static function getExternalCalendars()
+    public static function getExternalCalendars(): array
     {
         try {
             $calendarsRaw = QUI::getDataBase()->fetch(
@@ -351,7 +354,7 @@ class Handler
      * @throws Exception - If calendar not found
      * @throws QUI\Calendar\Exception\DatabaseException - Couldn't fetch calendar's data from the database
      */
-    public static function getCalendar($calendarID)
+    public static function getCalendar(int $calendarID): AbstractCalendar
     {
         try {
             $calendarRaw = QUI::getDataBase()->fetch(
