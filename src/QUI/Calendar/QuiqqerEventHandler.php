@@ -2,7 +2,7 @@
 
 namespace QUI\Calendar\Event;
 
-class EventHandler
+class QuiqqerEventHandler
 {
     public static function onAdminLoadFooter()
     {
