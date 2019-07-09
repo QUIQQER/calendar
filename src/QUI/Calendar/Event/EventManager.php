@@ -5,7 +5,6 @@ namespace QUI\Calendar\Event;
 use QUI;
 use QUI\Calendar\Exception\DatabaseException;
 use QUI\Calendar\Exception\NoPermissionException;
-use QUI\Permissions\Permission;
 use QUI\System\Log;
 
 class EventManager
@@ -15,16 +14,18 @@ class EventManager
      *
      * @param int $id - An event id
      *
-     * @return null|Event The event or null if event not found or no permission to view the events calendar
+     * @return null|QUI\Calendar\Event The event or null if event not found or no permission to view the events calendar
      *
      * @throws DatabaseException - Couldn't fetch event's data from the database
+     * @throws NoPermissionException - No permission to view the calendar's events
+     * @throws \Exception - Event couldn't be created from database data
      */
     public static function getEventById($id)
     {
         try {
             $data = QUI::getDataBase()->fetch(
                 [
-                    'from'  => EventHandler::tableCalendarsEvents(),
+                    'from'  => QUI\Calendar\Handler::tableCalendarsEvents(),
                     'where' => [
                         'eventid' => $id
                     ],
@@ -40,14 +41,10 @@ class EventManager
             return null;
         }
 
-        $Event = Event\Utils::createEventFromDatabaseArray($data[0]);
+        $Event = EventUtils::createEventFromDatabaseArray($data[0]);
 
-        try {
-            $Calendar = EventHandler::getCalendar($Event->calendar_id);
-            $Calendar->checkPermission($Calendar::PERMISSION_VIEW_CALENDAR);
-        } catch (Exception $ex) {
-            return null;
-        }
+        $Calendar = QUI\Calendar\Handler::getCalendar($Event->getCalendarId());
+        $Calendar->checkPermission($Calendar::PERMISSION_VIEW_CALENDAR);
 
         return $Event;
     }
@@ -56,56 +53,46 @@ class EventManager
     /**
      * Returns the specified amount of events for an array of calendar ids
      *
-     * @param int[]    $ids   - Array of calendar IDs of which upcoming events should be retrieved
-     * @param int|bool $limit - Maximum amount of events to get
+     * @param int[] $ids   - Array of calendar IDs of which upcoming events should be retrieved
+     * @param int   $limit - Maximum amount of events to get
      *
-     * @return Event[] - An array of upcoming events
+     * @return EventCollection - An array of upcoming events
      */
-    public static function getUpcomingEventsForCalendarIds(array $ids, $limit = false)
+    public static function getUpcomingEventsForCalendarIds(array $ids, int $limit = 1000)
     {
-        /**
-         * @var Event[] $events
-         */
-        $events = [];
+        $Events = new EventCollection();
         foreach ($ids as $calendarID) {
             try {
-                $calendarsEvents = EventHandler::getCalendar($calendarID)->getUpcomingEvents($limit)->toArray();
-                $events          = array_merge($events, $calendarsEvents);
+                $Events->merge(QUI\Calendar\Handler::getCalendar($calendarID)->getUpcomingEvents($limit));
             } catch (\QUI\Exception $exception) {
                 continue;
             }
         }
 
-        usort(
-            $events,
-            function ($EventA, $EventB) {
-                /**
-                 * @var Event $EventA
-                 */
-                /**
-                 * @var Event $EventB
-                 */
-                return strcmp($EventA->start_date, $EventB->start_date);
-            }
-        );
+        $Events->sortByStartDate();
 
-        if (is_int($limit) && $limit > 0) {
-            $events = array_slice($events, 0, $limit);
+        if ($limit > 0) {
+            $eventsCounter = 0;
+            $Events->filter(function ($Event) use ($eventsCounter, $limit) {
+                $limit++;
+
+                return $eventsCounter > $limit;
+            });
         }
 
-        return $events;
+        return $Events;
     }
 
 
     /**
      * Returns the specified amount of events for an array of calendar ids
      *
-     * @param AbstractCalendar[] $calendars - Array of calendars of which upcoming events should be retrieved
-     * @param int|bool           $limit     - Maximum amount of events to get
+     * @param QUI\Calendar\AbstractCalendar[] $calendars - Array of calendars of which upcoming events should be retrieved
+     * @param int                             $limit     - Maximum amount of events to get
      *
-     * @return Event[] - An array of upcoming events
+     * @return EventCollection - Upcoming events collection
      */
-    public static function getUpcomingEventsForCalendars(array $calendars, $limit = false)
+    public static function getUpcomingEventsForCalendars(array $calendars, int $limit = 1000)
     {
         $ids = [];
         foreach ($calendars as $Calendar) {
@@ -113,42 +100,5 @@ class EventManager
         }
 
         return self::getUpcomingEventsForCalendarIds($ids, $limit);
-    }
-
-
-    /**
-     * Returns all events from the database
-     *
-     * @return array
-     *
-     * @throws DatabaseException - Could not fetch event's data from the database
-     * @throws NoPermissionException
-     */
-    public static function getAllEvents()
-    {
-        try {
-            Permission::checkPermission(AbstractCalendar::PERMISSION_IS_ADMIN);
-        } catch (\QUI\Permissions\Exception $Exception) {
-            throw new NoPermissionException();
-        }
-
-        try {
-            $eventsDataRaw = QUI::getDataBase()->fetch(
-                [
-                    'from' => EventHandler::tableCalendarsEvents()
-                ]
-            );
-        } catch (\QUI\Database\Exception $Exception) {
-            Log::writeException($Exception);
-            throw new DatabaseException();
-        }
-
-        $events = [];
-        foreach ($eventsDataRaw as $key => $eventData) {
-            $events[] = Event\Utils::createEventFromDatabaseArray($eventData);
-        }
-
-        // Return array with new indexes starting at 0
-        return array_values($events);
     }
 }
