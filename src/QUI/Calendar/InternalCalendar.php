@@ -296,23 +296,24 @@ class InternalCalendar extends AbstractCalendar
             }
         }
 
-        $eventCounter = 0;
-
-        // Remove events that are out of range and reduce the event amount to the given limit.
-        // The events are already sorted properly by "inflateRecurringEvents()" above.
-        $EventCollection = $EventCollection->filter(function ($Event) use (
-            &$eventCounter,
-            $limit,
-            $IntervalEnd,
-            $IntervalStart
-        ) {
-            /** @var \QUI\Calendar\Event $Event */
-            return (
-                $Event->getStartDate() <= $IntervalEnd &&
-                $Event->getEndDate() >= $IntervalStart &&
-                ++$eventCounter <= $limit
-            );
-        });
+        if ($EventCollection->length() > $limit) {
+            $eventCounter = 0;
+            // Remove events that are out of range and reduce the event amount to the given limit.
+            // The events are already sorted properly by "inflateRecurringEvents()" above.
+            $EventCollection = $EventCollection->filter(function ($Event) use (
+                &$eventCounter,
+                $limit,
+                $IntervalEnd,
+                $IntervalStart
+            ) {
+                /** @var \QUI\Calendar\Event $Event */
+                return (
+                    $Event->getStartDate() <= $IntervalEnd &&
+                    $Event->getEndDate() >= $IntervalStart &&
+                    ++$eventCounter <= $limit
+                );
+            });
+        }
 
         return $EventCollection;
     }
