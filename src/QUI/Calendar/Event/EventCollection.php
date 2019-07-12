@@ -31,7 +31,7 @@ class EventCollection extends Collection
     public function toSchedulerFormat(): array
     {
         return $this->map(function ($Event) {
-            /** @var Event $Event */
+            /** @var Event|RecurringEvent $Event */
             return $Event->toSchedulerFormat();
         });
     }
