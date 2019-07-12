@@ -69,7 +69,7 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
             this.parent(options);
 
             if (!this.getAttribute('extensions')) {
-                this.setAttribute('extensions', ['agenda_view']);
+                this.setAttribute('extensions', ['agenda_view', 'recurring']);
             }
 
             this.setAttribute('canUserEditEvents', false);
@@ -210,12 +210,10 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
 
                         Calendars.getEventsAsJson(self.calID).then(function (events) {
                             // Set events colors
-                            events = JSON.parse(events);
                             events.forEach(function (event) {
                                 event.color = calendarColor;
                                 event.textColor = textColor;
                             });
-                            events = JSON.stringify(events);
 
                             self.parseEventsIntoScheduler(events).then(function () {
                                 self.schedulerReady = true;
