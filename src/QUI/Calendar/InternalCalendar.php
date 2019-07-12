@@ -335,6 +335,32 @@ class InternalCalendar extends AbstractCalendar
 
 
     /**
+     * @inheritDoc
+     *
+     * @return Event\EventCollection
+     *
+     * @throws QUI\Calendar\Exception\NoPermissionException
+     */
+    public function getAllEvents(): QUI\Calendar\Event\EventCollection
+    {
+        $StartDate = new \DateTime();
+        $EndDate   = clone $StartDate; // cloning appears to be faster than new
+
+        $StartDate->setTimestamp(0);
+        $EndDate->setTimestamp(PHP_INT_MAX);
+
+        // ignoreTime has to be false or we'll get an integer overflow
+        return $this->getEventsBetweenDates(
+            $StartDate,
+            $EndDate,
+            false,
+            PHP_INT_MAX,
+            false
+        );
+    }
+
+
+    /**
      * @inheritdoc
      */
     public function isInternal(): bool

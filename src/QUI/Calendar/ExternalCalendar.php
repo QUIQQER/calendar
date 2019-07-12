@@ -148,7 +148,7 @@ class ExternalCalendar extends AbstractCalendar
      * @throws QUI\Exception - Calendar's iCal could not be loaded (URL is not reachable or content invalid)
      * @throws \Exception - Event has invalid date format
      */
-    public function getEvents(): EventCollection
+    public function getAllEvents(): EventCollection
     {
         $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
 

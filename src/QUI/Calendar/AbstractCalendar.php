@@ -4,6 +4,7 @@ namespace QUI\Calendar;
 
 use DateTime;
 use QUI;
+use QUI\Calendar\Event\EventCollection;
 use QUI\Calendar\Exception\NoPermissionException;
 use QUI\Users\User;
 
@@ -194,6 +195,15 @@ abstract class AbstractCalendar
     {
         return $this->isPublic;
     }
+
+
+    /**
+     * Returns all events from the calendar.
+     * Recurring events are not (!) inflated.
+     *
+     * @return EventCollection
+     */
+    abstract public function getAllEvents(): EventCollection;
 
 
     /**
