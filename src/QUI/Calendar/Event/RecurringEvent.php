@@ -204,6 +204,8 @@ class RecurringEvent extends Event
         // Determines how long the event is to calculate the end of each event
         $data['event_length'] = $this->getEndDate()->getTimestamp() - $this->getStartDate()->getTimestamp();
 
+        $data['event_pid'] = 0;
+
         // Custom attribute to later determine that the event is recurring via JS
         $data['recurring'] = true;
 
