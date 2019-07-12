@@ -7,10 +7,12 @@ namespace QUI\Calendar;
 
 use DateTime;
 use DateTimeImmutable;
-use Eluceo\iCal\Component\Calendar;
-use Eluceo\iCal\Component\Event;
+use Eluceo\iCal\Component\Calendar as IcalCalendar;
+use Eluceo\iCal\Component\Event as IcalEvent;
+use Eluceo\iCal\Property\Event\RecurrenceRule;
 use PDO;
 use QUI;
+use QUI\Calendar\Event\RecurringEvent;
 
 /**
  * Class Calendar
@@ -135,37 +137,38 @@ class InternalCalendar extends AbstractCalendar
     {
         $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
 
-        $Calendar = new Calendar($this->getId());
-        $events   = $this->getEvents();
+        $IcalCalendar = new IcalCalendar($this->getId());
 
-        foreach ($events as $Event) {
-            try {
-                $start = new DateTime();
-                $start->setTimestamp(strtotime($Event->start_date));
+        $Events = $this->getAllEvents();
 
-                $end = new DateTime();
-                $end->setTimestamp(strtotime($Event->end_date));
-            } catch (\Exception $Exception) {
-                // This should never happen since DateTime is instantiated without parameters
-                // But just to be save, let's do this...
-                QUI\System\Log::writeException($Exception);
+        foreach ($Events as $Event) {
+            /** @var Event $Event */
 
-                return "";
+            $IcalEvent = new IcalEvent();
+
+            $IcalEvent->setDtStart($Event->getStartDate())
+                ->setDtEnd($Event->getEndDate())
+                ->setSummary($Event->getTitle())
+                ->setDescription($Event->getDescription())
+                ->setUrl($Event->getUrl())
+                ->setUniqueId($Event->getId());
+
+            if ($Event instanceof RecurringEvent) {
+                /** @var RecurringEvent $Event */
+
+                $RecurrenceRule = new RecurrenceRule();
+
+                $RecurrenceRule->setInterval(1)
+                    ->setFreq($Event->getRecurrenceIntervalInIcalFormat())
+                    ->setUntil($Event->getRecurrenceEnd());
+
+                $IcalEvent->addRecurrenceRule($RecurrenceRule);
             }
 
-            $CalendarEvent = new Event();
-
-            $CalendarEvent->setDtStart($start)
-                ->setDtEnd($end)
-                ->setSummary($Event->text)
-                ->setDescription($Event->description)
-                ->setUrl($Event->url)
-                ->setUniqueId($Event->id);
-
-            $Calendar->addComponent($CalendarEvent);
+            $IcalCalendar->addComponent($IcalEvent);
         }
 
-        return $Calendar->render();
+        return $IcalCalendar->render();
     }
 
 
