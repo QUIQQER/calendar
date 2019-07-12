@@ -10,8 +10,8 @@
 QUI::$Ajax->registerFunction(
     'package_quiqqer_calendar_ajax_getEventsAsJson',
     function ($calendarID) {
-        return \QUI\Calendar\Handler::getCalendar($calendarID)->toJSON();
+        return \QUI\Calendar\Handler::getCalendar($calendarID)->getAllEvents()->toSchedulerFormat();
     },
-    array('calendarID'),
+    ['calendarID'],
     false
 );
