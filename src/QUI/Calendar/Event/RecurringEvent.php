@@ -87,6 +87,28 @@ class RecurringEvent extends Event
         return $this->recurrenceInterval;
     }
 
+
+    /**
+     * Returns the recurrence interval in iCal specification.
+     *
+     * @return string
+     *
+     * @example  'year' becomes 'yearly'
+     *           'day' becomes 'daily'
+     */
+    public function getRecurrenceIntervalInIcalFormat(): string
+    {
+        $interval = $this->getRecurrenceInterval();
+
+        if ($interval === self::INTERVAL_DAY) {
+            $interval = 'daily';
+        } else {
+            $interval = $interval . 'ly';
+        }
+
+        return strtoupper($interval);
+    }
+
     /**
      * Set the recurrence interval.
      * Returns null if an invalid interval is passed.
