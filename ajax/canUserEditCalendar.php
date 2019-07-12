@@ -12,5 +12,5 @@ QUI::$Ajax->registerFunction(
 
         return $Calendar->hasPermission(\QUI\Calendar\AbstractCalendar::PERMISSION_EDIT_CALENDAR);
     },
-    array('calendarID')
+    ['calendarID']
 );

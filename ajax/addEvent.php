@@ -3,11 +3,11 @@
 /**
  * Add an event to a calendar
  *
- * @param int $calendarID - The calendar the event is in
- * @param String $title - The title of the event
- * @param String $desc - The description of the event
- * @param int $start - The start time of the event as UNIX timestamp
- * @param int $end - The end time of the event as UNIX timestamp
+ * @param int    $calendarID - The calendar the event is in
+ * @param String $title      - The title of the event
+ * @param String $desc       - The description of the event
+ * @param int    $start      - The start time of the event as UNIX timestamp
+ * @param int    $end        - The end time of the event as UNIX timestamp
  *
  * @return int $eventID   - The ID the event got assigned
  */
@@ -22,9 +22,25 @@ QUI::$Ajax->registerFunction(
 
         $Calendar->checkInternal();
 
-        $eventID = $Calendar->addEvent($title, $desc, $start, $end, $eventurl);
+        $StartDate = new \DateTime();
+        $EndDate   = clone $StartDate;
 
-        return (int)$eventID;
+        $StartDate->setTimestamp($start);
+        $EndDate->setTimestamp($end);
+
+        $Event = new \QUI\Calendar\Event(
+            $title,
+            $StartDate,
+            $EndDate
+        );
+
+        $Event->setDescription($desc)
+            ->setUrl($eventurl)
+            ->setCalendarId($calendarID);
+
+        $Calendar->addEvent($Event);
+
+        return (int)$Event->getId();
     },
-    array('calendarID', 'title', 'desc', 'start', 'end', 'eventurl')
+    ['calendarID', 'title', 'desc', 'start', 'end', 'eventurl']
 );

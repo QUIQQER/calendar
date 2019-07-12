@@ -3,8 +3,8 @@
 /**
  * Creates a new calendar from an iCal URL
  *
- * @param String $name - The name of the calendar
- * @param int $userid - The ID of the owner.
+ * @param String $name   - The name of the calendar
+ * @param int    $userid - The ID of the owner.
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_calendar_ajax_createCalendarFromIcal',
@@ -23,5 +23,5 @@ QUI::$Ajax->registerFunction(
             )
         );
     },
-    array('icalUrl', 'userid')
+    ['icalUrl', 'userid']
 );

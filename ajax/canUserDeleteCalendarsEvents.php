@@ -12,5 +12,5 @@ QUI::$Ajax->registerFunction(
 
         return $Calendar->hasPermission(\QUI\Calendar\AbstractCalendar::PERMISSION_REMOVE_EVENT);
     },
-    array('calendarID')
+    ['calendarID']
 );

@@ -8,12 +8,13 @@
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_calendar_ajax_removeEvent',
-    function ($calendarID, $eventID) {
-        $Calendar = \QUI\Calendar\Handler::getCalendar($calendarID);
+    function ($eventID) {
+        $Event = \QUI\Calendar\Event\EventManager::getEventById($eventID);
+
+        $Calendar = \QUI\Calendar\Handler::getCalendar($Event->getCalendarId());
         $Calendar->checkInternal();
-        
-        $Calendar->removeEvent($eventID);
+        $Calendar->removeEvent($Event);
     },
-    array('calendarID', 'eventID'),
+    ['eventID'],
     'quiqqer.calendar.event.delete'
 );
