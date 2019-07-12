@@ -155,7 +155,7 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
 
                             calendarData.textColor = textColor;
 
-                            Calendars.getEventsAsJson(calID).then(function (events) {
+                            Calendars.getEventsForScheduler(calID).then(function (events) {
                                 // Set events colors
                                 events.forEach(function (event) {
                                     event.color = calendarColor;

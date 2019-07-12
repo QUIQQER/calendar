@@ -186,11 +186,11 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
          *
          * @returns {Promise} - Resolves with the JSON string, rejects on error
          */
-        getEventsAsJson: function (calendarID)
+        getEventsForScheduler: function (calendarID)
         {
             return new Promise(function (resolve, reject)
             {
-                QUIAjax.get('package_quiqqer_calendar_ajax_getEventsAsJson', function (result)
+                QUIAjax.get('package_quiqqer_calendar_ajax_getEventsForScheduler', function (result)
                 {
                     resolve(result);
                 }, {
