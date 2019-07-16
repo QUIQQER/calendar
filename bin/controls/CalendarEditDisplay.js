@@ -47,6 +47,8 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
 
         Loader: null,
 
+        BeforeDragEventInCalendarEvent: null,
+
         BeforeChangeEventInCalendarEvent: null,
         ChangeEventInCalendarEvent      : null,
 
@@ -289,7 +291,26 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
         attachEvents: function () {
             var self = this;
 
-            this.BeforeChangeEventInCalendarEvent = this.Scheduler.attachEvent('onBeforeEventChanged', function () {
+
+            this.BeforeDragEventInCalendarEvent = this.Scheduler.attachEvent('onBeforeDrag', function (eventId) {
+                if (!eventId) {
+                    return true;
+                }
+
+                var Event = self.Scheduler.getEvent(eventId);
+
+                if (Event && Event.event_pid && Event.event_pid !== 0) {
+                    QUI.getMessageHandler().then(function (MH) {
+                        MH.addAttention(QUILocale.get(lg, 'exception.calendar.event.drag'));
+                    });
+                    return false;
+                }
+
+                return true;
+            });
+
+
+            this.BeforeChangeEventInCalendarEvent = this.Scheduler.attachEvent('onBeforeEventChanged', function (SchedulerEvent) {
                 if (self.getAttribute('canUserEditEvents')) {
                     return true;
                 }
@@ -371,6 +392,8 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
 
         detachEvents: function () {
             if (this.schedulerReady) {
+                this.Scheduler.detachEvent(this.BeforeDragEventInCalendarEvent);
+
                 this.Scheduler.detachEvent(this.AddEventToCalendarEvent);
 
                 this.Scheduler.detachEvent(this.BeforeChangeEventInCalendarEvent);

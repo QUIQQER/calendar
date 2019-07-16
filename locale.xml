@@ -197,6 +197,11 @@
             <en><![CDATA[An error occurred in the database.]]></en>
         </locale>
 
+        <locale name="exception.calendar.event.drag">
+            <de><![CDATA[Wiederkehrende Ereignisse müssen über den Event-Bearbeiten-Dialog verändert werden.]]></de>
+            <en><![CDATA[Recurring events must be modified via the event's edit-dialog.]]></en>
+        </locale>
+
         <!-- Tour -->
         <!-- Tours -->
         <locale name="tour.general.title">
