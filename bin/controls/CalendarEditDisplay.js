@@ -17,6 +17,7 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
     'qui/QUI',
     'qui/controls/Control',
     'package/quiqqer/calendar/bin/Calendars',
+    'package/quiqqer/calendar/bin/AddEventWindow',
     'package/quiqqer/calendar/bin/classes/ColorHelper',
     'package/quiqqer/calendar-controls/bin/Scheduler',
     'qui/controls/loader/Loader',
@@ -26,7 +27,7 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
     'package/bin/mustache/mustache',
     'text!package/quiqqer/calendar/bin/controls/CalendarDisplay.html'
 
-], function (QUI, QUIControl, Calendars, ColorHelper, Scheduler, QUILoader, QUILocale, Mustache, displayTemplate) {
+], function (QUI, QUIControl, Calendars, AddEventWindowControl, ColorHelper, Scheduler, QUILoader, QUILocale, Mustache, displayTemplate) {
     "use strict";
 
     var lg = 'quiqqer/calendar';
@@ -172,25 +173,23 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
                     // Always use UTC since we store unix timestamps (UTC)
                     self.Scheduler.config.server_utc = true;
 
-                    // Event description
-                    self.Scheduler.config.lightbox.sections = [
-                        {
-                            name  : QUILocale.get(lg, 'calendar.window.addevent.event.title'),
-                            height: 30,
-                            map_to: "text",
-                            type  : "textarea",
-                            focus : true
-                        },
-                        {name: "description", height: 200, map_to: "description", type: "textarea"},
-                        {
-                            name  : QUILocale.get(lg, 'calendar.window.addevent.event.url'),
-                            height: 50,
-                            map_to: "url",
-                            type  : "textarea"
-                        },
-                        {name: "recurring", height: 115, type: "recurring", map_to: "rec_type", button: "recurring"},
-                        {name: "time", height: 72, type: "time", map_to: "auto"}
-                    ];
+                    self.Scheduler.showLightbox = function (eventId) {
+                        var Event = self.Scheduler.getEvent(eventId);
+
+                        if (Event.event_pid) {
+                            Event = self.Scheduler.getEvent(Event.event_pid);
+                        }
+
+                        var AddEventWindow = new AddEventWindowControl({event: Event});
+
+                        AddEventWindow.addEvent('onSubmit', function () {
+                            Event = AddEventWindow.getEventForSchedulerFromValues();
+                            self.Scheduler.updateEvent(Event.id);
+                            AddEventWindow.close();
+                        });
+
+                        AddEventWindow.open();
+                    };
 
                     // Remove all events from calendar (if another scheduler was opened previously)
                     self.Scheduler.clearAll();

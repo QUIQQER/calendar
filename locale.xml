@@ -372,6 +372,44 @@
             <en><![CDATA[End]]></en>
         </locale>
 
+        <locale name="calendar.window.addevent.recurrence.interval.label">
+            <de><![CDATA[Wiederholen]]></de>
+            <en><![CDATA[Repeat]]></en>
+        </locale>
+        <locale name="calendar.window.addevent.recurrence.interval.none">
+            <de><![CDATA[Nicht wiederholen]]></de>
+            <en><![CDATA[No repetition]]></en>
+        </locale>
+        <locale name="calendar.window.addevent.recurrence.interval.year">
+            <de><![CDATA[Jährlich]]></de>
+            <en><![CDATA[Yearly]]></en>
+        </locale>
+        <locale name="calendar.window.addevent.recurrence.interval.month">
+            <de><![CDATA[Monatlich]]></de>
+            <en><![CDATA[Monthly]]></en>
+        </locale>
+        <locale name="calendar.window.addevent.recurrence.interval.week">
+            <de><![CDATA[Wöchentlich]]></de>
+            <en><![CDATA[Weekly]]></en>
+        </locale>
+        <locale name="calendar.window.addevent.recurrence.interval.day">
+            <de><![CDATA[Täglich]]></de>
+            <en><![CDATA[Daily]]></en>
+        </locale>
+        <locale name="calendar.window.addevent.recurrence.interval.hour">
+            <de><![CDATA[Stündlich]]></de>
+            <en><![CDATA[Hourly]]></en>
+        </locale>
+
+        <locale name="calendar.window.addevent.recurrence.end.label">
+            <de><![CDATA[Bis zum]]></de>
+            <en><![CDATA[Until]]></en>
+        </locale>
+        <locale name="calendar.window.addevent.recurrence.end.none">
+            <de><![CDATA[Kein Ende]]></de>
+            <en><![CDATA[No End]]></en>
+        </locale>
+
         <locale name="calendar.window.addevent.event.calendarID">
             <de><![CDATA[Kalender ID]]></de>
             <en><![CDATA[Calendar ID]]></en>
