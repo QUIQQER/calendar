@@ -1,6 +1,6 @@
 <?php
 
-namespace QUI\Calendar\Event;
+namespace QUI\Calendar;
 
 class QuiqqerEventHandler
 {
