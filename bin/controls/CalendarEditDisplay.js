@@ -187,6 +187,16 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
                         AddEventWindow.addEvent('onSubmit', function () {
                             Event = AddEventWindow.getEventForSchedulerFromValues();
                             self.Scheduler.updateEvent(Event.id);
+
+                            Calendars.editEvent(
+                                Event.id,
+                                Event.text,
+                                Event.description,
+                                Event.start_date.getTime() / 1000,
+                                Event.end_date.getTime() / 1000,
+                                Event.url
+                            );
+
                             AddEventWindow.close();
                         });
 
@@ -326,15 +336,7 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
 
             // Run when an event is edited in the scheduler
             this.ChangeEventInCalendarEvent = this.Scheduler.attachEvent('onEventChanged', function (id, ev) {
-                Calendars.editEvent(
-                    self.calID,
-                    ev.id,
-                    ev.text,
-                    ev.description,
-                    ev.start_date.getTime() / 1000,
-                    ev.end_date.getTime() / 1000,
-                    ev.url
-                );
+                Calendars.editEvent(ev.id, ev.text, ev.description, ev.start_date.getTime() / 1000, ev.end_date.getTime() / 1000, ev.url);
             });
 
             // Run when an event is added to the scheduler

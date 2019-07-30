@@ -24,15 +24,19 @@ class EventManager
     {
         $tableEvents         = QUI\Calendar\Handler::tableCalendarsEvents();
         $tableRecurrenceData = QUI\Calendar\Handler::tableCalendarsEventsRecurrence();
-        try {
-            $data = QUI::getDataBase()->fetchSQL("
-                SELECT *
+
+        // The long SELECT is required, since the duplicate column name 'eventid' in the two table causes null values, if no recurrence data is available
+        $query = " 
+                SELECT events.`eventid`, `title`, `desc`, `start`, `end`, `calendarid`, `url`, `recurrence_interval`, `recurrence_end`
                 FROM `{$tableEvents}` AS events
                     LEFT OUTER JOIN `{$tableRecurrenceData}` AS recurrence_data
-                        ON events.`eventid` = recurrence_data.eventid
+                        ON events.`eventid` = recurrence_data.`eventid`
                 WHERE events.`eventid` = {$id}
                 LIMIT 1;
-            ");
+         ";
+
+        try {
+            $data = QUI::getDataBase()->fetchSQL($query);
         } catch (\QUI\Database\Exception $Exception) {
             Log::writeException($Exception);
             throw new DatabaseException();

@@ -204,7 +204,6 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
         /**
          * Edits an events values
          *
-         * @param {int} cID       - ID of the calendar where the event is in
          * @param {int} eID       - ID of the event
          * @param {String} eTitle - The new event title
          * @param {String} eDesc  - The new event description
@@ -214,14 +213,13 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
          *
          * @returns {Promise} - Resolves when event was edited, rejects on error
          */
-        editEvent: function (cID, eID, eTitle, eDesc, eStart, eEnd, eUrl)
+        editEvent: function (eID, eTitle, eDesc, eStart, eEnd, eUrl)
         {
             return new Promise(function (resolve, reject)
             {
                 QUIAjax.post('package_quiqqer_calendar_ajax_editEvent', resolve,
                     {
                         'package'   : 'quiqqer/calendar',
-                        'calendarID': cID,
                         'eventID'   : eID,
                         'title'     : eTitle,
                         'desc'      : eDesc,
