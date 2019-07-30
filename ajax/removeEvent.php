@@ -11,6 +11,10 @@ QUI::$Ajax->registerFunction(
     function ($eventID) {
         $Event = \QUI\Calendar\Event\EventManager::getEventById($eventID);
 
+        if (!$Event) {
+            return;
+        }
+
         $Calendar = \QUI\Calendar\Handler::getCalendar($Event->getCalendarId());
         $Calendar->checkInternal();
         $Calendar->removeEvent($Event);

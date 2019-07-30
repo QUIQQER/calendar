@@ -339,6 +339,12 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
 
             // Run when an event is added to the scheduler
             this.AddEventToCalendarEvent = this.Scheduler.attachEvent('onEventAdded', function (id, ev) {
+                // The event was added, by deleting a event from a recurring-event-series
+                // See: http://disq.us/p/10qarki
+                if (ev.event_pid) {
+                    return;
+                }
+
                 Calendars.addEvent(
                     self.calID,
                     ev.text,
