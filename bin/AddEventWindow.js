@@ -67,10 +67,15 @@ define('package/quiqqer/calendar/bin/AddEventWindow', [
             var EventHelper = new EventHelperClass();
 
             var Event            = this.getAttribute('event'),
-                isEventRecurring = Event && Event.recurring;
+                isEventRecurring = Event && Event.recurring,
+                endValue         = '';
 
-            // DHTLMX scheduler stores recurring events' end dates different in the Event-object
-            var EventEndDate = EventHelper.getSchedulerEventEndDate(Event);
+            if (Event) {
+                // DHTLMX scheduler stores recurring events' end dates different in the Event-object
+                var EndDate = EventHelper.getSchedulerEventEndDate(Event);
+
+                endValue = EventHelper.convertDateToSchedulerFormat(EndDate);
+            }
 
             this.getContent().set({
                 html: Mustache.render(template, {
@@ -93,7 +98,7 @@ define('package/quiqqer/calendar/bin/AddEventWindow', [
                     },
                     end       : {
                         label: QUILocale.get(lg, 'calendar.window.addevent.event.end'),
-                        value: Event ? EventHelper.convertDateToSchedulerFormat(EventEndDate) : ''
+                        value: endValue
                     },
                     recurrence: {
                         interval: {
