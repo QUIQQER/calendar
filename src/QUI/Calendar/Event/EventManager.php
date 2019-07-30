@@ -22,16 +22,17 @@ class EventManager
      */
     public static function getEventById($id)
     {
+        $tableEvents         = QUI\Calendar\Handler::tableCalendarsEvents();
+        $tableRecurrenceData = QUI\Calendar\Handler::tableCalendarsEventsRecurrence();
         try {
-            $data = QUI::getDataBase()->fetch(
-                [
-                    'from'  => QUI\Calendar\Handler::tableCalendarsEvents(),
-                    'where' => [
-                        'eventid' => $id
-                    ],
-                    'limit' => 1
-                ]
-            );
+            $data = QUI::getDataBase()->fetchSQL("
+                SELECT *
+                FROM `{$tableEvents}` AS events
+                    LEFT OUTER JOIN `{$tableRecurrenceData}` AS recurrence_data
+                        ON events.`eventid` = recurrence_data.eventid
+                WHERE events.`eventid` = {$id}
+                LIMIT 1;
+            ");
         } catch (\QUI\Database\Exception $Exception) {
             Log::writeException($Exception);
             throw new DatabaseException();
