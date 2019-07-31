@@ -19,6 +19,7 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
     'package/quiqqer/calendar/bin/Calendars',
     'package/quiqqer/calendar/bin/AddEventWindow',
     'package/quiqqer/calendar/bin/classes/ColorHelper',
+    'package/quiqqer/calendar/bin/classes/EventHelper',
     'package/quiqqer/calendar-controls/bin/Scheduler',
     'qui/controls/loader/Loader',
 
@@ -27,10 +28,11 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
     'package/bin/mustache/mustache',
     'text!package/quiqqer/calendar/bin/controls/CalendarDisplay.html'
 
-], function (QUI, QUIControl, Calendars, AddEventWindowControl, ColorHelper, Scheduler, QUILoader, QUILocale, Mustache, displayTemplate) {
+], function (QUI, QUIControl, Calendars, AddEventWindowControl, ColorHelper, EventHelperClass, Scheduler, QUILoader, QUILocale, Mustache, displayTemplate) {
     "use strict";
 
-    var lg = 'quiqqer/calendar';
+    var lg          = 'quiqqer/calendar',
+        EventHelper = new EventHelperClass();
 
     return new Class({
 
@@ -356,13 +358,32 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
                     return;
                 }
 
+                var recurrenceInterval = null,
+                    recurrenceEnd      = null;
+
+                if (ev.recurring) {
+                    recurrenceInterval = EventHelper.convertRecurrencePatternToInterval(ev.rec_pattern);
+
+                    recurrenceEnd = ev.end_date.getTime() / 1000;
+
+                    // Dirty-way to check if the event's recurrence has no end; Scheduler uses year 9999 for that
+                    // See: http://disq.us/p/1jtwydk
+                    if (ev.end_date.getFullYear() === 9999) {
+                        recurrenceEnd = null;
+                    }
+                }
+
+                var EndDate = EventHelper.getSchedulerEventEndDate(ev);
+
                 Calendars.addEvent(
                     self.calID,
                     ev.text,
                     ev.description,
                     ev.start_date.getTime() / 1000,
-                    ev.end_date.getTime() / 1000,
-                    ev.url
+                    EndDate.getTime() / 1000,
+                    ev.url,
+                    recurrenceInterval,
+                    recurrenceEnd
                 ).then(function (result) {
                     if (result == null) {
                         return;

@@ -219,29 +219,33 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
         /**
          * Adds an event to a calendar
          *
-         * @param {int} cID      - The calendar ID to add the event to
-         * @param {String} title - The event title
-         * @param {String} desc  - The event description
-         * @param {int} start    - The event start as UNIX timestamp
-         * @param {int} end      - The event end as UNIX timestamp
-         * @param {String} url   - Link to further information about the event
+         * @param {int}     cID                 - The calendar ID to add the event to
+         * @param {String}  title               - The event title
+         * @param {String}  desc                - The event description
+         * @param {int}     start               - The event start as UNIX timestamp
+         * @param {int}     end                 - The event end as UNIX timestamp
+         * @param {String}  url                 - Link to further information about the event
+         * @param {String}  recurrenceInterval  - The interval of recurrence. Null, if event shouldn't be recurring.
+         * @param {int}     recurrenceEnd       - Unix timestamp when the recurrence ends. Null, if event isn't recurring or the recurrence has no end
          *
          * @returns {Promise} - Resolves with the assigned event id, rejects on error
          */
-        addEvent: function (cID, title, desc, start, end, url) {
+        addEvent: function (cID, title, desc, start, end, url, recurrenceInterval, recurrenceEnd) {
             return new Promise(function (resolve, reject) {
                 QUIAjax.post('package_quiqqer_calendar_ajax_addEvent', function (result) {
                         resolve(result);
                     },
                     {
-                        'package'   : 'quiqqer/calendar',
-                        'calendarID': cID,
-                        'title'     : title,
-                        'desc'      : desc,
-                        'start'     : start,
-                        'end'       : end,
-                        'eventurl'  : url,
-                        onError     : reject
+                        package           : 'quiqqer/calendar',
+                        calendarID        : cID,
+                        title             : title,
+                        desc              : desc,
+                        start             : start,
+                        end               : end,
+                        eventurl          : url,
+                        recurrenceInterval: recurrenceInterval,
+                        recurrenceEnd     : recurrenceEnd,
+                        onError           : reject
                     });
             });
         },
