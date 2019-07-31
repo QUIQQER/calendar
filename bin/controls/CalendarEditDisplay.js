@@ -182,6 +182,12 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
                             Event = self.Scheduler.getEvent(Event.event_pid);
                         }
 
+                        // Dirty-way to check if the event's recurrence has no end; Scheduler uses year 9999 for that
+                        // See: http://disq.us/p/1jtwydk
+                        if (Event.recurring && Event.end_date && Event.end_date.getFullYear() === 9999) {
+                            Event.end_date = null;
+                        }
+
                         var AddEventWindow = new AddEventWindowControl({event: Event});
 
                         AddEventWindow.addEvent('onSubmit', function () {

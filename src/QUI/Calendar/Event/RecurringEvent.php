@@ -196,7 +196,16 @@ class RecurringEvent extends Event
         $data = parent::toSchedulerFormat();
 
         // End of recurrence has to become the events end date
-        $data['end_date'] = EventUtils::datetimeToSchedulerFormat($this->getRecurrenceEnd());
+        $recurrenceEnd = $this->getRecurrenceEnd();
+
+        if ($recurrenceEnd) {
+            $recurrenceEnd = EventUtils::datetimeToSchedulerFormat($recurrenceEnd);
+        } else {
+            // No end date (value ist set according to http://disq.us/p/1jtwydk)
+            $recurrenceEnd = '9999-01-01 00:00:00';
+        }
+
+        $data['end_date'] = $recurrenceEnd;
 
         // Format according to https://docs.dhtmlx.com/scheduler/recurring_events.html
         $data['rec_type'] = $this->getRecurrenceInterval() . '_1___';

@@ -112,7 +112,7 @@ define('package/quiqqer/calendar/bin/AddEventWindow', [
                         },
                         end     : {
                             // Scheduler uses end_date to refer to the recurrence end
-                            value: isEventRecurring ? EventHelper.convertDateToSchedulerFormat(Event.end_date) : '',
+                            value: isEventRecurring && Event.end_date ? EventHelper.convertDateToSchedulerFormat(Event.end_date) : '',
                             label: QUILocale.get(lg, 'calendar.window.addevent.recurrence.end.label'),
                             none : QUILocale.get(lg, 'calendar.window.addevent.recurrence.end.none')
                         }
@@ -280,6 +280,8 @@ define('package/quiqqer/calendar/bin/AddEventWindow', [
                 var RecurrenceEnd = Content.getElement('[name=event-recurrence-end]').value;
                 if (RecurrenceEnd) {
                     Event.end_date = new Date(RecurrenceEnd);
+                } else {
+                    Event.end_date = new Date('9999-01-01 00:00:00');
                 }
             }
 
