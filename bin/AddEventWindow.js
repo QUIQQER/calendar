@@ -197,6 +197,47 @@ define('package/quiqqer/calendar/bin/AddEventWindow', [
             DatePicker.picker.style['z-index'] = popUpZIndex + 1;
         },
 
+        getValues: function () {
+            var Content = this.getContent();
+
+            var values = {
+                text       : Content.getElement('[name=eventtitle]').value,
+                description: Content.getElement('[name=eventdesc]').value,
+                url        : Content.getElement('[name=eventurl]').value,
+                isWholeDay : this.WholeDaySwitch.getStatus(),
+                StartDate  : new Date(Content.getElement('[name=eventstart]').value),
+                EndDate    : new Date(Content.getElement('[name=eventend]').value)
+            };
+
+            if (values.isWholeDay) {
+                values.StartDate.setHours(0, 0, 0, 0);
+
+                values.EndDate.setHours(0, 0, 0, 0);
+                values.EndDate.setDate(values.StartDate.getDate() + 1);
+            }
+
+            // If recurrence interval, set it to the result
+            var recurrenceIntervalValue    = null,
+                recurrenceIntervalRawValue = Content.getElement('[name=event-recurrence-interval]').value;
+
+            if (recurrenceIntervalRawValue && recurrenceIntervalRawValue != 'none') {
+                recurrenceIntervalValue = recurrenceIntervalRawValue;
+            }
+
+            values.recurrenceInterval = recurrenceIntervalValue;
+
+            // If recurrence end, create Date-object from the value and set it to the result
+            var RecurrenceEndValue    = null,
+                recurrenceEndRawValue = Content.getElement('[name=event-recurrence-end]').value;
+
+            if (recurrenceEndRawValue) {
+                RecurrenceEndValue = new Date(recurrenceEndRawValue);
+            }
+
+            values.RecurrenceEndDate = RecurrenceEndValue;
+
+            return values;
+        },
 
         getEventForSchedulerFromValues: function () {
             var Event = this.getAttribute('event') || {};
