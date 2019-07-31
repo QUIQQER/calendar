@@ -405,15 +405,18 @@ class InternalCalendar extends AbstractCalendar
 
             $Event->setId($PDO->lastInsertId('eventid'));
 
+            $tableRecurringEventData = Handler::tableCalendarsEventsRecurrence();
+
             // Recurring event?
             if ($Event instanceof QUI\Calendar\Event\RecurringEvent) {
-                $tableRecurringEventData = Handler::tableCalendarsEventsRecurrence();
-
                 QUI::getDataBase()->replace(
                     $tableRecurringEventData,
                     // Re-fetching the data here because the event's id is set now
                     $Event->toArrayForDatabase()[$tableRecurringEventData]
                 );
+            } else {
+                // The Event may have been a recurring event before, so we have to delete the data
+                QUI::getDataBase()->delete($tableRecurringEventData, ['eventid' => $Event->getId()]);
             }
         } catch (QUI\Database\Exception $Exception) {
             // Undo the previous queries
