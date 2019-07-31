@@ -14,8 +14,7 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
     'qui/classes/DOM',
     'Ajax'
 
-], function (QUI, QUIDOM, QUIAjax)
-{
+], function (QUI, QUIDOM, QUIAjax) {
     "use strict";
 
     var lg = 'quiqqer/calendar';
@@ -25,8 +24,7 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
         Extends: QUIDOM,
         Type   : 'package/quiqqer/calendar/bin/classes/Handler',
 
-        initialize: function ()
-        {
+        initialize: function () {
         },
 
         /**
@@ -39,11 +37,9 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
          *
          * @return {Promise} - Resolves when calendar was created, rejects on error
          */
-        addCalendar: function (userid, calendarName, isPublic, color)
-        {
+        addCalendar: function (userid, calendarName, isPublic, color) {
             var isPublicAsBool = isPublic == true ? 1 : 0;
-            return new Promise(function (resolve, reject)
-            {
+            return new Promise(function (resolve, reject) {
                 QUIAjax.post('package_quiqqer_calendar_ajax_createCalendar', resolve, {
                     'package' : 'quiqqer/calendar',
                     'userid'  : userid,
@@ -67,11 +63,9 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
          *
          * @return {*}
          */
-        addExternalCalendar: function (calendarName, icalUrl, userid, isPublic, color)
-        {
+        addExternalCalendar: function (calendarName, icalUrl, userid, isPublic, color) {
             var isPublicAsBool = isPublic == true ? 1 : 0;
-            return new Promise(function (resolve, reject)
-            {
+            return new Promise(function (resolve, reject) {
                 QUIAjax.post('package_quiqqer_calendar_ajax_addExternalCalendar', resolve, {
                     'package'     : 'quiqqer/calendar',
                     'icalUrl'     : icalUrl,
@@ -91,10 +85,8 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
          * @param {string} icalUrl - iCal data
          * @param {int} userid - The user to create the calendar for
          */
-        addCalendarFromIcalUrl: function (icalUrl, userid)
-        {
-            return new Promise(function (resolve, reject)
-            {
+        addCalendarFromIcalUrl: function (icalUrl, userid) {
+            return new Promise(function (resolve, reject) {
                 QUIAjax.post('package_quiqqer_calendar_ajax_createCalendarFromIcal', resolve, {
                     'package': 'quiqqer/calendar',
                     'icalUrl': icalUrl,
@@ -115,13 +107,11 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
          *
          * @return {Promise} - Resolves when calendar was created, rejects on error
          */
-        editCalendar: function (calendarID, calendarName, isPublic, color)
-        {
+        editCalendar: function (calendarID, calendarName, isPublic, color) {
             color = color || '#2F8FC6';
 
             var isPublicAsBool = isPublic == true ? 1 : 0;
-            return new Promise(function (resolve, reject)
-            {
+            return new Promise(function (resolve, reject) {
                 QUIAjax.post('package_quiqqer_calendar_ajax_editCalendar', resolve, {
                     'package'   : 'quiqqer/calendar',
                     'calendarID': calendarID,
@@ -142,10 +132,8 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
          *
          * @return {Promise} - Resolves when calendar was created, rejects on error
          */
-        setExternalUrl: function (calendarID, externalUrl)
-        {
-            return new Promise(function (resolve, reject)
-            {
+        setExternalUrl: function (calendarID, externalUrl) {
+            return new Promise(function (resolve, reject) {
                 QUIAjax.post('package_quiqqer_calendar_ajax_setExternalUrl', resolve, {
                     'package'    : 'quiqqer/calendar',
                     'calendarID' : calendarID,
@@ -163,12 +151,9 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
          *
          * @returns {Promise} - Resolves with the iCal string, rejects on error
          */
-        getCalendarAsIcal: function (calendarID)
-        {
-            return new Promise(function (resolve, reject)
-            {
-                QUIAjax.get('package_quiqqer_calendar_ajax_getCalendarAsIcal', function (result)
-                {
+        getCalendarAsIcal: function (calendarID) {
+            return new Promise(function (resolve, reject) {
+                QUIAjax.get('package_quiqqer_calendar_ajax_getCalendarAsIcal', function (result) {
                     resolve(result);
                 }, {
                     'package'   : 'quiqqer/calendar',
@@ -186,12 +171,9 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
          *
          * @returns {Promise} - Resolves with the JSON string, rejects on error
          */
-        getEventsForScheduler: function (calendarID)
-        {
-            return new Promise(function (resolve, reject)
-            {
-                QUIAjax.get('package_quiqqer_calendar_ajax_getEventsForScheduler', function (result)
-                {
+        getEventsForScheduler: function (calendarID) {
+            return new Promise(function (resolve, reject) {
+                QUIAjax.get('package_quiqqer_calendar_ajax_getEventsForScheduler', function (result) {
                     resolve(result);
                 }, {
                     'package'   : 'quiqqer/calendar',
@@ -210,23 +192,25 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
          * @param {int} eStart    - The new event start (unix timestamp)
          * @param {int} eEnd      - The new event end (unix timestamp)
          * @param {String} eUrl   - Link to further information about the event
+         * @param {String} rInterval - Optional: Recurrence interval for recurring events
+         * @param {int} rEnd - Optional: Recurrence end for recurring events
          *
          * @returns {Promise} - Resolves when event was edited, rejects on error
          */
-        editEvent: function (eID, eTitle, eDesc, eStart, eEnd, eUrl)
-        {
-            return new Promise(function (resolve, reject)
-            {
+        editEvent: function (eID, eTitle, eDesc, eStart, eEnd, eUrl, rInterval, rEnd) {
+            return new Promise(function (resolve, reject) {
                 QUIAjax.post('package_quiqqer_calendar_ajax_editEvent', resolve,
                     {
-                        'package'   : 'quiqqer/calendar',
-                        'eventID'   : eID,
-                        'title'     : eTitle,
-                        'desc'      : eDesc,
-                        'start'     : eStart,
-                        'end'       : eEnd,
-                        'eventurl'  : eUrl,
-                        onError     : reject
+                        package           : 'quiqqer/calendar',
+                        eventID           : eID,
+                        title             : eTitle,
+                        desc              : eDesc,
+                        start             : eStart,
+                        end               : eEnd,
+                        eventurl          : eUrl,
+                        recurrenceInterval: rInterval,
+                        recurrenceEnd     : rEnd,
+                        onError           : reject
                     });
             });
         },
@@ -244,12 +228,9 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
          *
          * @returns {Promise} - Resolves with the assigned event id, rejects on error
          */
-        addEvent: function (cID, title, desc, start, end, url)
-        {
-            return new Promise(function (resolve, reject)
-            {
-                QUIAjax.post('package_quiqqer_calendar_ajax_addEvent', function (result)
-                    {
+        addEvent: function (cID, title, desc, start, end, url) {
+            return new Promise(function (resolve, reject) {
+                QUIAjax.post('package_quiqqer_calendar_ajax_addEvent', function (result) {
                         resolve(result);
                     },
                     {
@@ -273,10 +254,8 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
          *
          * @returns {Promise} - Resolves when event was removed, rejects on error
          */
-        deleteEvent: function (cID, eID)
-        {
-            return new Promise(function (resolve, reject)
-            {
+        deleteEvent: function (cID, eID) {
+            return new Promise(function (resolve, reject) {
                 QUIAjax.post('package_quiqqer_calendar_ajax_removeEvent', resolve,
                     {
                         'package'   : 'quiqqer/calendar',
@@ -294,10 +273,8 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
          *
          * @return {Promise} - Resolves when calendars where deleted, rejects on error
          */
-        deleteCalendars: function (ids)
-        {
-            return new Promise(function (resolve, reject)
-            {
+        deleteCalendars: function (ids) {
+            return new Promise(function (resolve, reject) {
                 QUIAjax.post('package_quiqqer_calendar_ajax_delete', resolve, {
                     'package': 'quiqqer/calendar',
                     ids      : JSON.encode(ids),
@@ -311,12 +288,9 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
          *
          * @return {array}
          */
-        getAsArray: function ()
-        {
-            return new Promise(function (resolve, reject)
-            {
-                QUIAjax.get('package_quiqqer_calendar_ajax_getCalendars', function (result)
-                {
+        getAsArray: function () {
+            return new Promise(function (resolve, reject) {
+                QUIAjax.get('package_quiqqer_calendar_ajax_getCalendars', function (result) {
                     resolve(result);
                 }, {
                     'package': 'quiqqer/calendar',
@@ -332,12 +306,9 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
          * @param {int} calendarID
          * @return {Promise<T>}
          */
-        getCalendar: function (calendarID)
-        {
-            return new Promise(function (resolve, reject)
-            {
-                QUIAjax.get('package_quiqqer_calendar_ajax_getCalendar', function (result)
-                {
+        getCalendar: function (calendarID) {
+            return new Promise(function (resolve, reject) {
+                QUIAjax.get('package_quiqqer_calendar_ajax_getCalendar', function (result) {
                     resolve(result);
                 }, {
                     'package'   : 'quiqqer/calendar',
@@ -353,15 +324,13 @@ define('package/quiqqer/calendar/bin/classes/Handler', [
          *
          * @param calendar The calendar to open
          */
-        openCalendar: function (calendar)
-        {
+        openCalendar: function (calendar) {
             var self = this;
 
             require([
                 'package/quiqqer/calendar/bin/CalendarPanel',
                 'utils/Panels'
-            ], function (CalendarPanel, Utils)
-            {
+            ], function (CalendarPanel, Utils) {
                 var panels = QUI.Controls.getByType('package/quiqqer/calendar/bin/CalendarPanel');
                 if (panels[0] !== undefined) {
                     panels[0].destroy();

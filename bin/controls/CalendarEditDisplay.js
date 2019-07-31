@@ -188,13 +188,16 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
                             Event = AddEventWindow.getEventForSchedulerFromValues();
                             self.Scheduler.updateEvent(Event.id);
 
+                            var values = AddEventWindow.getValues();
                             Calendars.editEvent(
                                 Event.id,
-                                Event.text,
-                                Event.description,
-                                Event.start_date.getTime() / 1000,
-                                Event.end_date.getTime() / 1000,
-                                Event.url
+                                values.text,
+                                values.description,
+                                values.StartDate.getTime() / 1000,
+                                values.EndDate.getTime() / 1000,
+                                values.url,
+                                values.recurrenceInterval,
+                                values.RecurrenceEndDate ? values.RecurrenceEndDate.getTime() / 1000 : null
                             );
 
                             AddEventWindow.close();
