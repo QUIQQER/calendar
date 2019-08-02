@@ -188,7 +188,6 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
                             map_to: "url",
                             type  : "textarea"
                         },
-                        {name: "recurring", height: 115, type: "recurring", map_to: "rec_type", button: "recurring"},
                         {name: "time", height: 72, type: "time", map_to: "auto"}
                     ];
 

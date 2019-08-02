@@ -6,14 +6,17 @@
  * @param int $calendarID - The ID of the calendar where the event is in
  * @param int $eventID    - The ID of the event that should be removed
  */
+
+use QUI\Calendar\Handler;
+
 QUI::$Ajax->registerFunction(
     'package_quiqqer_calendar_ajax_removeEvent',
     function ($calendarID, $eventID) {
-        $Calendar = \QUI\Calendar\Handler::getCalendar($calendarID);
+        $Calendar = Handler::getCalendar($calendarID);
         $Calendar->checkInternal();
-        
+
         $Calendar->removeCalendarEvent($eventID);
     },
-    array('calendarID', 'eventID'),
-    'quiqqer.calendar.event.delete'
+    ['calendarID', 'eventID'],
+    'Permission::checkUser'
 );

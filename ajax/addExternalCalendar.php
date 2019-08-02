@@ -4,11 +4,15 @@
  * Creates a new calendar from an iCal URL
  *
  * @param string $calendarName - Name of the calendar
- * @param string $icalUrl - URL of the iCal (.ics) file
- * @param \QUI\Interfaces\Users\User $User - Owner of the calendar
- * @param bool $isPublic - Is the calendar private or public?
- * @param string $color - The calendars color in hex format (leading #)
+ * @param string $icalUrl      - URL of the iCal (.ics) file
+ * @param User   $User         - Owner of the calendar
+ * @param bool   $isPublic     - Is the calendar private or public?
+ * @param string $color        - The calendars color in hex format (leading #)
  */
+
+use QUI\Calendar\Handler;
+use QUI\Interfaces\Users\User;
+
 QUI::$Ajax->registerFunction(
     'package_quiqqer_calendar_ajax_addExternalCalendar',
     function ($calendarName, $icalUrl, $userid, $isPublic = false, $color = '#2F8FC6') {
@@ -18,7 +22,7 @@ QUI::$Ajax->registerFunction(
             return null;
         }
 
-        \QUI\Calendar\Handler::addExternalCalendar($calendarName, $icalUrl, $User, $isPublic, $color);
+        Handler::addExternalCalendar($calendarName, $icalUrl, $User, $isPublic, $color);
 
         QUI::getMessagesHandler()->addSuccess(
             QUI::getLocale()->get(
@@ -27,5 +31,6 @@ QUI::$Ajax->registerFunction(
             )
         );
     },
-    array('calendarName', 'icalUrl', 'userid', 'isPublic', 'color')
+    ['calendarName', 'icalUrl', 'userid', 'isPublic', 'color'],
+    'Permission::checkUser'
 );

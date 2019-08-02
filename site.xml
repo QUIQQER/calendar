@@ -80,6 +80,7 @@
 
             <attributes>
                 <attribute>calendar.settings.ids</attribute>
+                <attribute>calendar.settings.template</attribute>
             </attributes>
 
             <settings>
@@ -88,6 +89,53 @@
                         <title>
                             <locale group="quiqqer/calendar" var="calendar.settings.title"/>
                         </title>
+
+                        <select conf="calendar.settings.template">
+                            <text>
+                                <locale group="quiqqer/calendar" var="calendar.settings.template"/>
+                            </text>
+                            <option value="list">
+                                <locale group="quiqqer/calendar" var="calendar.settings.template.list"/>
+                            </option>
+                            <option value="timeline">
+                                <locale group="quiqqer/calendar" var="calendar.settings.template.timeline"/>
+                            </option>
+                        </select>
+
+                        <input conf="calendar.settings.ids"
+                               type="hidden"
+                               disabled="disabled"
+                               data-qui="package/quiqqer/calendar/bin/controls/Select"
+                               data-qui-options-is-edit-calendar="false"
+                               label="false">
+                            <description>
+                                <locale group="quiqqer/calendar" var="quiqqer.settings.calendar.ids"/>
+                            </description>
+                        </input>
+                    </settings>
+                </category>
+            </settings>
+        </type>
+
+        <type type="sitetypes/eventCalendar" icon="fa fa-calendar-check-o">
+            <locale group="quiqqer/calendar" var="admin.types.eventCalendar.title"/>
+
+            <desc>
+                <locale group="quiqqer/calendar" var="admin.types.eventCalendar.desc"/>
+            </desc>
+
+            <attributes>
+                <attribute>calendar.settings.ids</attribute>
+            </attributes>
+
+            <settings>
+                <category name="calendar-fullpage-settings">
+                    <settings>
+                        <title>
+                            <locale group="quiqqer/calendar" var="calendar.settings.title"/>
+                        </title>
+
+
 
                         <input conf="calendar.settings.ids"
                                type="hidden"

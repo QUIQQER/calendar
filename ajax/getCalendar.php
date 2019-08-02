@@ -7,10 +7,13 @@
  *
  * @return array
  */
+
+use QUI\Calendar\Handler;
+
 QUI::$Ajax->registerFunction(
     'package_quiqqer_calendar_ajax_getCalendar',
     function ($calendarID) {
-        return \QUI\Calendar\Handler::getCalendar($calendarID)->toArray();
+        return Handler::getCalendar($calendarID)->toArray();
     },
-    array('calendarID')
+    ['calendarID']
 );

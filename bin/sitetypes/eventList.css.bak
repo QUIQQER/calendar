@@ -1,0 +1,95 @@
+.quiqqer-eventList {
+    margin: 0 auto;
+    max-width: 800px;
+}
+
+.quiqqer-eventList-entry {
+    align-items: center;
+    display: flex;
+    margin: 1rem 0;
+}
+
+.quiqqer-eventList-entry-date {
+    align-items: center;
+    align-self: flex-start;
+    display: flex;
+    flex-grow: 0;
+    flex-shrink: 0;
+    justify-content: center;
+    margin-top: 1rem;
+    padding: 1rem;
+    text-align: center;
+    width: 100px;
+}
+
+.quiqqer-eventList-entry:hover .quiqqer-eventList-entry-data {
+    box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
+}
+
+.quiqqer-eventList-entry-date time {
+    opacity: 0.75;
+}
+
+.quiqqer-eventList-entry-date-day {
+    display: block;
+    font-size: 2rem;
+    line-height: 2rem;
+    opacity: inherit;
+}
+
+.quiqqer-eventList-entry-date-month {
+    display: block;
+    font-size: 1rem;
+    letter-spacing: 2px;
+}
+
+.quiqqer-eventList-entry-data {
+    border: 1px solid #ddd;
+    border-left: 5px solid #d7c3f0;
+    border-radius: 5px;
+    flex-grow: 1;
+    margin: 1rem 1rem;
+    padding: 0.5rem 1.5rem;
+}
+
+.quiqqer-eventList-entry-data header {
+    font-size: 1.5rem;
+    font-weight: normal;
+}
+
+.quiqqer-eventList-entry-data-desc {
+    margin: 6px 0;
+}
+
+.quiqqer-eventList-entry-data-footer {
+    margin-top: 1rem;
+    font-size: 0.75rem;
+}
+
+.quiqqer-eventList-entry-data-footer-label {
+    opacity: 0.80;
+}
+
+.quiqqer-eventList-entry-data-footer-calendar {
+    font-weight: normal;
+}
+
+/* inactive */
+.quiqqer-eventList-entry.status-past {
+    opacity: 0.5;
+}
+
+.quiqqer-eventList-entry.status-past .quiqqer-eventList-entry-data {
+    /*background: #fafafa;*/
+}
+
+/* now / today */
+.quiqqer-eventList-entry.status-now .quiqqer-eventList-entry-date time {
+    opacity: 1;
+    font-weight: normal;
+}
+
+.quiqqer-eventList-entry.status-now .quiqqer-eventList-entry-data {
+    /*background: #f7f3fd;*/
+    border-left-color: #9880b7;
+}
