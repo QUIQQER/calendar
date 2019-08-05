@@ -15,6 +15,7 @@ define('package/quiqqer/calendar/bin/AddEventWindow', [
 
     'qui/QUI',
     'qui/controls/windows/Confirm',
+    'qui/controls/buttons/Button',
 
     'package/quiqqer/calendar-controls/bin/Source/Picker',
     'package/quiqqer/calendar-controls/bin/Source/Picker.Attach',
@@ -30,7 +31,7 @@ define('package/quiqqer/calendar/bin/AddEventWindow', [
     'css!package/quiqqer/calendar/bin/AddEventWindow.css',
     'css!package/quiqqer/calendar-controls/bin/Source/datepicker.css'
 
-], function (QUI, QUIConfirm, Picker, PickerAttach, PickerDate, EventHelperClass, QUILocale, Mustache, template) {
+], function (QUI, QUIConfirm, QUIButton, Picker, PickerAttach, PickerDate, EventHelperClass, QUILocale, Mustache, template) {
     "use strict";
 
     var lg = 'quiqqer/calendar';
@@ -68,13 +69,42 @@ define('package/quiqqer/calendar/bin/AddEventWindow', [
 
             var Event            = this.getAttribute('event'),
                 isEventRecurring = Event && Event.recurring,
-                endValue         = '';
+                endValue         = '',
+                self             = this;
 
             if (Event) {
                 // DHTLMX scheduler stores recurring events' end dates different in the Event-object
                 var EndDate = EventHelper.getSchedulerEventEndDate(Event);
 
                 endValue = EventHelper.convertDateToSchedulerFormat(EndDate);
+
+                this.addButton(
+                    new QUIButton({
+                        name     : 'delete',
+                        text     : QUILocale.get('quiqqer/system', 'delete'),
+                        textimage: 'fa fa-trash',
+                        events   : {
+                            onClick: function () {
+                                new QUIConfirm({
+                                    icon       : 'fa fa-trash',
+                                    title      : QUILocale.get('quiqqer/system', 'delete'),
+                                    content    : '',
+                                    information: QUILocale.get(lg, 'calendar.window.addevent.delete.text'),
+                                    texticon   : '',
+                                    events     : {
+                                        onSubmit: function () {
+                                            self.deleteThisEventOnClose = true;
+                                            self.close();
+                                        }
+                                    }
+                                }).open();
+                            }
+                        }
+                    })
+                );
+
+                var DeleteButton = this.getButton('delete');
+                DeleteButton.inject(this.$Buttons, 'bottom');
             }
 
             this.getContent().set({
@@ -129,7 +159,6 @@ define('package/quiqqer/calendar/bin/AddEventWindow', [
                 RecurrenceEndInput      = this.getContent().getElementById('event-recurrence-end'),
                 RecurrenceEndRow        = this.getContent().getElementById('event-row-recurrence-end');
 
-            var self = this;
             require(['qui/controls/buttons/ButtonSwitch'], function (ButtonSwitch) {
                 self.WholeDaySwitch = new ButtonSwitch({
                     status: false,

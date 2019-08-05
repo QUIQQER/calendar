@@ -420,6 +420,10 @@
             <en><![CDATA[Calendar ID]]></en>
         </locale>
 
+        <locale name="calendar.window.addevent.delete.text">
+            <de><![CDATA[Soll das Event wirklich gelöscht werden?]]></de>
+            <en><![CDATA[Do you really want to delete this event?]]></en>
+        </locale>
 
         <!-- Add/Edit Calendar -->
         <locale name="calendar.window.add.calendar.title">

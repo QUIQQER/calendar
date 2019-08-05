@@ -211,6 +211,15 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
                             AddEventWindow.close();
                         });
 
+                        // Allow deleting events from the AddEvent-Popup
+                        AddEventWindow.addEvent('onCloseBegin', function () {
+                            if (!AddEventWindow.deleteThisEventOnClose) {
+                                return;
+                            }
+
+                            self.Scheduler.deleteEvent(AddEventWindow.getEventForSchedulerFromValues().id);
+                        });
+
                         AddEventWindow.open();
                     };
 
