@@ -1,0 +1,71 @@
+{if $Template->getAttribute('content-header')}
+<section class="content-header grid-100 mobile-grid-100">
+    <header>
+        <h1>{$Site->getAttribute('title')}</h1>
+    </header>
+
+    {if $Site->getAttribute('short')}
+    <div class="content-short">
+        {$Site->getAttribute('short')}
+    </div>
+    {/if}
+</section>
+{/if}
+
+{if $Template->getAttribute('content-body') && $Site->getAttribute('content')}
+<section class="content-body grid-100 mobile-grid-100">
+    {$Site->getAttribute('content')}
+</section>
+{/if}
+
+{assign var="date" value=""}
+{assign var="newDateEntry" value="0"}
+
+<section class="quiqqer-eventList">
+{foreach $events as $event}
+
+    {if $event->start_date|date_format:"d-m-Y" != $date|date_format:"d-m-Y"}
+        {assign var="date" value=$event->start_date}
+        {assign var="newDateEntry" value="1"}
+    {else}
+        {assign var="newDateEntry" value="0"}
+    {/if}
+
+    <div class="quiqqer-eventList-entry status-{$event->eventTimeStatus}">
+        {if $newDateEntry}
+        <div class="quiqqer-eventList-entry-date">
+            <time datetime="{$date|date_format:'c'}">
+                <span class="quiqqer-eventList-entry-date-day" title="{locale_date date=$date}">
+                    {$date|date_format:"d"}
+                </span>
+                <span class="quiqqer-eventList-entry-date-month">
+                    {$date|date_format:"M"}
+                </span>
+            </time>
+        </div>
+        {/if}
+
+        <div class="quiqqer-eventList-entry-data">
+            <div class="quiqqer-eventList-entry-data-wrapper">
+                <header title="{$event->text}">
+                    {$event->text}
+                </header>
+                <div class="quiqqer-eventList-entry-data-desc">
+                    {$event->description}
+                </div>
+                {if $event->calendar_id !== -1}
+                <div class="quiqqer-eventList-entry-data-footer">
+                    <span class="quiqqer-eventList-entry-data-footer-label">
+                        {locale group="quiqqer/calendar" var="quiqqer.frontend.calendar.label"}
+                    </span>
+                    <span class="quiqqer-eventList-entry-data-footer-calendar">
+                        {QUI\Calendar\Handler::getCalendar($event->calendar_id)->getName()}
+                    </span>
+                </div>
+                {/if}
+            </div>
+        </div>
+    </div>
+
+{/foreach}
+</section>

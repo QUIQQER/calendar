@@ -272,7 +272,7 @@
 
         <locale name="admin.types.calendarEdit.title">
             <de><![CDATA[Editierbarer Kalender]]></de>
-            <en><![CDATA[Editable Kalender]]></en>
+            <en><![CDATA[Editable calendar]]></en>
         </locale>
 
         <locale name="admin.types.eventList.title">
@@ -284,18 +284,40 @@
             <en><![CDATA[List of upcoming events.]]></en>
         </locale>
 
+        <locale name="admin.types.eventCalendar.title">
+            <de><![CDATA[Event-Kalender: Monatsansicht]]></de>
+            <en><![CDATA[Event Calendar: month view]]></en>
+        </locale>
+        <locale name="admin.types.eventCalendar.desc">
+            <de><![CDATA[Events werden in Monatsansicht dargestellt.]]></de>
+            <en><![CDATA[Events are displayed in month view.]]></en>
+        </locale>
+
         <locale name="calendar.settings.title">
             <de><![CDATA[Kalender Einstellungen]]></de>
-            <en><![CDATA[Kalender Einstellungen]]></en>
+            <en><![CDATA[Calendar settings]]></en>
         </locale>
         <locale name="quiqqer.settings.calendar.ids">
             <de><![CDATA[Wählen Sie die auf der Seite anzuzeigenden Kalender aus]]></de>
             <en><![CDATA[Select the calendars that should be shown on the page]]></en>
         </locale>
 
+        <locale name="calendar.settings.template">
+            <de><![CDATA[Vorlage]]></de>
+            <en><![CDATA[Template]]></en>
+        </locale>
+        <locale name="calendar.settings.template.list">
+            <de><![CDATA[Liste]]></de>
+            <en><![CDATA[List]]></en>
+        </locale>
+        <locale name="calendar.settings.template.timeline">
+            <de><![CDATA[Timeline]]></de>
+            <en><![CDATA[Timeline]]></en>
+        </locale>
+
         <locale name="calendarEdit.settings.title">
             <de><![CDATA[Kalender Einstellungen]]></de>
-            <en><![CDATA[Kalender Einstellungen]]></en>
+            <en><![CDATA[Calendar settings]]></en>
         </locale>
         <locale name="quiqqer.settings.calendarEdit.id">
             <de><![CDATA[Wählen Sie den auf der Seite anzuzeigenden Kalender aus]]></de>
