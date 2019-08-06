@@ -15,7 +15,7 @@ if (!\is_array($calendarIDs)) {
 
 foreach ($calendarIDs as $calendarID) {
     try {
-        $eventsCurrent = Handler::getCalendar($calendarID)->getEventsBetweenDates($startDate, $endDate, true, 1000);
+        $eventsCurrent = Handler::getCalendar($calendarID)->getEventsBetweenDates($startDate, $endDate, true, 100);
         $events        = \array_merge($events, $eventsCurrent->toArray());
     } catch (QUI\Exception $Exception) {
         QUI\System\Log::addDebug($Exception->getMessage());
@@ -23,7 +23,10 @@ foreach ($calendarIDs as $calendarID) {
 }
 
 \usort($events, function ($a, $b) {
-    return \strtotime($a->start_date) - \strtotime($b->start_date);
+    $startTime = $a->getStartDate();
+    $endTime   = $b->getStartDate();
+
+    return $startTime->format('U') - $endTime->format('U');
 });
 
 $counter          = 0;
@@ -31,7 +34,7 @@ $incrementCounter = true;
 $todayEvent       = false;
 
 foreach ($events as $event) {
-    $eventDate = new \DateTime($event->start_date);
+    $eventDate = $event->getStartDate();
 
     // bad code...
     if ($eventDate->format('Y-m-d') < $currDay->format('Y-m-d')) {
@@ -59,15 +62,18 @@ foreach ($events as $event) {
 if ($counter) {
     $EmptyEvent = new QUI\Calendar\Event(
         'Kein besonderer Tag heute',
-        'Heute gibt es nichts, was besonders ist.',
-        $currDay->format('Y-m-d'),
-        $currDay->format('Y-m-d')
+        $currDay,
+        $currDay
+    );
+
+    $EmptyEvent->setDescription(
+        'Heute gibt es nichts, was besonders ist.'
     );
 
     $EmptyEvent->eventTimeStatus = 'now';
     $toInsert                    = [$EmptyEvent];
 
-    array_splice($events, $counter, 0, $toInsert);
+    \array_splice($events, $counter, 0, $toInsert);
 }
 
 

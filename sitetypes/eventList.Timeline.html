@@ -18,14 +18,14 @@
 </section>
 {/if}
 
-{assign var="date" value=""}
+{assign var="date" value=date_create('1999-01-01 00:00:00')}
 {assign var="newDateEntry" value="0"}
 
 <section class="quiqqer-eventList">
 {foreach $events as $event}
 
-    {if $event->start_date|date_format:"d-m-Y" != $date|date_format:"d-m-Y"}
-        {assign var="date" value=$event->start_date}
+    {if $event->getStartDate()->format("d-m-Y") != $date->format("d-m-Y")}
+        {assign var="date" value=$event->getStartDate()}
         {assign var="newDateEntry" value="1"}
     {else}
         {assign var="newDateEntry" value="0"}
@@ -34,12 +34,13 @@
     <div class="quiqqer-eventList-entry status-{$event->eventTimeStatus}">
         {if $newDateEntry}
         <div class="quiqqer-eventList-entry-date">
-            <time datetime="{$date|date_format:'c'}">
-                <span class="quiqqer-eventList-entry-date-day" title="{locale_date date=$date}">
-                    {$date|date_format:"d"}
+            <time datetime="{$date->format('c')}"
+                  title="{locale_date timestamp=$date->format('U')}}">
+                <span class="quiqqer-eventList-entry-date-day">
+                    {$date->format("d")}
                 </span>
                 <span class="quiqqer-eventList-entry-date-month">
-                    {$date|date_format:"M"}
+                    {$date->format("M")}
                 </span>
             </time>
         </div>
@@ -47,19 +48,19 @@
 
         <div class="quiqqer-eventList-entry-data">
             <div class="quiqqer-eventList-entry-data-wrapper">
-                <header title="{$event->text}">
-                    {$event->text}
+                <header title="{$event->getTitle()}">
+                    {$event->getTitle()}
                 </header>
                 <div class="quiqqer-eventList-entry-data-desc">
-                    {$event->description}
+                    {$event->getDescription()}
                 </div>
-                {if $event->calendar_id !== -1}
+                {if $event->getCalendarId()}
                 <div class="quiqqer-eventList-entry-data-footer">
                     <span class="quiqqer-eventList-entry-data-footer-label">
                         {locale group="quiqqer/calendar" var="quiqqer.frontend.calendar.label"}
                     </span>
                     <span class="quiqqer-eventList-entry-data-footer-calendar">
-                        {QUI\Calendar\Handler::getCalendar($event->calendar_id)->getName()}
+                        {QUI\Calendar\Handler::getCalendar($event->getCalendarId())->getName()}
                     </span>
                 </div>
                 {/if}

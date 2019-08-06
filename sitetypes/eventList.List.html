@@ -23,31 +23,33 @@
 
     <div class="quiqqer-eventList-entry status-{$event->eventTimeStatus}">
         <div class="quiqqer-eventList-entry-date">
-            <time datetime="{$event->start_date|date_format:'c'}">
-                <span class="quiqqer-eventList-entry-date-day" title="{locale_date date=$event->start_date}">
-                    {$event->start_date|date_format:"d"}
+            <time datetime="{$event->getStartDate()->format('c')}"
+                  title="{locale_date timestamp=$event->getStartDate()->format('U')}">
+                <span class="quiqqer-eventList-entry-date-day">
+                    {$event->getStartDate()->format("d")}
                 </span>
                 <span class="quiqqer-eventList-entry-date-month">
-                    {$event->start_date|date_format:"M"}
+                    {$event->getStartDate()->format("M")}
                 </span>
             </time>
         </div>
 
         <div class="quiqqer-eventList-entry-data">
-            <header title="{$event->text}">
-                {$event->text}
+            <header title="{$event->getTitle()}">
+                {$event->getTitle()}
             </header>
             <div class="quiqqer-eventList-entry-data-desc">
-                {$event->description}
+                {$event->getDescription()}
             </div>
             <div class="quiqqer-eventList-entry-data-footer">
-                <span class="quiqqer-eventList-entry-data-footer-label">
-                    {locale group="quiqqer/calendar" var="quiqqer.frontend.calendar.label"}
-                </span>
-                <span class="quiqqer-eventList-entry-data-footer-calendar">
-                    {*$event->calendar_id*}
-                    {QUI\Calendar\Handler::getCalendar($event->calendar_id)->getName()}
-                </span>
+                {if $event->getCalendarId()}
+                    <span class="quiqqer-eventList-entry-data-footer-label">
+                        {locale group="quiqqer/calendar" var="quiqqer.frontend.calendar.label"}
+                    </span>
+                    <span class="quiqqer-eventList-entry-data-footer-calendar">
+                        {QUI\Calendar\Handler::getCalendar($event->getCalendarId())->getName()}
+                    </span>
+                {/if}
             </div>
         </div>
     </div>
