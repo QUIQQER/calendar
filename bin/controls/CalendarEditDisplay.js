@@ -194,7 +194,10 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
 
                         AddEventWindow.addEvent('onSubmit', function () {
                             Event = AddEventWindow.getEventForSchedulerFromValues();
-                            self.Scheduler.updateEvent(Event.id);
+
+                            // Using Scheduler.updateEvent() with recurring events changed to normal events does not work
+                            // Calling this function redraws the event correctly (for whatever reason).
+                            self.Scheduler.event_updated(Event);
 
                             var values = AddEventWindow.getValues();
                             Calendars.editEvent(
