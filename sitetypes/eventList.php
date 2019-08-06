@@ -5,6 +5,7 @@ use QUI\Calendar\Handler;
 $currDay   = new \DateTime('now');
 $startDate = new \DateTime(\date('d.m.Y', \strtotime("-2 days")));
 $endDate   = new \DateTime(\date('d.m.Y', \strtotime("7 days")));
+$Locale    = QUI::getLocale();
 
 $events      = [];
 $calendarIDs = $Site->getAttribute('calendar.settings.ids');
@@ -61,13 +62,13 @@ foreach ($events as $event) {
 // no event today?
 if ($counter) {
     $EmptyEvent = new QUI\Calendar\Event(
-        'Kein besonderer Tag heute',
+        $Locale->get('quiqqer/calendar', 'quiqqer.frontend.calendar.emptyEvent.title'),
         $currDay,
         $currDay
     );
 
     $EmptyEvent->setDescription(
-        'Heute gibt es nichts, was besonders ist.'
+        $Locale->get('quiqqer/calendar', 'quiqqer.frontend.calendar.emptyEvent.desc')
     );
 
     $EmptyEvent->eventTimeStatus = 'now';

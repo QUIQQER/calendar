@@ -329,6 +329,18 @@
             <de><![CDATA[Kalender:]]></de>
             <en><![CDATA[Calendar:]]></en>
         </locale>
+        <locale name="quiqqer.frontend.calendar.button.more">
+            <de><![CDATA[Mehr erfahren]]></de>
+            <en><![CDATA[Learn more]]></en>
+        </locale>
+        <locale name="quiqqer.frontend.calendar.emptyEvent.title">
+            <de><![CDATA[Kein besonderes Ereignis heute]]></de>
+            <en><![CDATA[No special event today]]></en>
+        </locale>
+        <locale name="quiqqer.frontend.calendar.emptyEvent.desc">
+            <de><![CDATA[Heute ist uns kein besonderes Ereignis bekannt.]]></de>
+            <en><![CDATA[There is no special event known to us today.]]></en>
+        </locale>
 
 
         <!-- Settings -->

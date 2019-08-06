@@ -35,7 +35,7 @@
         {if $newDateEntry}
         <div class="quiqqer-eventList-entry-date">
             <time datetime="{$date->format('c')}"
-                  title="{locale_date timestamp=$date->format('U')}}">
+                  title="{locale_date timestamp=$date->format('U')}">
                 <span class="quiqqer-eventList-entry-date-day">
                     {$date->format("d")}
                 </span>
@@ -56,11 +56,13 @@
                     {$event->getDescription()}
                 </div>
 
-                {*if $event->getUrl()*}
+                {if $event->getUrl()}
                 <div class="quiqqer-eventList-entry-data-buttons">
-                    <a href="{$event->getUrl()}" target="_blank">Mehr erfahren</a>
+                    <a href="{$event->getUrl()}" target="_blank">
+                        {locale group="quiqqer/calendar" var="quiqqer.frontend.calendar.button.more"}
+                    </a>
                 </div>
-                {*/if*}
+                {/if}
 
                 {if $event->getCalendarId()}
                 <div class="quiqqer-eventList-entry-data-footer">
