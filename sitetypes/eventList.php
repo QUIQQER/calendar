@@ -7,7 +7,7 @@ $startDate = new \DateTime(\date('d.m.Y', \strtotime("-2 days")));
 $endDate   = new \DateTime(\date('d.m.Y', \strtotime("7 days")));
 $Locale    = QUI::getLocale();
 
-$events      = [];
+$events      = new \QUI\Calendar\Event\EventCollection();
 $calendarIDs = $Site->getAttribute('calendar.settings.ids');
 
 if (!\is_array($calendarIDs)) {
@@ -17,18 +17,24 @@ if (!\is_array($calendarIDs)) {
 foreach ($calendarIDs as $calendarID) {
     try {
         $eventsCurrent = Handler::getCalendar($calendarID)->getEventsBetweenDates($startDate, $endDate, true, 100);
-        $events        = \array_merge($events, $eventsCurrent->toArray());
+        $events->merge($eventsCurrent);
+
+//        $events        = \array_merge($events, $eventsCurrent->toArray());
+
+
     } catch (QUI\Exception $Exception) {
         QUI\System\Log::addDebug($Exception->getMessage());
     }
 }
 
-\usort($events, function ($a, $b) {
+$events->sortByStartDate();
+
+/*\usort($events, function ($a, $b) {
     $startTime = $a->getStartDate();
     $endTime   = $b->getStartDate();
 
     return $startTime->format('U') - $endTime->format('U');
-});
+});*/
 
 $counter          = 0;
 $incrementCounter = true;
@@ -74,7 +80,7 @@ if ($counter) {
     $EmptyEvent->eventTimeStatus = 'now';
     $toInsert                    = [$EmptyEvent];
 
-    \array_splice($events, $counter, 0, $toInsert);
+    $events->insert($EmptyEvent, $counter);
 }
 
 

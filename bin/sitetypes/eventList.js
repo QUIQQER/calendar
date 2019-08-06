@@ -12,10 +12,15 @@ document.addEventListener('DOMContentLoaded', function () {
      * Scroll to current (today's) event
      */
     function scrollToCurrentEvent (QUI) {
-        var CurrentEventElm = document.getElement('.quiqqer-eventList-entry.status-now'),
-            pos             = CurrentEventElm.getPosition().y + 100, // offset 100px
-            winHeight       = QUI.getWindowSize().y,
-            bodyScroll      = QUI.getScroll().y;
+        var CurrentEventElm = document.getElement('.quiqqer-eventList-entry.status-now');
+
+        if (!CurrentEventElm) {
+            return;
+        }
+
+        var pos        = CurrentEventElm.getPosition().y + 100, // offset 100px
+            winHeight  = QUI.getWindowSize().y,
+            bodyScroll = QUI.getScroll().y;
 
         if (pos < winHeight + bodyScroll) {
             return;
