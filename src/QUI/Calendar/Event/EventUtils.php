@@ -70,8 +70,8 @@ class EventUtils
                 // Using modify on a Date-object at the end of this loop would edit all currently instantiated dates.
                 $CurrentEvent = new Event(
                     $Event->getTitle(),
-                    $CurrentEventDateStart,
-                    $CurrentEventDateEnd
+                    clone $CurrentEventDateStart,
+                    clone $CurrentEventDateEnd
                 );
 
                 if (!empty($Event->getUrl())) {
