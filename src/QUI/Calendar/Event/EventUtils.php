@@ -100,11 +100,11 @@ class EventUtils
 
         $result = \array_merge($EventCollection->toArray(), $inflatedEvents);
 
-        // The events might be out of order so we have to sort them again
-        \usort($result, [static::class, 'sortEventArrayByStartDateComparisonFunction']);
-
         // The value is passed by reference (&) so we have to overwrite it
         $EventCollection = new EventCollection($result);
+
+        // The events might be out of order so we have to sort them again
+        $EventCollection->sortByStartDate();
     }
 
     /**
