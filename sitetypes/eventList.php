@@ -18,23 +18,12 @@ foreach ($calendarIDs as $calendarID) {
     try {
         $eventsCurrent = Handler::getCalendar($calendarID)->getEventsBetweenDates($startDate, $endDate, true, 100);
         $events->merge($eventsCurrent);
-
-//        $events        = \array_merge($events, $eventsCurrent->toArray());
-
-
     } catch (QUI\Exception $Exception) {
         QUI\System\Log::addDebug($Exception->getMessage());
     }
 }
 
 $events->sortByStartDate();
-
-/*\usort($events, function ($a, $b) {
-    $startTime = $a->getStartDate();
-    $endTime   = $b->getStartDate();
-
-    return $startTime->format('U') - $endTime->format('U');
-});*/
 
 $counter          = 0;
 $incrementCounter = true;
