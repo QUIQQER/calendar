@@ -195,7 +195,7 @@ class EventUtils
      *
      * @return int
      */
-    protected static function sortEventArrayByStartDateComparisonFunction(Event $EventA, Event $EventB)
+    public static function sortEventArrayByStartDateComparisonFunction(Event $EventA, Event $EventB)
     {
         /**
          * @var Event $EventA
