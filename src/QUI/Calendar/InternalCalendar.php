@@ -249,20 +249,25 @@ class InternalCalendar extends AbstractCalendar
         // we query all events, except the once with a recurrence_end before the start of the requested interval.
         // The filtering happens later via PHP-logic ("EventUtils::inflateRecurringEvents()").
         $sql = "
-            SELECT events.*, 
+            SELECT event.*, 
                    recurrence_end, 
                    recurrence_interval 
-            FROM {$tableEvents} events
+            FROM {$tableEvents} event
                 LEFT JOIN {$tableRecurrence} recurrence
-                    ON events.eventid = recurrence.eventid
+                    ON event.eventid = recurrence.eventid
             WHERE 
                 calendarid = :calendar_id AND
-                events.start <= :interval_end AND
+                event.start <= :interval_end AND
                 ((                     
-                    events.end >= :interval_start AND 
-                    recurrence_end IS NULL
+                    event.end >= :interval_start AND 
+                    recurrence_interval IS NULL
                 ) OR (
-                    recurrence_end >= :interval_start
+                    (
+                        recurrence_end IS NOT NULL AND
+                        recurrence_end >= :interval_start
+                    ) OR (
+                        recurrence_end IS NULL
+                    )
                 ))
             ORDER BY start ASC
         ";
@@ -300,24 +305,22 @@ class InternalCalendar extends AbstractCalendar
             }
         }
 
-        if ($EventCollection->length() > $limit) {
-            $eventCounter = 0;
-            // Remove events that are out of range and reduce the event amount to the given limit.
-            // The events are already sorted properly by "inflateRecurringEvents()" above.
-            $EventCollection = $EventCollection->filter(function ($Event) use (
-                &$eventCounter,
-                $limit,
-                $IntervalEnd,
-                $IntervalStart
-            ) {
-                /** @var \QUI\Calendar\Event $Event */
-                return (
-                    $Event->getStartDate() <= $IntervalEnd &&
-                    $Event->getEndDate() >= $IntervalStart &&
-                    ++$eventCounter <= $limit
-                );
-            });
-        }
+        // Remove events that are out of range and reduce the event amount to the given limit.
+        // The events are already sorted properly by "inflateRecurringEvents()" above.
+        $eventCounter    = 0;
+        $EventCollection = $EventCollection->filter(function ($Event) use (
+            &$eventCounter,
+            $limit,
+            $IntervalEnd,
+            $IntervalStart
+        ) {
+            /** @var \QUI\Calendar\Event $Event */
+            return (
+                $Event->getStartDate() <= $IntervalEnd &&
+                $Event->getEndDate() >= $IntervalStart &&
+                ++$eventCounter <= $limit
+            );
+        });
 
         return $EventCollection;
     }
