@@ -52,12 +52,16 @@ class EventUtils
 
             $recurrenceInterval = $Event->getRecurrenceInterval();
 
-            // Increase the start beforehand to maybe ignore the while-loop later
-            $CurrentEventDateStart = $Event->getStartDate();
+            // Increase the start beforehand to maybe ignore the while-loop later.
+            // We have to use clone here since DateTime objects behave really weird in PHP.
+            // If we don't clone, the modify() modifies $Event which should not happen.
+            $CurrentEventDateStart = clone $Event->getStartDate();
             $CurrentEventDateStart->modify("+ 1 {$recurrenceInterval}");
 
-            // Increase the start beforehand to maybe ignore the while-loop later
-            $CurrentEventDateEnd = $Event->getEndDate();
+            // Increase the start beforehand to maybe ignore the while-loop later.
+            // We have to use clone here since DateTime objects behave really weird in PHP.
+            // If we don't clone, the modify() modifies $Event which should not happen.
+            $CurrentEventDateEnd = clone $Event->getEndDate();
             $CurrentEventDateEnd->modify("+ 1 {$recurrenceInterval}");
 
             // Generate the events
@@ -66,8 +70,8 @@ class EventUtils
                 // Using modify on a Date-object at the end of this loop would edit all currently instantiated dates.
                 $CurrentEvent = new Event(
                     $Event->getTitle(),
-                    clone $CurrentEventDateStart,
-                    clone $CurrentEventDateEnd
+                    $CurrentEventDateStart,
+                    $CurrentEventDateEnd
                 );
 
                 if (!empty($Event->getUrl())) {
