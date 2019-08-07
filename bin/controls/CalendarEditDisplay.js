@@ -177,6 +177,11 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
                     // Always use UTC since we store unix timestamps (UTC)
                     self.Scheduler.config.server_utc = true;
 
+                    // Hide all other icons to prevent confusion
+                    // Also, using the delete button doesn't work probably with recurring events, so we better hide it
+                    self.Scheduler.config.icons_edit   = ['icon_details'];
+                    self.Scheduler.config.icons_select = ['icon_details'];
+
                     self.Scheduler.showLightbox = function (eventId) {
                         var Event = self.Scheduler.getEvent(eventId);
 
