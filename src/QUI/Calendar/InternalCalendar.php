@@ -6,7 +6,6 @@
 namespace QUI\Calendar;
 
 use DateTime;
-use DateTimeImmutable;
 use Eluceo\iCal\Component\Calendar as IcalCalendar;
 use Eluceo\iCal\Component\Event as IcalEvent;
 use Eluceo\iCal\Property\Event\RecurrenceRule;
@@ -183,17 +182,9 @@ class InternalCalendar extends AbstractCalendar
         bool $ignoreTime,
         int $limit = 1000
     ): QUI\Calendar\Event\EventCollection {
-        $StartDate = clone $Date;
-        $EndDate   = clone $Date;
-
-        if ($ignoreTime) {
-            $StartDate->setTime(0, 0, 0, 0);
-            $EndDate->setTime(23, 59, 59, 999999);
-        }
-
         return $this->getEventsBetweenDates(
-            $StartDate,
-            $EndDate,
+            clone $Date,
+            clone $Date,
             $ignoreTime,
             $limit
         );
@@ -213,40 +204,44 @@ class InternalCalendar extends AbstractCalendar
      * @throws QUI\Calendar\Exception\NoPermissionException - Current user isn't allowed to view the calendar
      */
     public function getEventsBetweenDates(
-        DateTime $IntervalStart,
-        DateTime $IntervalEnd = null,
+        DateTime $InputIntervalStart,
+        DateTime $InputIntervalEnd = null,
         bool $ignoreTime = true,
         int $limit = 1000,
         bool $inflateRecurringEvents = true
     ): QUI\Calendar\Event\EventCollection {
         $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
 
-        if (is_null($IntervalEnd)) {
+        $IntervalStart = clone $InputIntervalStart;
+        $IntervalEnd   = clone $InputIntervalEnd;
+
+        if (is_null($InputIntervalEnd)) {
             $IntervalEnd = new DateTime();
             $IntervalEnd->setTimestamp(PHP_INT_MAX);
+        }
+
+        if ($ignoreTime) {
+            $IntervalStart->setTime(0, 0, 0, 0);
+            $IntervalEnd->setTime(23, 59, 59, 999999);
         }
 
         $timestampIntervalStart = $IntervalStart->getTimestamp();
         $timestampIntervalEnd   = $IntervalEnd->getTimestamp();
 
-        if ($ignoreTime) {
-            $IntervalStartImmutable = DateTimeImmutable::createFromMutable($IntervalStart);
-            $timestampIntervalStart = $IntervalStartImmutable->setTime(0, 0, 0, 0)->getTimestamp();
-
-            $IntervalEndImmutable = DateTimeImmutable::createFromMutable($IntervalEnd);
-            $timestampIntervalEnd = $IntervalEndImmutable->setTime(23, 59, 59, 999999)->getTimestamp();
-        }
-
         $tableEvents     = Handler::tableCalendarsEvents();
         $tableRecurrence = Handler::tableCalendarsEventsRecurrence();
 
         // Get all normal (first condition) and recurring events (second condition).
-        // An event is normal if it has no recurrence_end (IS NULL)
+        // An event is normal if it has no recurrence_interval (IS NULL)
         // If it's normal is has to start before the end of the requested interval
         //
-        // An event is recurring if it has a recurrence_end set
+        // An event is recurring if it has a recurrence_interval set.
         // Since we (currently) can not calculate how often an event recurs and if it recurs in our interval via SQL,
         // we query all events, except the once with a recurrence_end before the start of the requested interval.
+        //
+        // The last OR-condition makes sure to get all recurring events without an interval-end.
+        // This is necessary since an event that begins before the interval recurs in the interval.
+        //
         // The filtering happens later via PHP-logic ("EventUtils::inflateRecurringEvents()").
         $sql = "
             SELECT event.*, 
