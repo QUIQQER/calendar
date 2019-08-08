@@ -213,11 +213,12 @@ class InternalCalendar extends AbstractCalendar
         $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
 
         $IntervalStart = clone $InputIntervalStart;
-        $IntervalEnd   = clone $InputIntervalEnd;
 
         if (is_null($InputIntervalEnd)) {
             $IntervalEnd = new DateTime();
             $IntervalEnd->setTimestamp(PHP_INT_MAX);
+        } else {
+            $IntervalEnd = clone $InputIntervalEnd;
         }
 
         if ($ignoreTime) {
