@@ -34,15 +34,15 @@ foreach ($EventCollection as $index => $Event) {
      */
     $EventStartDate = $Event->getStartDate();
 
-    if ($EventStartDate < $CurrentDate) {
-        $Event->eventTimeStatus = 'past';
-        ++$todaysEventPosition;
-        continue;
-    }
-
     if ($EventStartDate->format('Y-m-d') == $CurrentDate->format('Y-m-d')) {
         $Event->eventTimeStatus  = 'now';
         $isEventForTodayExisting = true;
+        continue;
+    }
+
+    if ($EventStartDate < $CurrentDate) {
+        $Event->eventTimeStatus = 'past';
+        ++$todaysEventPosition;
         continue;
     }
 
