@@ -216,7 +216,11 @@ class InternalCalendar extends AbstractCalendar
 
         if (is_null($InputIntervalEnd)) {
             $IntervalEnd = new DateTime();
-            $IntervalEnd->setTimestamp(PHP_INT_MAX);
+            // Fix to prevent date overflow
+            // 2.147.483.647 = Max 32bit integer value
+            // Results in: 2038-01-19 03:14:07 UTC (see: year 2038 problem)
+            // TODO: move away from timestamps and use DateTime (see quiqqer/calendar#51)
+            $IntervalEnd->setTimestamp(2147483647);
         } else {
             $IntervalEnd = clone $InputIntervalEnd;
         }
@@ -350,7 +354,12 @@ class InternalCalendar extends AbstractCalendar
         $EndDate   = clone $StartDate; // cloning appears to be faster than new
 
         $StartDate->setTimestamp(0);
-        $EndDate->setTimestamp(PHP_INT_MAX);
+
+        // Fix to prevent date overflow
+        // 2.147.483.647 = Max 32bit integer value
+        // Results in: 2038-01-19 03:14:07 UTC (see: year 2038 problem)
+        // TODO: move away from timestamps and use DateTime (see quiqqer/calendar#51)
+        $EndDate->setTimestamp(2147483647);
 
         // ignoreTime has to be false or we'll get an integer overflow
         return $this->getEventsBetweenDates(

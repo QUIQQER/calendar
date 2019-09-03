@@ -21,7 +21,7 @@ class EventUtils
      *
      * @param EventCollection $EventCollection
      * @param int             $maxInflationPerEvent - How many events at max should be spawned from a recurring event? (Default: 100)
-     * @param \DateTime       $UntilDate            - When should the recurrence stop? (Default: date from timestamp with value PHP_INT_MAX)
+     * @param \DateTime       $UntilDate            - When should the recurrence stop? (Default: 2038-01-19 03:14:07 UTC)
      *
      * @return void
      *
@@ -42,7 +42,11 @@ class EventUtils
 
             // Determine the end of the recurrence, if none is set, use the maximum integer
             if (!$UntilDate) {
-                $UntilDate->setTimestamp(PHP_INT_MAX);
+                // Fix to prevent date overflow
+                // 2.147.483.647 = Max 32bit integer value
+                // Results in: 2038-01-19 03:14:07 UTC (see: year 2038 problem)
+                // TODO: move away from timestamps and use DateTime (see quiqqer/calendar#51)
+                $UntilDate->setTimestamp(2147483647);
             } else {
                 // UntilDate given and recurrence ends before the UntilDate
                 if ($Event->getRecurrenceEnd() && $Event->getRecurrenceEnd() < $UntilDate) {
