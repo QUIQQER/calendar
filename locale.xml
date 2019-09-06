@@ -341,6 +341,15 @@
             <de><![CDATA[Heute ist uns kein besonderes Ereignis bekannt.]]></de>
             <en><![CDATA[There is no special event known to us today.]]></en>
         </locale>
+        <locale name="quiqqer.frontend.calendar.message.calendar.missing">
+            <de><![CDATA[Dieser Seite ist kein Kalender zugewiesen.]]></de>
+            <en><![CDATA[This page has no calendar assigned.]]></en>
+        </locale>
+        <locale name="quiqqer.frontend.calendar.message.calendar.invalid">
+            <de><![CDATA[Dieser Seite ist ein ungültiger Kalender zugewiesen.]]></de>
+            <en><![CDATA[This page has an invalid calendar assigned.]]></en>
+        </locale>
+
 
 
         <!-- Settings -->
