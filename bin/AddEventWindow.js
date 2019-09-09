@@ -50,7 +50,8 @@ define('package/quiqqer/calendar/bin/AddEventWindow', [
             maxWidth : 600,
             maxHeight: 400,
             autoclose: false,
-            event    : null
+            event    : null,
+            'class': 'add-event-window'
         },
 
         initialize: function (options) {
