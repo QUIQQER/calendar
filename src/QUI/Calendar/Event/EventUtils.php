@@ -244,6 +244,10 @@ class EventUtils
             $Event->setDescription($IcalEvent->description);
         }
 
+        if (isset($IcalEvent->url) && !empty($IcalEvent->url)) {
+            $Event->setUrl($IcalEvent->url);
+        }
+
         return $Event;
     }
 }
