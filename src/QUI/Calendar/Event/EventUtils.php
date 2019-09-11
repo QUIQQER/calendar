@@ -240,10 +240,6 @@ class EventUtils
             new \DateTime($IcalEvent->dtend)
         );
 
-        if ($IcalEvent->uid) {
-            $Event->setId($IcalEvent->uid);
-        }
-
         if ($IcalEvent->description) {
             $Event->setDescription($IcalEvent->description);
         }
