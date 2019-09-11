@@ -250,13 +250,36 @@ class Handler
             $Calendar->checkPermission($Calendar::PERMISSION_DELETE_CALENDAR);
 
             try {
+                $tableEvents         = self::tableCalendarsEvents();
+                $tableRecurrenceData = self::tableCalendarsEventsRecurrence();
+
+                // Delete recurring event data
+                // Recurring event data doesn't know about it's calendar.
+                // Therefore we have to use this 'ugly' sub-query.
+                $Database->getPDO()->query("
+                DELETE FROM {$tableRecurrenceData}
+                    WHERE eventid IN (
+                        SELECT eventid 
+                            FROM {$tableEvents}
+                            WHERE calendarid = {$id}                            
+                    );
+                ;");
+
+                // Delete the calendar entry
                 $Database->delete(
                     self::tableCalendars(),
                     ['id' => $id]
                 );
 
+                // Delete the calendar's events
                 $Database->delete(
-                    self::tableCalendarsEvents(),
+                    $tableEvents,
+                    ['calendarid' => $id]
+                );
+
+                // Delete the calendar's shares
+                $Database->delete(
+                    self::tableCalendarsShares(),
                     ['calendarid' => $id]
                 );
             } catch (QUI\Database\Exception $Exception) {
