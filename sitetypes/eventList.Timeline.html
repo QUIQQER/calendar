@@ -21,7 +21,7 @@
 {assign var="date" value=date_create('1999-01-01 00:00:00')}
 {assign var="newDateEntry" value="0"}
 
-<section class="quiqqer-eventList">
+<section class="quiqqer-eventList-timeline">
 {foreach $events as $event}
 
     {if $event->getStartDate()->format("d-m-Y") != $date->format("d-m-Y")}
