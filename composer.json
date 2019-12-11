@@ -1,40 +1,39 @@
 {
-  "name": "quiqqer/calendar",
-  "type": "quiqqer-module",
-  "description": "Adds calendars to your QUIQQER system, allowing you to manage and display events on your website.",
-  "version": "dev-master",
-  "license": [
-    "CC BY-NC-SA 4.0",
-    "PCSG QL-1.0"
-  ],
-  "authors": [
-    {
-      "name": "Henning Leutz",
-      "email": "leutz@pcsg.de",
-      "homepage": "https://www.pcsg.de",
-      "role": "Developer"
+    "name": "quiqqer\/calendar",
+    "type": "quiqqer-module",
+    "description": "Adds calendars to your QUIQQER system, allowing you to manage and display events on your website.",
+    "license": [
+        "CC BY-NC-SA 4.0",
+        "PCSG QL-1.0"
+    ],
+    "authors": [
+        {
+            "name": "Henning Leutz",
+            "email": "leutz@pcsg.de",
+            "homepage": "https:\/\/www.pcsg.de",
+            "role": "Developer"
+        },
+        {
+            "name": "Jan Wennrich",
+            "email": "jan.wennrich@pcsg.de",
+            "homepage": "https:\/\/www.pcsg.de",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "mail": "support@pcsg.de"
     },
-    {
-      "name": "Jan Wennrich",
-      "email": "jan.wennrich@pcsg.de",
-      "homepage": "https://www.pcsg.de",
-      "role": "Developer"
+    "require": {
+        "php": ">=7.1",
+        "quiqqer\/quiqqer": "^1.3.0|dev-master|dev-dev",
+        "quiqqer\/calendar-controls": "1.2.*|dev-master|dev-dev",
+        "quiqqer\/utils": ">1.18.0|dev-master|dev-dev",
+        "eluceo\/ical": "0.11.0",
+        "johngrogg\/ics-parser": "2.1.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "QUI\\Calendar\\": "src\/QUI\/Calendar"
+        }
     }
-  ],
-  "support": {
-    "mail": "support@pcsg.de"
-  },
-  "require": {
-    "php": ">=7.1",
-    "quiqqer/quiqqer": "^1.3.0|dev-master|dev-dev",
-    "quiqqer/calendar-controls": "1.2.*|dev-master|dev-dev",
-    "quiqqer/utils": ">1.18.0|dev-master|dev-dev",
-    "eluceo/ical": "0.11.0",
-    "johngrogg/ics-parser": "2.1.5"
-  },
-  "autoload": {
-    "psr-4": {
-      "QUI\\Calendar\\": "src\/QUI\/Calendar"
-    }
-  }
 }
