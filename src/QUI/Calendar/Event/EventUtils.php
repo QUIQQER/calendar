@@ -32,13 +32,15 @@ class EventUtils
         $maxInflationPerEvent = 1000,
         \DateTime $UntilDate = null
     ): void {
-        $inflatedEvents = [];
+        $result = $EventCollection->toArray();
 
         foreach ($EventCollection as $Event) {
             // If there is no recurrence for the current event, don't do anything
             if (!($Event instanceof RecurringEvent)) {
                 continue;
             }
+
+            $inflatedEvents = [];
 
             // Determine the end of the recurrence, if none is set, use the maximum integer
             if (!$UntilDate) {
@@ -72,6 +74,9 @@ class EventUtils
             while (($CurrentEventDateStart < $UntilDate) && (count($inflatedEvents) <= $maxInflationPerEvent)) {
                 // For some odd reason we have to use 'clone' here.
                 // Using modify on a Date-object at the end of this loop would edit all currently instantiated dates.
+                // TODO: check if clone $CurrentEvent could be used to prevent errors when Event properties change.
+                // Switching to clone does probably not work, we would need deep cloning.
+                // This could be achieved by implementing __clone in the Event class.
                 $CurrentEvent = new Event(
                     $Event->getTitle(),
                     clone $CurrentEventDateStart,
@@ -100,9 +105,10 @@ class EventUtils
                 $CurrentEventDateStart->modify("+ 1 {$recurrenceInterval}");
                 $CurrentEventDateEnd->modify("+ 1 {$recurrenceInterval}");
             }
-        }
 
-        $result = \array_merge($EventCollection->toArray(), $inflatedEvents);
+            // Add inflated events to the result
+            $result = \array_merge($result, $inflatedEvents);
+        }
 
         // The value is passed by reference (&) so we have to overwrite it
         $EventCollection = new EventCollection($result);
