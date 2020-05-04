@@ -197,6 +197,11 @@
             <en><![CDATA[An error occurred in the database.]]></en>
         </locale>
 
+        <locale name="exception.calendar.event.drag">
+            <de><![CDATA[Wiederkehrende Ereignisse müssen über den Event-Bearbeiten-Dialog verändert werden.]]></de>
+            <en><![CDATA[Recurring events must be modified via the event's edit-dialog.]]></en>
+        </locale>
+
         <!-- Tour -->
         <!-- Tours -->
         <locale name="tour.general.title">
@@ -324,6 +329,27 @@
             <de><![CDATA[Kalender:]]></de>
             <en><![CDATA[Calendar:]]></en>
         </locale>
+        <locale name="quiqqer.frontend.calendar.button.more">
+            <de><![CDATA[Mehr erfahren]]></de>
+            <en><![CDATA[Learn more]]></en>
+        </locale>
+        <locale name="quiqqer.frontend.calendar.emptyEvent.title">
+            <de><![CDATA[Kein besonderes Ereignis heute]]></de>
+            <en><![CDATA[No special event today]]></en>
+        </locale>
+        <locale name="quiqqer.frontend.calendar.emptyEvent.desc">
+            <de><![CDATA[Heute ist uns kein besonderes Ereignis bekannt.]]></de>
+            <en><![CDATA[There is no special event known to us today.]]></en>
+        </locale>
+        <locale name="quiqqer.frontend.calendar.message.calendar.missing">
+            <de><![CDATA[Dieser Seite ist kein Kalender zugewiesen.]]></de>
+            <en><![CDATA[This page has no calendar assigned.]]></en>
+        </locale>
+        <locale name="quiqqer.frontend.calendar.message.calendar.invalid">
+            <de><![CDATA[Dieser Seite ist ein ungültiger Kalender zugewiesen.]]></de>
+            <en><![CDATA[This page has an invalid calendar assigned.]]></en>
+        </locale>
+
 
 
         <!-- Settings -->
@@ -394,11 +420,53 @@
             <en><![CDATA[End]]></en>
         </locale>
 
+        <locale name="calendar.window.addevent.recurrence.interval.label">
+            <de><![CDATA[Wiederholen]]></de>
+            <en><![CDATA[Repeat]]></en>
+        </locale>
+        <locale name="calendar.window.addevent.recurrence.interval.none">
+            <de><![CDATA[Nicht wiederholen]]></de>
+            <en><![CDATA[No repetition]]></en>
+        </locale>
+        <locale name="calendar.window.addevent.recurrence.interval.year">
+            <de><![CDATA[Jährlich]]></de>
+            <en><![CDATA[Yearly]]></en>
+        </locale>
+        <locale name="calendar.window.addevent.recurrence.interval.month">
+            <de><![CDATA[Monatlich]]></de>
+            <en><![CDATA[Monthly]]></en>
+        </locale>
+        <locale name="calendar.window.addevent.recurrence.interval.week">
+            <de><![CDATA[Wöchentlich]]></de>
+            <en><![CDATA[Weekly]]></en>
+        </locale>
+        <locale name="calendar.window.addevent.recurrence.interval.day">
+            <de><![CDATA[Täglich]]></de>
+            <en><![CDATA[Daily]]></en>
+        </locale>
+        <locale name="calendar.window.addevent.recurrence.interval.hour">
+            <de><![CDATA[Stündlich]]></de>
+            <en><![CDATA[Hourly]]></en>
+        </locale>
+
+        <locale name="calendar.window.addevent.recurrence.end.label">
+            <de><![CDATA[Bis zum]]></de>
+            <en><![CDATA[Until]]></en>
+        </locale>
+        <locale name="calendar.window.addevent.recurrence.end.none">
+            <de><![CDATA[Kein Ende]]></de>
+            <en><![CDATA[No End]]></en>
+        </locale>
+
         <locale name="calendar.window.addevent.event.calendarID">
             <de><![CDATA[Kalender ID]]></de>
             <en><![CDATA[Calendar ID]]></en>
         </locale>
 
+        <locale name="calendar.window.addevent.delete.text">
+            <de><![CDATA[Soll das Event wirklich gelöscht werden?]]></de>
+            <en><![CDATA[Do you really want to delete this event?]]></en>
+        </locale>
 
         <!-- Add/Edit Calendar -->
         <locale name="calendar.window.add.calendar.title">

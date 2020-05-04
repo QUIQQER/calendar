@@ -17,7 +17,9 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
     'qui/QUI',
     'qui/controls/Control',
     'package/quiqqer/calendar/bin/Calendars',
+    'package/quiqqer/calendar/bin/AddEventWindow',
     'package/quiqqer/calendar/bin/classes/ColorHelper',
+    'package/quiqqer/calendar/bin/classes/EventHelper',
     'package/quiqqer/calendar-controls/bin/Scheduler',
     'qui/controls/loader/Loader',
 
@@ -26,10 +28,11 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
     'package/bin/mustache/mustache',
     'text!package/quiqqer/calendar/bin/controls/CalendarDisplay.html'
 
-], function (QUI, QUIControl, Calendars, ColorHelper, Scheduler, QUILoader, QUILocale, Mustache, displayTemplate) {
+], function (QUI, QUIControl, Calendars, AddEventWindowControl, ColorHelper, EventHelperClass, Scheduler, QUILoader, QUILocale, Mustache, displayTemplate) {
     "use strict";
 
-    var lg = 'quiqqer/calendar';
+    var lg          = 'quiqqer/calendar',
+        EventHelper = new EventHelperClass();
 
     return new Class({
 
@@ -45,6 +48,8 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
         Scheduler: Scheduler,
 
         Loader: null,
+
+        BeforeDragEventInCalendarEvent: null,
 
         BeforeChangeEventInCalendarEvent: null,
         ChangeEventInCalendarEvent      : null,
@@ -69,7 +74,7 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
             this.parent(options);
 
             if (!this.getAttribute('extensions')) {
-                this.setAttribute('extensions', ['agenda_view']);
+                this.setAttribute('extensions', ['agenda_view', 'recurring']);
             }
 
             this.setAttribute('canUserEditEvents', false);
@@ -172,24 +177,59 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
                     // Always use UTC since we store unix timestamps (UTC)
                     self.Scheduler.config.server_utc = true;
 
-                    // Event description
-                    self.Scheduler.config.lightbox.sections = [
-                        {
-                            name  : QUILocale.get(lg, 'calendar.window.addevent.event.title'),
-                            height: 30,
-                            map_to: "text",
-                            type  : "textarea",
-                            focus : true
-                        },
-                        {name: "description", height: 200, map_to: "description", type: "textarea"},
-                        {
-                            name  : QUILocale.get(lg, 'calendar.window.addevent.event.url'),
-                            height: 50,
-                            map_to: "url",
-                            type  : "textarea"
-                        },
-                        {name: "time", height: 72, type: "time", map_to: "auto"}
-                    ];
+                    // Hide all other icons to prevent confusion
+                    // Also, using the delete button doesn't work probably with recurring events, so we better hide it
+                    self.Scheduler.config.icons_edit   = ['icon_details'];
+                    self.Scheduler.config.icons_select = ['icon_details'];
+
+                    self.Scheduler.showLightbox = function (eventId) {
+                        var Event = self.Scheduler.getEvent(eventId);
+
+                        if (Event.event_pid) {
+                            Event = self.Scheduler.getEvent(Event.event_pid);
+                        }
+
+                        // Dirty-way to check if the event's recurrence has no end; Scheduler uses year 9999 for that
+                        // See: http://disq.us/p/1jtwydk
+                        if (Event.recurring && Event.end_date && Event.end_date.getFullYear() === 9999) {
+                            Event.end_date = null;
+                        }
+
+                        var AddEventWindow = new AddEventWindowControl({event: Event});
+
+                        AddEventWindow.addEvent('onSubmit', function () {
+                            Event = AddEventWindow.getEventForSchedulerFromValues();
+
+                            // Using Scheduler.updateEvent() with recurring events changed to normal events does not work
+                            // Calling this function redraws the event correctly (for whatever reason).
+                            self.Scheduler.event_updated(Event);
+
+                            var values = AddEventWindow.getValues();
+                            Calendars.editEvent(
+                                Event.id,
+                                values.text,
+                                values.description,
+                                values.StartDate.getTime() / 1000,
+                                values.EndDate.getTime() / 1000,
+                                values.url,
+                                values.recurrenceInterval,
+                                values.RecurrenceEndDate ? values.RecurrenceEndDate.getTime() / 1000 : null
+                            );
+
+                            AddEventWindow.close();
+                        });
+
+                        // Allow deleting events from the AddEvent-Popup
+                        AddEventWindow.addEvent('onCloseBegin', function () {
+                            if (!AddEventWindow.deleteThisEventOnClose) {
+                                return;
+                            }
+
+                            self.Scheduler.deleteEvent(AddEventWindow.getEventForSchedulerFromValues().id);
+                        });
+
+                        AddEventWindow.open();
+                    };
 
                     // Remove all events from calendar (if another scheduler was opened previously)
                     self.Scheduler.clearAll();
@@ -207,14 +247,12 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
                         var calendarColor = calendarData.color;
                         var textColor = CH.getSchedulerTextColor(calendarColor);
 
-                        Calendars.getEventsAsJson(self.calID).then(function (events) {
+                        Calendars.getEventsForScheduler(self.calID).then(function (events) {
                             // Set events colors
-                            events = JSON.parse(events);
                             events.forEach(function (event) {
                                 event.color = calendarColor;
                                 event.textColor = textColor;
                             });
-                            events = JSON.stringify(events);
 
                             self.parseEventsIntoScheduler(events).then(function () {
                                 self.schedulerReady = true;
@@ -291,7 +329,26 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
         attachEvents: function () {
             var self = this;
 
-            this.BeforeChangeEventInCalendarEvent = this.Scheduler.attachEvent('onBeforeEventChanged', function () {
+
+            this.BeforeDragEventInCalendarEvent = this.Scheduler.attachEvent('onBeforeDrag', function (eventId) {
+                if (!eventId) {
+                    return true;
+                }
+
+                var Event = self.Scheduler.getEvent(eventId);
+
+                if (Event && Event.event_pid && Event.event_pid !== 0) {
+                    QUI.getMessageHandler().then(function (MH) {
+                        MH.addAttention(QUILocale.get(lg, 'exception.calendar.event.drag'));
+                    });
+                    return false;
+                }
+
+                return true;
+            });
+
+
+            this.BeforeChangeEventInCalendarEvent = this.Scheduler.attachEvent('onBeforeEventChanged', function (SchedulerEvent) {
                 if (self.getAttribute('canUserEditEvents')) {
                     return true;
                 }
@@ -307,26 +364,43 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
 
             // Run when an event is edited in the scheduler
             this.ChangeEventInCalendarEvent = this.Scheduler.attachEvent('onEventChanged', function (id, ev) {
-                Calendars.editEvent(
-                    self.calID,
-                    ev.id,
-                    ev.text,
-                    ev.description,
-                    ev.start_date.getTime() / 1000,
-                    ev.end_date.getTime() / 1000,
-                    ev.url
-                );
+                Calendars.editEvent(ev.id, ev.text, ev.description, ev.start_date.getTime() / 1000, ev.end_date.getTime() / 1000, ev.url);
             });
 
             // Run when an event is added to the scheduler
             this.AddEventToCalendarEvent = this.Scheduler.attachEvent('onEventAdded', function (id, ev) {
+                // The event was added, by deleting a event from a recurring-event-series
+                // See: http://disq.us/p/10qarki
+                if (ev.event_pid) {
+                    return;
+                }
+
+                var recurrenceInterval = null,
+                    recurrenceEnd      = null;
+
+                if (ev.recurring) {
+                    recurrenceInterval = EventHelper.convertRecurrencePatternToInterval(ev.rec_pattern);
+
+                    recurrenceEnd = ev.end_date.getTime() / 1000;
+
+                    // Dirty-way to check if the event's recurrence has no end; Scheduler uses year 9999 for that
+                    // See: http://disq.us/p/1jtwydk
+                    if (ev.end_date.getFullYear() === 9999) {
+                        recurrenceEnd = null;
+                    }
+                }
+
+                var EndDate = EventHelper.getSchedulerEventEndDate(ev);
+
                 Calendars.addEvent(
                     self.calID,
                     ev.text,
                     ev.description,
                     ev.start_date.getTime() / 1000,
-                    ev.end_date.getTime() / 1000,
-                    ev.url
+                    EndDate.getTime() / 1000,
+                    ev.url,
+                    recurrenceInterval,
+                    recurrenceEnd
                 ).then(function (result) {
                     if (result == null) {
                         return;
@@ -373,6 +447,8 @@ define('package/quiqqer/calendar/bin/controls/CalendarEditDisplay', [
 
         detachEvents: function () {
             if (this.schedulerReady) {
+                this.Scheduler.detachEvent(this.BeforeDragEventInCalendarEvent);
+
                 this.Scheduler.detachEvent(this.AddEventToCalendarEvent);
 
                 this.Scheduler.detachEvent(this.BeforeChangeEventInCalendarEvent);

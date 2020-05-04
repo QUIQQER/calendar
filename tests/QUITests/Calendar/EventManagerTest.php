@@ -11,7 +11,7 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetUpcomingEventsForCalendarId()
     {
-        $events = QUI\Calendar\EventManager::getUpcomingEventsForCalendarId(29, 4);
+        $events = QUI\Calendar\Manager::getUpcomingEventsForCalendarId(29, 4);
 
         writePhpUnitMessage($events);
     }
@@ -19,7 +19,7 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testGetUpcomingEventsForCalendarIds()
     {
-        $events = QUI\Calendar\EventManager::getUpcomingEventsForCalendarIds([29,30], 3);
+        $events = QUI\Calendar\Manager::getUpcomingEventsForCalendarIds([29,30], 3);
 
         writePhpUnitMessage($events);
     }

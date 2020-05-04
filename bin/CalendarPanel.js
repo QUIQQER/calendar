@@ -189,7 +189,7 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
 
 
         /**
-         * Called from Panel Handler.
+         * Called from Panel EventHandler.
          * Stores the data of the current panel in the workspace so the panel can be displayed after page reload.
          * @return {{type, attributes, calendarData: *}}
          */
@@ -251,50 +251,8 @@ define('package/quiqqer/calendar/bin/CalendarPanel', [
             require(['package/quiqqer/calendar/bin/AddEventWindow'], function (AddEventWindow) {
                 var aeWindow = new AddEventWindow();
                 aeWindow.addEvent('onSubmit', function (Window) {
-                    var Content    = Window.getContent(),
-
-                        title      = Content.getElement('[name=eventtitle]').value,
-                        desc       = Content.getElement('[name=eventdesc]').value,
-                        url        = Content.getElement('[name=eventurl]').value,
-
-                        startRaw   = Content.getElement('[name=eventstart]').value,
-                        Start      = new Date(startRaw),
-
-                        endRaw     = Content.getElement('[name=eventend]').value,
-
-                        isWholeDay = Content.getElementById('whole-day').getElementsByTagName('input')[0].value === 1;
                     this.Loader.show();
-
-                    if (!startRaw) {
-                        this.Loader.hide();
-
-                        QUI.getMessageHandler().then(function (MH) {
-                            MH.addError(QUILocale.get(lg, 'error.missing.start'));
-                        });
-
-                        return;
-                    }
-
-                    if (isWholeDay) {
-                        Start.setHours(0);
-                        Start.setMinutes(0);
-                    }
-
-                    var End;
-                    if (!endRaw || isWholeDay) {
-                        End = new Date(startRaw);
-                        End.setDate(Start.getDate() + 1);
-                    } else {
-                        End = new Date(endRaw);
-                    }
-
-                    self.Scheduler.addEventToScheduler({
-                        start_date : Start,
-                        end_date   : End,
-                        text       : title,
-                        description: desc,
-                        url        : url
-                    });
+                    self.Scheduler.addEventToScheduler(aeWindow.getEventForSchedulerFromValues());
                     this.Loader.hide();
                     aeWindow.close();
                 });

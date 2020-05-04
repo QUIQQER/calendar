@@ -168,6 +168,9 @@ define('package/quiqqer/calendar/bin/AddEditCalendarWindow', [
                 // After Creating the calendar
                 AddCalendarPromise.then(function ()
                 {
+                    // initCalendarMenuEntries() is globally available from '/bin/initCalendarMenuEntries.js'
+                    initCalendarMenuEntries();
+
                     this.close();
                 }.bind(this)).catch(function ()
                 {

@@ -7,6 +7,6 @@ use QUI;
 /**
  * Thrown when a user is lacking permissions
  */
-class NoPermission extends QUI\Calendar\Exception
+class NoPermissionException extends QUI\Calendar\Exception
 {
 }

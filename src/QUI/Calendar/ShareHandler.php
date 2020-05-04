@@ -6,14 +6,16 @@
 
 namespace QUI\Calendar;
 
-use QUI\Calendar\Exception\Database;
-use QUI\Calendar\Exception\NoPermission;
-use QUI\Calendar\Exception\Share;
+use QUI;
+use QUI\Calendar\Exception\DatabaseException;
+use QUI\Calendar\Exception\NoPermissionException;
+use QUI\Calendar\Exception\ShareException;
 use QUI\System\Log;
 use QUI\Users\User;
 
 /**
  * Class Share
+ *
  * @package QUI\Calendar
  */
 class ShareHandler
@@ -24,35 +26,37 @@ class ShareHandler
      * By passing a user as an argument the URL for a specific user can be retrieved.
      *
      * @param AbstractCalendar $Calendar - A calendar to get the share URL for
-     * @param User $User - The user to get the URL for
+     * @param User             $User     - The user to get the URL for
      *
      * @return string
      *
-     * @throws NoPermission - The user is not permitted to view the calendar
-     * @throws Database - Couldn't read/write from/to database
-     * @throws Share - Couldn't generate a share-hash (missing entropy)
+     * @throws NoPermissionException - The user is not permitted to view the calendar
+     * @throws DatabaseException - Couldn't read/write from/to database
+     * @throws ShareException - Couldn't generate a share-hash (missing entropy)
      */
-    public static function getShareUrlForCalendar(AbstractCalendar $Calendar, User $User = null)
+    public static function getShareUrlForCalendar(AbstractCalendar $Calendar, User $User = null): string
     {
         if (is_null($User)) {
-            $User = \QUI::getUserBySession();
+            $User = QUI::getUserBySession();
         }
 
         $Calendar->checkPermission($Calendar::PERMISSION_VIEW_CALENDAR, $User);
 
         // Check if there is already a share hash for this calendar and user
         try {
-            $shareData = \QUI::getDataBase()->fetch([
-                'from'  => Handler::tableCalendarsShares(),
-                'where' => array(
-                    'calendarid' => (int)$Calendar->getId(),
-                    'userid'     => $User->getId()
-                ),
-                'limit' => 1
-            ]);
+            $shareData = QUI::getDataBase()->fetch(
+                [
+                    'from'  => Handler::tableCalendarsShares(),
+                    'where' => [
+                        'calendarid' => (int)$Calendar->getId(),
+                        'userid'     => $User->getId()
+                    ],
+                    'limit' => 1
+                ]
+            );
         } catch (\QUI\Database\Exception $Exception) {
             Log::writeException($Exception);
-            throw new Database();
+            throw new DatabaseException();
         }
 
         if (isset($shareData[0]) && isset($shareData['hash'])) {
@@ -62,7 +66,7 @@ class ShareHandler
         $hash = self::generateShareHash();
 
         try {
-            \QUI::getDataBase()->insert(
+            QUI::getDataBase()->insert(
                 Handler::tableCalendarsShares(),
                 [
                     'calendarid'   => $Calendar->getId(),
@@ -73,7 +77,7 @@ class ShareHandler
             );
         } catch (\QUI\Database\Exception $Exception) {
             Log::writeException($Exception);
-            throw new Database();
+            throw new DatabaseException();
         }
 
         return self::generateShareUrlForHash($hash);
@@ -83,14 +87,14 @@ class ShareHandler
     /**
      * Generates a new share hash.
      *
-     * @throws Share - Thrown when it's not possible to generate a share url (missing entropy)
+     * @throws ShareException - Thrown when it's not possible to generate a share url (missing entropy)
      */
-    protected static function generateShareHash()
+    protected static function generateShareHash(): string
     {
         try {
             return bin2hex(random_bytes(16));
         } catch (\Exception $Exception) {
-            throw new Share();
+            throw new ShareException();
         }
     }
 
@@ -102,9 +106,9 @@ class ShareHandler
      *
      * @return string
      */
-    protected static function generateShareUrlForHash($hash)
+    protected static function generateShareUrlForHash(string $hash): string
     {
-        $host  = \QUI::conf('globals', 'host') . "/";
+        $host  = QUI::conf('globals', 'host') . "/";
         $path  = "packages/quiqqer/calendar/bin/iCalExport.php";
         $query = "?hash=" . $hash;
 
@@ -117,25 +121,27 @@ class ShareHandler
      *
      * @param string $hash - The calendars share hash
      *
-     * @throws Database - Couldn't fetch the calendar data from the database
+     * @return AbstractCalendar
      * @throws Exception - No calendar for this hash in the database
      *
-     * @return AbstractCalendar
+     * @throws DatabaseException - Couldn't fetch the calendar data from the database
      */
-    public static function getCalendarFromHash($hash)
+    public static function getCalendarFromHash(string $hash): AbstractCalendar
     {
         try {
-            $calendarData = \QUI::getDataBase()->fetch([
-                'select' => ['calendarid'],
-                'from'   => Handler::tableCalendarsShares(),
-                'where'  => [
-                    'hash' => $hash
-                ],
-                'limit'  => 1
-            ]);
+            $calendarData = QUI::getDataBase()->fetch(
+                [
+                    'select' => ['calendarid'],
+                    'from'   => Handler::tableCalendarsShares(),
+                    'where'  => [
+                        'hash' => $hash
+                    ],
+                    'limit'  => 1
+                ]
+            );
         } catch (\QUI\Exception $Exception) {
             Log::writeException($Exception);
-            throw new Database();
+            throw new DatabaseException();
         }
 
         if (!isset($calendarData[0])) {

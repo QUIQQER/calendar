@@ -7,6 +7,7 @@
 namespace QUI\Calendar;
 
 use QUI;
+use QUI\Cron\Manager;
 
 /**
  * Class Cron / Calendar Crons
@@ -19,8 +20,10 @@ class Cron
     /**
      * Syncs all external calendars from their origin with the QUIQQER system
      *
-     * @param array $params
-     * @param \QUI\Cron\Manager $CronManager
+     * @param array   $params
+     * @param Manager $CronManager
+     *
+     * @throws QUI\Calendar\Exception\DatabaseException
      */
     public static function syncExternalCalendars($params, $CronManager)
     {

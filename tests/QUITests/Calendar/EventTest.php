@@ -11,7 +11,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
 {
     public function testEventToArray()
     {
-        $Event = new QUI\Calendar\Event('Title', 'Desc', '0', '1');
+        $Event = new QUI\Calendar\Event('Title', '0', '1');
 
         $this->assertEquals(array(
             'text'        => 'Title',

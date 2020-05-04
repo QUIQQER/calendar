@@ -5,9 +5,9 @@
             <td>
                 <label class="field-container">
                     <span class="field-container-item">
-                        {{title}}
+                        {{title.label}}
                     </span>
-                    <input type="text" name="eventtitle" value="" class="field-container-field">
+                    <input type="text" name="eventtitle" value="{{title.value}}" class="field-container-field">
                 </label>
             </td>
         </tr>
@@ -15,9 +15,9 @@
             <td>
                 <label class="field-container hasCheckbox">
                     <span class="field-container-item">
-                        {{desc}}
+                        {{desc.label}}
                     </span>
-                    <input type="text" name="eventdesc" value="" class="field-container-field">
+                    <input type="text" name="eventdesc" value="{{desc.value}}" class="field-container-field">
                 </label>
             </td>
         </tr>
@@ -25,9 +25,9 @@
             <td>
                 <label class="field-container">
                     <span class="field-container-item">
-                        {{url}}
+                        {{url.label}}
                     </span>
-                    <input type="text" name="eventurl" value="" class="field-container-field">
+                    <input type="text" name="eventurl" value="{{url.value}}" class="field-container-field">
                 </label>
             </td>
         </tr>
@@ -47,9 +47,9 @@
             <td>
                 <label class="field-container">
                     <span class="field-container-item">
-                        {{start}}
+                        {{start.label}}
                     </span>
-                    <input type="text" id="eventstart" name="eventstart" value="" class="field-container-field">
+                    <input type="text" id="eventstart" name="eventstart" value="{{start.value}}" class="field-container-field">
                 </label>
             </td>
         </tr>
@@ -57,9 +57,38 @@
             <td>
                 <label class="field-container hasCheckbox">
                     <span class="field-container-item">
-                        {{end}}
+                        {{end.label}}
                     </span>
-                    <input type="text" id="eventend" name="eventend" value="" class="field-container-field">
+                    <input type="text" id="eventend" name="eventend" value="{{end.value}}" class="field-container-field">
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label class="field-container hasCheckbox">
+                    <span class="field-container-item">
+                        {{recurrence.interval.label}}
+                    </span>
+                    <select id="event-recurrence-interval"
+                            name="event-recurrence-interval"
+                            class="field-container-field">
+                        <option value="none" selected>{{recurrence.interval.none}}</option>
+                        <option value="year">{{recurrence.interval.year}}</option>
+                        <option value="month">{{recurrence.interval.month}}</option>
+                        <option value="week">{{recurrence.interval.week}}</option>
+                        <option value="day">{{recurrence.interval.day}}</option>
+                        <option value="hour">{{recurrence.interval.hour}}</option>
+                    </select>
+                </label>
+            </td>
+        </tr>
+        <tr id="event-row-recurrence-end">
+            <td>
+                <label class="field-container hasCheckbox">
+                    <span class="field-container-item">
+                        {{recurrence.end.label}}
+                    </span>
+                    <input type="text" id="event-recurrence-end" name="event-recurrence-end" value="{{recurrence.end.value}}" placeholder="{{recurrence.end.none}}" class="field-container-field">
                 </label>
             </td>
         </tr>

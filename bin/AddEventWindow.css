@@ -1,3 +1,25 @@
 span.field-container-item {
     width: 100px;
 }
+
+
+.add-event-window label,
+.add-event-window .field-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.add-event-window table {
+    width: 100%;
+}
+
+.add-event-window input,
+.add-event-window select,
+.add-event-window #whole-day {
+    width: 50%;
+}
+
+.add-event-window .qui-button-switch-switch {
+    float: right;
+}

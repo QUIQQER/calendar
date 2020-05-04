@@ -5,13 +5,10 @@
  *
  * @return array
  */
-
-use QUI\Calendar\EventManager;
-
 QUI::$Ajax->registerFunction(
     'package_quiqqer_calendar_ajax_getEvents',
     function () {
-        return EventManager::getAllEvents();
+        return \QUI\Calendar\Manager::getAllEvents();
     },
     false
 );

@@ -2,7 +2,10 @@
 
 namespace QUI\Calendar;
 
+use DateTime;
 use QUI;
+use QUI\Calendar\Event\EventCollection;
+use QUI\Calendar\Exception\NoPermissionException;
 use QUI\Users\User;
 
 abstract class AbstractCalendar
@@ -50,29 +53,33 @@ abstract class AbstractCalendar
      * @param int - $calendarId
      *
      * @throws QUI\Calendar\Exception - Calendar does not exist
-     * @throws QUI\Calendar\Exception\Database - Couldn't fetch the calendar's data from the database
+     * @throws QUI\Calendar\Exception\DatabaseException - Couldn't fetch the calendar's data from the database
      */
-    public function __construct($calendarId)
+    public function __construct(int $calendarId)
     {
         try {
-            $result = QUI::getDataBase()->fetch(array(
-                'from'  => Handler::tableCalendars(),
-                'where' => array(
-                    'id' => (int)$calendarId
-                ),
-                'limit' => 1
-            ));
+            $result = QUI::getDataBase()->fetch(
+                [
+                    'from'  => Handler::tableCalendars(),
+                    'where' => [
+                        'id' => (int)$calendarId
+                    ],
+                    'limit' => 1
+                ]
+            );
         } catch (QUI\Database\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
-            throw new QUI\Calendar\Exception\Database();
+            throw new QUI\Calendar\Exception\DatabaseException();
         }
 
 
         if (!isset($result[0])) {
-            throw new QUI\Calendar\Exception(array(
-                'quiqqer/calendar',
-                'exception.calendar.not_found'
-            ));
+            throw new QUI\Calendar\Exception(
+                [
+                    'quiqqer/calendar',
+                    'exception.calendar.not_found'
+                ]
+            );
         }
 
         $this->id = $calendarId;
@@ -86,9 +93,9 @@ abstract class AbstractCalendar
     /**
      * Constructs the calendar from the given SQL result
      *
-     * @param $data
+     * @param array $data
      */
-    protected function construct($data)
+    protected function construct(array $data)
     {
         $this->name = $data['name'];
 
@@ -107,14 +114,16 @@ abstract class AbstractCalendar
     /**
      * Edits the calendars values
      *
-     * @param $name - The new calendar name
+     * @param $name     - The new calendar name
      * @param $isPublic - Is the calendar public?
-     * @param $color - The calendars color
+     * @param $color    - The calendars color
      *
-     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to edit the calendar
-     * @throws QUI\Calendar\Exception\Database - Couldn't update the event in the database
+     * @return void
+     *
+     * @throws NoPermissionException - Current user isn't allowed to edit the calendar
+     * @throws QUI\Calendar\Exception\DatabaseException - Couldn't update the event in the database
      */
-    public function editCalendar($name, $isPublic, $color)
+    public function editCalendar(string $name, bool $isPublic, string $color): void
     {
         $this->checkPermission(AbstractCalendar::PERMISSION_EDIT_CALENDAR);
 
@@ -134,7 +143,7 @@ abstract class AbstractCalendar
             );
         } catch (QUI\Database\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
-            throw new QUI\Calendar\Exception\Database();
+            throw new QUI\Calendar\Exception\DatabaseException();
         }
     }
 
@@ -144,15 +153,7 @@ abstract class AbstractCalendar
      *
      * @return string - The calendar in iCal format
      */
-    abstract public function toICal();
-
-
-    /**
-     * Converts the calendars events to JSON format
-     *
-     * @return string - The calendars events in JSON format
-     */
-    abstract public function toJSON();
+    abstract public function toICal(): string;
 
 
     /**
@@ -160,7 +161,7 @@ abstract class AbstractCalendar
      *
      * @return int - the calendar ID
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -170,7 +171,7 @@ abstract class AbstractCalendar
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -180,7 +181,7 @@ abstract class AbstractCalendar
      *
      * @return User
      */
-    public function getUser()
+    public function getUser(): User
     {
         return $this->User;
     }
@@ -190,59 +191,67 @@ abstract class AbstractCalendar
      *
      * @return bool
      */
-    public function isPublic()
+    public function isPublic(): bool
     {
         return $this->isPublic;
     }
 
+
     /**
-     * Returns all events in a calendar as an array
+     * Returns all events from the calendar.
+     * Recurring events are not (!) inflated.
      *
-     * @return array - array of events
+     * @return EventCollection
      */
-    abstract public function getEvents();
+    abstract public function getAllEvents(): EventCollection;
+
 
     /**
      * Returns all events for a given date (day).
      *
      * The second parameter determines whether the exact point in time should be used or the entire day.
      *
-     * @param \DateTime $Date
-     * @param boolean $ignoreTime
+     * @param DateTime $Date
+     * @param bool     $ignoreTime
      *
-     * @return EventCollection
+     * @return  QUI\Calendar\Event\EventCollection
      * @example
      * passed date object: 20.04.2042 13:37
      * second parameter true: Returns all events that occur on 20.04.2042
      * second parameter false: Returns all events that occur on 20.04.2042 at 13:37
-     *
      */
-    abstract public function getEventsForDate(\DateTime $Date, $ignoreTime);
+    abstract public function getEventsForDate(DateTime $Date, bool $ignoreTime): QUI\Calendar\Event\EventCollection;
 
     /**
      * Returns all events between two given dates.
      *
      * The second parameter determines whether the exact point in time should be used or the entire day.
      *
-     * @param \DateTime $StartDate
-     * @param \DateTime $EndDate
-     * @param boolean $ignoreTime
+     * @param DateTime $IntervalStart
+     * @param DateTime $IntervalEnd
+     * @param boolean  $ignoreTime
+     * @param int      $limit
      *
-     * @return EventCollection
+     * @return  QUI\Calendar\Event\EventCollection
+     *
      * @example
      * passed date objects: 20.04.2042 13:37 and 06.09.2042 04:20
      * second parameter true: Returns all events that occur between 20.04.2042 00:00 and 06.09.2042 23:59
      * second parameter false: Returns all events that occur between 20.04.2042 13:37 and 06.09.2042 04:20
-     *
      */
-    abstract public function getEventsBetweenDates(\DateTime $StartDate, \DateTime $EndDate, $ignoreTime);
+    abstract public function getEventsBetweenDates(
+        DateTime $IntervalStart,
+        DateTime $IntervalEnd,
+        bool $ignoreTime,
+        int $limit
+    ): QUI\Calendar\Event\EventCollection;
 
     /**
      * Returns the calendars color in hex format.
      *
      * @return string
      */
-    public function getColor()
+    public function getColor(): string
     {
         return $this->color;
     }
@@ -250,29 +259,29 @@ abstract class AbstractCalendar
     /**
      * Returns the specified amount of upcoming events
      *
-     * @param int - Amount of upcoming events to get. Leave empty or set to -1 to get all upcoming events.
+     * @param int $amount - Amount of upcoming events to get. Leave empty or set to -1 to get all upcoming events.
      *
-     * @return Event[] - Array of upcoming events
+     * @return QUI\Calendar\Event\EventCollection - EventCollection of upcoming events
      */
-    abstract public function getUpcomingEvents($amount = -1);
+    abstract public function getUpcomingEvents(int $amount = -1): QUI\Calendar\Event\EventCollection;
 
     /**
      * Converts the calendars information to an array. Does not include events.
      *
      * @return array
      *
-     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
+     * @throws NoPermissionException - Current user isn't allowed to view the calendar
      */
-    public function toArray()
+    public function toArray(): array
     {
         $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
 
-        return array(
+        return [
             'isPublic'     => $this->isPublic(),
             'calendarname' => $this->getName(),
             'id'           => $this->getId(),
             'color'        => $this->getColor(),
-        );
+        ];
     }
 
 
@@ -281,16 +290,16 @@ abstract class AbstractCalendar
      * By default the session user is used.
      * By passing a user as the second argument the permissions for a third user can be checked.
      *
-     * @param $permission - Name of the permission to check
-     * @param User $User - The user to check the permission for (Session User by default)
+     * @param string $permission - Name of the permission to check
+     * @param User   $User       - The user to check the permission for (Session User by default)
      *
      * @return boolean
      */
-    public function hasPermission($permission, User $User = null)
+    public function hasPermission(string $permission, User $User = null): bool
     {
         try {
             static::checkPermission($permission, $User);
-        } catch (QUI\Calendar\Exception\NoPermission $Exception) {
+        } catch (NoPermissionException $Exception) {
             return false;
         }
 
@@ -304,14 +313,14 @@ abstract class AbstractCalendar
      * By default the session user is used.
      * By passing a user as the second argument the permissions for a third user can be checked.
      *
-     * @param $permission - Name of the permission to check
-     * @param User $User - The user to check the permission for (Session User by default)
+     * @param string $permission - Name of the permission to check
+     * @param User   $User       - The user to check the permission for (Session User by default)
      *
      * @return boolean
      *
-     * @throws \QUI\Calendar\Exception\NoPermission
+     * @throws NoPermissionException
      */
-    public function checkPermission($permission, User $User = null)
+    public function checkPermission(string $permission, User $User = null): bool
     {
         if (is_null($User)) {
             $User = QUI::getUsers()->getUserBySession();
@@ -340,10 +349,12 @@ abstract class AbstractCalendar
                     return true;
                 }
 
-                throw new QUI\Calendar\Exception\NoPermission([
-                    $localeGroup,
-                    'exception.calendar.permission.view'
-                ]);
+                throw new NoPermissionException(
+                    [
+                        $localeGroup,
+                        'exception.calendar.permission.view'
+                    ]
+                );
 
                 break;
 
@@ -353,10 +364,12 @@ abstract class AbstractCalendar
                     return true;
                 }
 
-                throw new QUI\Calendar\Exception\NoPermission([
-                    $localeGroup,
-                    'exception.calendar.permission.create'
-                ]);
+                throw new NoPermissionException(
+                    [
+                        $localeGroup,
+                        'exception.calendar.permission.create'
+                    ]
+                );
 
                 break;
 
@@ -377,23 +390,25 @@ abstract class AbstractCalendar
                     ['permission' => $permissionName]
                 );
 
-                throw new QUI\Calendar\Exception\NoPermission($message);
+                throw new NoPermissionException($message);
         }
 
-        throw new QUI\Calendar\Exception\NoPermission([
-            $localeGroup,
-            'exception.calendar.permission.edit'
-        ]);
+        throw new NoPermissionException(
+            [
+                $localeGroup,
+                'exception.calendar.permission.edit'
+            ]
+        );
     }
 
     /**
      * Checks if the specified user is the owner of this calendar
      *
-     * @param User|\QUI\Interfaces\Users\User $User - The user to check
+     * @param \QUI\Interfaces\Users\User $User - The user to check
      *
      * @return boolean
      */
-    public function isOwner($User)
+    public function isOwner(QUI\Interfaces\Users\User $User): bool
     {
         return $User->getId() == $this->User->getId();
     }
@@ -404,21 +419,25 @@ abstract class AbstractCalendar
      *
      * @return boolean
      */
-    abstract public function isInternal();
+    abstract public function isInternal(): bool;
 
 
     /**
-     * Checks if the calendar is internal, throws Exception if not
+     * Checks if the calendar is internal, throws Exception if it is not.
+     *
+     * @return void
      *
      * @throws Exception
      */
-    public function checkInternal()
+    public function checkInternal(): void
     {
         if (!$this->isInternal()) {
-            throw new Exception(array(
-                'quiqqer/calendar',
-                'exception.calendar.notInternal'
-            ));
+            throw new Exception(
+                [
+                    'quiqqer/calendar',
+                    'exception.calendar.notInternal'
+                ]
+            );
         }
     }
 
@@ -426,15 +445,19 @@ abstract class AbstractCalendar
     /**
      * Checks if the calendar is external, throws Exception if not
      *
+     * @return void
+     *
      * @throws Exception
      */
-    public function checkExternal()
+    public function checkExternal(): void
     {
         if ($this->isInternal()) {
-            throw new Exception(array(
-                'quiqqer/calendar',
-                'exception.calendar.notExternal'
-            ));
+            throw new Exception(
+                [
+                    'quiqqer/calendar',
+                    'exception.calendar.notExternal'
+                ]
+            );
         }
     }
 
@@ -449,11 +472,11 @@ abstract class AbstractCalendar
      *
      * @return string
      *
-     * @throws QUI\Calendar\Exception\NoPermission - The user has no permission to view the calendar
-     * @throws QUI\Calendar\Exception\Database - Couldn't read/write from/to database
-     * @throws QUI\Calendar\Exception\Share - Couldn't generate a share-hash (missing entropy)
+     * @throws NoPermissionException - The user has no permission to view the calendar
+     * @throws QUI\Calendar\Exception\DatabaseException - Couldn't read/write from/to database
+     * @throws QUI\Calendar\Exception\ShareException - Couldn't generate a share-hash (missing entropy)
      */
-    public function getShareUrl(User $User = null)
+    public function getShareUrl(User $User = null): string
     {
         return ShareHandler::getShareUrlForCalendar($this, $User);
     }

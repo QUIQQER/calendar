@@ -6,7 +6,7 @@
  * @require qui/QUI
  * @require qui/controls/Control
  * @require qui/controls/windows/Confirm
- * @require package/quiqqer/areas/bin/classes/Handler
+ * @require package/quiqqer/areas/bin/classes/EventHandler
  * @require Locale
  * @require css!package/quiqqer/areas/bin/controls/search/Window.css
  */

@@ -5,10 +5,13 @@
 
 namespace QUI\Calendar;
 
-use function DusanKasan\Knapsack\last;
-use Eluceo\iCal\Component\Calendar;
-use Eluceo\iCal\Component\Event;
+use DateTime;
+use Eluceo\iCal\Component\Calendar as IcalCalendar;
+use Eluceo\iCal\Component\Event as IcalEvent;
+use Eluceo\iCal\Property\Event\RecurrenceRule;
+use PDO;
 use QUI;
+use QUI\Calendar\Event\RecurringEvent;
 
 /**
  * Class Calendar
@@ -23,7 +26,7 @@ class InternalCalendar extends AbstractCalendar
      *
      * @throws Exception - given calendar data belongs to an external calendar
      */
-    protected function construct($data)
+    protected function construct(array $data)
     {
         if ($data['isExternal'] == 1) {
             throw new Exception("Calendar with ID {$this->getId()} is external but was created as internal");
@@ -32,132 +35,95 @@ class InternalCalendar extends AbstractCalendar
         parent::construct($data);
     }
 
+
     /**
      * Adds an event to the calendar.
+     * The event is not allowed to have an ID yet.
+     * The calendar ID has to be set already.
      *
-     * @param string $title - Event title
-     * @param string $desc - Event description
-     * @param int $start - Unix timestamp when the event starts
-     * @param int $end - Unix timestamp when the event ends
-     * @param string $url - Link to further information about the event
+     * On success, the event gets it's ID assigned (parameter passed by reference).
+     * On error, the event's ID does not change.
      *
-     * @return int - The ID the event got assigned from the database
+     * @param \QUI\Calendar\Event $Event - The event to add
      *
-     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
-     * @throws QUI\Calendar\Exception\Database - Couldn't insert event into the database
+     * @throws QUI\Calendar\Exception\NoPermissionException - Current user isn't allowed to view the calendar
+     * @throws QUI\Calendar\Exception\DatabaseException - Couldn't insert event into the database
+     * @throws QUI\Calendar\Exception\InvalidArgumentException - Event already has it's own ID or calendar ID.
      */
-    public function addCalendarEvent($title, $desc, $start, $end, $url = "")
+    public function addEvent(\QUI\Calendar\Event &$Event): void
     {
         $this->checkPermission(self::PERMISSION_ADD_EVENT);
 
-        try {
-            QUI::getDataBase()->insert(Handler::tableCalendarsEvents(), array(
-                'title'      => $title,
-                'desc'       => $desc,
-                'start'      => $start,
-                'end'        => $end,
-                'url'        => $url,
-                'calendarid' => $this->getId()
-            ));
-        } catch (QUI\Database\Exception $Exception) {
-            QUI\System\Log::writeException($Exception);
-            throw new QUI\Calendar\Exception\Database();
+        if (!\is_null($Event->getId())) {
+            $message = "The event already has the ID '{$Event->getId()}'. It should have none yet.";
+            throw new QUI\Calendar\Exception\InvalidArgumentException($message);
         }
 
-        return QUI::getDataBase()->getPDO()->lastInsertId('eventid');
+        $this->writeEventToDatabase($Event);
     }
 
 
     /**
-     * Adds multiple events at once to the calendar.
+     * Updates/Overwrites an event in the calendar.
+     * The event is must have an ID yet.
      *
-     * @param \QUI\Calendar\Event[] $events
+     * @param \QUI\Calendar\Event $Event - The event to add
      *
-     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to add events to the calendar
+     * @throws QUI\Calendar\Exception\NoPermissionException - Current user isn't allowed to view the calendar
+     * @throws QUI\Calendar\Exception\DatabaseException - Couldn't insert event into the database
+     * @throws QUI\Calendar\Exception\InvalidArgumentException - Event already has it's own ID or calendar ID.
      */
-    public function addCalendarEvents($events)
-    {
-        $this->checkPermission(self::PERMISSION_ADD_EVENT);
-
-        if (!is_array($events) || empty($events)) {
-            return;
-        }
-
-        $sql      = "INSERT INTO " . Handler::tableCalendarsEvents() . " (title, `desc`, `url`, start, `end`, calendarid) VALUES ";
-        $lastElem = last($events);
-        foreach ($events as $Event) {
-            $data = implode(',', [
-                "'" . $Event->text . "'",
-                "'" . $Event->description . "'",
-                "'" . $Event->url . "'",
-                $Event->start_date,
-                $Event->end_date,
-                $this->getId()
-            ]);
-            $sql  = $sql . "($data)";
-            if ($Event != $lastElem) {
-                $sql = $sql . ",";
-            }
-        }
-
-        $sql = $sql . ";";
-
-        QUI::getDataBase()->getPDO()->prepare($sql)->execute();
-    }
-
-    /**
-     * Edits an event in the calendar.
-     *
-     * @param int $eventID - ID of the event to edit
-     * @param string $title - Event title
-     * @param string $desc - Event description
-     * @param int $start - Unix timestamp when the event starts
-     * @param int $end - Unix timestamp when the event ends
-     * @param string $url - Link to further information about the event
-     *
-     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
-     * @throws QUI\Calendar\Exception\Database - Couldn't update event in the database
-     */
-    public function editCalendarEvent($eventID, $title, $desc, $start, $end, $url)
+    public function updateEvent(\QUI\Calendar\Event $Event)
     {
         $this->checkPermission(self::PERMISSION_EDIT_EVENT);
 
-        try {
-            QUI::getDataBase()->update(Handler::tableCalendarsEvents(), array(
-                'title' => $title,
-                'desc'  => $desc,
-                'start' => $start,
-                'end'   => $end,
-                'url'   => $url
-            ), array(
-                'eventid' => $eventID
-            ));
-        } catch (QUI\Database\Exception $Exception) {
-            QUI\System\Log::writeException($Exception);
-            throw new QUI\Calendar\Exception\Database();
+        if (\is_null($Event->getId())) {
+            $message = "The event has no ID. Can not update the event in the database.";
+            throw new QUI\Calendar\Exception\InvalidArgumentException($message);
         }
+
+        $this->writeEventToDatabase($Event);
     }
 
     /**
-     * Removes an event from the calendar.
+     * Removes the given event from the calendar/database.
      *
-     * @param int $eventID - ID of the event to remove
+     * Throws an exception if something goes wrong.
      *
-     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to remove events from the calendar
-     * @throws QUI\Calendar\Exception\Database - Couldn't delete the event from the database
+     * @param \QUI\Calendar\Event $Event
+     *
+     * @throws Exception\DatabaseException
+     * @throws Exception\NoPermissionException
      */
-    public function removeCalendarEvent($eventID)
+    public function removeEvent(\QUI\Calendar\Event $Event): void
     {
         $this->checkPermission(self::PERMISSION_REMOVE_EVENT);
 
+        $PDO = QUI::getPDO();
+
+        $PDO->beginTransaction();
         try {
-            QUI::getDataBase()->delete(Handler::tableCalendarsEvents(), array(
-                'eventid' => $eventID
-            ));
+            QUI::getDataBase()->delete(
+                Handler::tableCalendarsEvents(),
+                ['eventid' => $Event->getId()]
+            );
+
+            // Recurring event?
+            if ($Event instanceof QUI\Calendar\Event\RecurringEvent) {
+                QUI::getDataBase()->delete(
+                    Handler::tableCalendarsEventsRecurrence(),
+                    ['eventid' => $Event->getId()]
+                );
+            }
         } catch (QUI\Database\Exception $Exception) {
+            // Undo the previous queries
+            $PDO->rollBack();
+
             QUI\System\Log::writeException($Exception);
-            throw new QUI\Calendar\Exception\Database();
+            throw new QUI\Calendar\Exception\DatabaseException();
         }
+        // Everything is fine, now commit the data to the database
+        $PDO->commit();
     }
 
     /**
@@ -165,250 +131,312 @@ class InternalCalendar extends AbstractCalendar
      *
      * @return string - The calendar in iCal format
      *
-     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
+     * @throws QUI\Calendar\Exception\NoPermissionException - Current user isn't allowed to view the calendar
      */
-    public function toICal()
+    public function toICal(): string
     {
         $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
 
-        $Calendar = new Calendar($this->getId());
-        $events   = $this->getEvents();
+        $IcalCalendar = new IcalCalendar($this->getId());
 
-        foreach ($events as $Event) {
-            try {
-                $start = new \DateTime();
-                $start->setTimestamp(strtotime($Event->start_date));
+        $Events = $this->getAllEvents();
 
-                $end = new \DateTime();
-                $end->setTimestamp(strtotime($Event->end_date));
-            } catch (\Exception $Exception) {
-                // This should never happen since DateTime is instantiated without parameters
-                // But just to be save, let's do this...
-                QUI\System\Log::writeException($Exception);
+        foreach ($Events as $Event) {
+            /** @var Event $Event */
 
-                return "";
+            $IcalEvent = new IcalEvent();
+
+            $IcalEvent->setDtStart($Event->getStartDate())
+                ->setDtEnd($Event->getEndDate())
+                ->setSummary($Event->getTitle())
+                ->setDescription($Event->getDescription())
+                ->setUrl($Event->getUrl())
+                ->setUniqueId($Event->getId());
+
+            if ($Event instanceof RecurringEvent) {
+                /** @var RecurringEvent $Event */
+
+                $RecurrenceRule = new RecurrenceRule();
+
+                $RecurrenceRule->setInterval(1)
+                    ->setFreq($Event->getRecurrenceIntervalInIcalFormat())
+                    ->setUntil($Event->getRecurrenceEnd());
+
+                $IcalEvent->addRecurrenceRule($RecurrenceRule);
             }
 
-            $CalendarEvent = new Event();
-
-            $CalendarEvent->setDtStart($start)
-                ->setDtEnd($end)
-                ->setSummary($Event->text)
-                ->setDescription($Event->description)
-                ->setUrl($Event->url)
-                ->setUniqueId($Event->id);
-
-            $Calendar->addComponent($CalendarEvent);
+            $IcalCalendar->addComponent($IcalEvent);
         }
 
-        return $Calendar->render();
-    }
-
-
-    /**
-     * Converts the calendars events to JSON format
-     *
-     * @return string - The calendars events in JSON format
-     *
-     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
-     */
-    public function toJSON()
-    {
-        $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
-
-        $events = $this->getEvents();
-
-        return json_encode($events);
-    }
-
-
-    /**
-     * Returns all events in a calendar as an array
-     *
-     * @return \QUI\Calendar\Event[] - array of events
-     *
-     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
-     * @throws QUI\Calendar\Exception\Database - Couldn't fetch events' data from the database
-     */
-    public function getEvents()
-    {
-        $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
-
-        try {
-            $eventsRaw = QUI::getDataBase()->fetch(array(
-                'from'  => Handler::tableCalendarsEvents(),
-                'where' => array(
-                    'calendarid' => (int)$this->getId()
-                )
-            ));
-        } catch (QUI\Database\Exception $Exception) {
-            QUI\System\Log::writeException($Exception);
-            throw new QUI\Calendar\Exception\Database();
-        }
-
-        $events = array();
-        foreach ($eventsRaw as $event) {
-            $events[] = \QUI\Calendar\Event::fromDatabaseArray($event);
-        }
-
-        return $events;
+        return $IcalCalendar->render();
     }
 
 
     /**
      * @inheritdoc
      *
-     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
+     * @throws QUI\Calendar\Exception\NoPermissionException - Current user isn't allowed to view the calendar
      */
-    public function getEventsForDate(\DateTime $Date, $ignoreTime)
-    {
+    public function getEventsForDate(
+        DateTime $Date,
+        bool $ignoreTime,
+        int $limit = 1000
+    ): QUI\Calendar\Event\EventCollection {
+        return $this->getEventsBetweenDates(
+            clone $Date,
+            clone $Date,
+            $ignoreTime,
+            $limit
+        );
+    }
+
+
+    /**
+     * @inheritdoc
+     *
+     * @param DateTime      $IntervalStart
+     * @param DateTime|null $IntervalEnd
+     * @param bool          $ignoreTime
+     * @param int           $limit
+     * @param bool          $inflateRecurringEvents - Create child-events for recurring events (default) or not
+     *
+     * @return QUI\Calendar\Event\EventCollection
+     * @throws QUI\Calendar\Exception\NoPermissionException - Current user isn't allowed to view the calendar
+     */
+    public function getEventsBetweenDates(
+        DateTime $InputIntervalStart,
+        DateTime $InputIntervalEnd = null,
+        bool $ignoreTime = true,
+        int $limit = 1000,
+        bool $inflateRecurringEvents = true
+    ): QUI\Calendar\Event\EventCollection {
         $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
 
-        $timestamp = $Date->getTimestamp();
+        $IntervalStart = clone $InputIntervalStart;
 
-        $where = [
-            'calendarid' => (int)$this->getId(),
-            'start'      => [
-                'type'  => '<=',
-                'value' => $timestamp
-            ],
-            'end'        => [
-                'type'  => '>=',
-                'value' => $timestamp
-            ]
-        ];
+        if (is_null($InputIntervalEnd)) {
+            $IntervalEnd = new DateTime();
+            // Fix to prevent date overflow
+            // 2.147.483.647 = Max 32bit integer value
+            // Results in: 2038-01-19 03:14:07 UTC (see: year 2038 problem)
+            // TODO: move away from timestamps and use DateTime (see quiqqer/calendar#51)
+            $IntervalEnd->setTimestamp(2147483647);
+        } else {
+            $IntervalEnd = clone $InputIntervalEnd;
+        }
 
         if ($ignoreTime) {
-            $DateImmutable = \DateTimeImmutable::createFromMutable($Date);
-
-            $timestampDayStart = $DateImmutable->setTime(0, 0, 0)->getTimestamp();
-            $timestampDayEnd   = $DateImmutable->setTime(23, 59, 59)->getTimestamp();
-
-            // Values are correctly assigned and not swapped (!)
-            // The event has to start before the end of this day
-            // The event has to end after the start of this day
-            $where['start']['value'] = $timestampDayEnd;
-            $where['end']['value']   = $timestampDayStart;
+            $IntervalStart->setTime(0, 0, 0, 0);
+            $IntervalEnd->setTime(23, 59, 59, 999999);
         }
 
-        try {
-            $eventsRaw = QUI::getDataBase()->fetch(array(
-                'from'  => Handler::tableCalendarsEvents(),
-                'where' => $where
-            ));
-        } catch (QUI\Database\Exception $Exception) {
-            QUI\System\Log::writeException($Exception);
-            $eventsRaw = [];
-        }
+        $timestampIntervalStart = $IntervalStart->getTimestamp();
+        $timestampIntervalEnd   = $IntervalEnd->getTimestamp();
 
-        $Events = new EventCollection();
-        foreach ($eventsRaw as $event) {
-            $Events->append(\QUI\Calendar\Event::fromDatabaseArray($event));
-        }
+        $tableEvents     = Handler::tableCalendarsEvents();
+        $tableRecurrence = Handler::tableCalendarsEventsRecurrence();
 
-        return $Events;
-    }
-
-
-    /**
-     * @inheritdoc
-     *
-     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
-     */
-    public function getEventsBetweenDates(\DateTime $StartDate, \DateTime $EndDate, $ignoreTime)
-    {
-        $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
-
-        $timestampStartDate = $StartDate->getTimestamp();
-        $timestampEndDate   = $EndDate->getTimestamp();
-
-        if ($ignoreTime) {
-            $StartDateImmutable = \DateTimeImmutable::createFromMutable($StartDate);
-            $timestampStartDate = $StartDateImmutable->setTime(0, 0, 0)->getTimestamp();
-
-            $EndDateImmutable = \DateTimeImmutable::createFromMutable($EndDate);
-            $timestampEndDate = $EndDateImmutable->setTime(23, 59, 59)->getTimestamp();
-        }
-
-        try {
-            $eventsRaw = QUI::getDataBase()->fetch(array(
-                'from'  => Handler::tableCalendarsEvents(),
-                'where' => [
-                    'calendarid' => (int)$this->getId(),
-                    'start'      => [
-                        'type'  => '<=',
-                        'value' => $timestampEndDate
-                    ],
-                    'end'        => [
-                        'type'  => '>=',
-                        'value' => $timestampStartDate
-                    ]
-                ]
-            ));
-        } catch (QUI\Database\Exception $Exception) {
-            QUI\System\Log::writeException($Exception);
-            $eventsRaw = [];
-        }
-
-
-        $Events = new EventCollection();
-        foreach ($eventsRaw as $event) {
-            $Events->append(\QUI\Calendar\Event::fromDatabaseArray($event));
-        }
-
-        return $Events;
-    }
-
-
-    /**
-     * @inheritdoc
-     *
-     * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
-     */
-    public function getUpcomingEvents($amount = -1)
-    {
-        $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
-
-        $table = Handler::tableCalendarsEvents();
-
+        // Get all normal (first condition) and recurring events (second condition).
+        // An event is normal if it has no recurrence_interval (IS NULL)
+        // If it's normal is has to start before the end of the requested interval
+        //
+        // An event is recurring if it has a recurrence_interval set.
+        // Since we (currently) can not calculate how often an event recurs and if it recurs in our interval via SQL,
+        // we query all events, except the once with a recurrence_end before the start of the requested interval.
+        //
+        // The last OR-condition makes sure to get all recurring events without an interval-end.
+        // This is necessary since an event that begins before the interval recurs in the interval.
+        //
+        // The filtering happens later via PHP-logic ("EventUtils::inflateRecurringEvents()").
         $sql = "
-            SELECT * 
-            FROM {$table}
+            SELECT event.*, 
+                   recurrence_end, 
+                   recurrence_interval 
+            FROM {$tableEvents} event
+                LEFT JOIN {$tableRecurrence} recurrence
+                    ON event.eventid = recurrence.eventid
             WHERE 
-              calendarid = :calendarID AND 
-              start >= :startDate
+                calendarid = :calendar_id AND
+                event.start <= :interval_end AND
+                ((                     
+                    event.end >= :interval_start AND 
+                    recurrence_interval IS NULL
+                ) OR (
+                    (
+                        recurrence_end IS NOT NULL AND
+                        recurrence_end >= :interval_start
+                    ) OR (
+                        recurrence_end IS NULL
+                    )
+                ))
             ORDER BY start ASC
         ";
-
-        $parameters = array(
-            ':calendarID' => (int)$this->getId(),
-            ':startDate'  => time()
-        );
-
-        if (is_numeric($amount) && $amount > -1) {
-            $limit = (int)$amount;
-            $sql   .= "LIMIT {$limit}";
-        }
+        // LIMIT happens by using "EventUtils::inflateRecurringEvents()" below
 
         $Statement = QUI::getDataBase()->getPDO()->prepare($sql);
-        $Statement->execute($parameters);
+        $Statement->execute(
+            [
+                ':calendar_id'    => (int)$this->getId(),
+                ':interval_start' => $timestampIntervalStart,
+                ':interval_end'   => $timestampIntervalEnd
+            ]
+        );
 
-        $eventsRaw = $Statement->fetchAll(\PDO::FETCH_ASSOC);
+        $eventsRaw = $Statement->fetchAll(PDO::FETCH_ASSOC);
 
-        $events = array();
-        foreach ($eventsRaw as $event) {
-            $events[] = \QUI\Calendar\Event::fromDatabaseArray($event);
+        $EventCollection = new QUI\Calendar\Event\EventCollection();
+        foreach ($eventsRaw as $eventRaw) {
+            try {
+                $Event = QUI\Calendar\Event\EventUtils::createEventFromDatabaseArray($eventRaw);
+            } catch (\Exception $Exception) {
+                QUI\System\Log::writeException($Exception);
+                continue;
+            }
+
+            $EventCollection->append($Event);
         }
 
-        return $events;
+        // Create/"Inflate" all recurring events
+        if ($inflateRecurringEvents) {
+            try {
+                QUI\Calendar\Event\EventUtils::inflateRecurringEvents($EventCollection, $limit, $IntervalEnd);
+            } catch (\Exception $Exception) {
+                QUI\System\Log::writeException($Exception);
+            }
+        }
+
+        // Remove events that are out of range and reduce the event amount to the given limit.
+        // The events are already sorted properly by "inflateRecurringEvents()" above.
+        $eventCounter    = 0;
+        $EventCollection = $EventCollection->filter(function ($Event) use (
+            &$eventCounter,
+            $limit,
+            $IntervalEnd,
+            $IntervalStart
+        ) {
+            /** @var \QUI\Calendar\Event $Event */
+            return (
+                $Event->getStartDate() <= $IntervalEnd &&
+                $Event->getEndDate() >= $IntervalStart &&
+                ++$eventCounter <= $limit
+            );
+        });
+
+        return $EventCollection;
+    }
+
+
+    /**
+     * @inheritDoc
+     *
+     * @param int $amount
+     *
+     * @return QUI\Calendar\Event\EventCollection
+     *
+     * @throws QUI\Calendar\Exception\NoPermissionException - Current user isn't allowed to view the calendar
+     */
+    public function getUpcomingEvents(int $amount = 1000): QUI\Calendar\Event\EventCollection
+    {
+        return $this->getEventsBetweenDates(new DateTime(), null, false, $amount);
+    }
+
+
+    /**
+     * @inheritDoc
+     *
+     * @return Event\EventCollection
+     *
+     * @throws QUI\Calendar\Exception\NoPermissionException
+     */
+    public function getAllEvents(): QUI\Calendar\Event\EventCollection
+    {
+        $StartDate = new \DateTime();
+        $EndDate   = clone $StartDate; // cloning appears to be faster than new
+
+        $StartDate->setTimestamp(0);
+
+        // Fix to prevent date overflow
+        // 2.147.483.647 = Max 32bit integer value
+        // Results in: 2038-01-19 03:14:07 UTC (see: year 2038 problem)
+        // TODO: move away from timestamps and use DateTime (see quiqqer/calendar#51)
+        $EndDate->setTimestamp(2147483647);
+
+        // ignoreTime has to be false or we'll get an integer overflow
+        return $this->getEventsBetweenDates(
+            $StartDate,
+            $EndDate,
+            false,
+            PHP_INT_MAX,
+            false
+        );
     }
 
 
     /**
      * @inheritdoc
      */
-    public function isInternal()
+    public function isInternal(): bool
     {
         return true;
+    }
+
+
+    /**
+     * (Over)Writes an event in the database.
+     * If the event has an ID, assigned the event is overwritten in the database.
+     * If the event has no ID, it's added to the database.
+     *
+     * On success, the event gets it's ID assigned (parameter passed by reference).
+     * On error, the event's ID does not change.
+     *
+     * @param \QUI\Calendar\Event $Event - The event to add
+     *
+     * @throws QUI\Calendar\Exception\DatabaseException - Couldn't insert event into the database
+     * @throws QUI\Calendar\Exception\InvalidArgumentException - Event already has it's own ID or calendar ID.
+     */
+    protected function writeEventToDatabase(\QUI\Calendar\Event &$Event): void
+    {
+        if ($Event->getCalendarId() != $this->getId()) {
+            $message = "The event's calendar ID '{$Event->getCalendarId()}' doesn't match the calendar's ID '{$this->getId()}'";
+            throw new QUI\Calendar\Exception\InvalidArgumentException($message);
+        }
+
+        $EventClone = clone $Event;
+
+        $PDO = QUI::getPDO();
+
+        $PDO->beginTransaction();
+        try {
+            $tableEventData = Handler::tableCalendarsEvents();
+
+            QUI::getDataBase()->replace($tableEventData, $Event->toArrayForDatabase()[$tableEventData]);
+
+            $Event->setId($PDO->lastInsertId('eventid'));
+
+            $tableRecurringEventData = Handler::tableCalendarsEventsRecurrence();
+
+            // Recurring event?
+            if ($Event instanceof QUI\Calendar\Event\RecurringEvent) {
+                QUI::getDataBase()->replace(
+                    $tableRecurringEventData,
+                    // Re-fetching the data here because the event's id is set now
+                    $Event->toArrayForDatabase()[$tableRecurringEventData]
+                );
+            } else {
+                // The Event may have been a recurring event before, so we have to delete the data
+                QUI::getDataBase()->delete($tableRecurringEventData, ['eventid' => $Event->getId()]);
+            }
+        } catch (QUI\Database\Exception $Exception) {
+            // Undo the previous queries
+            $PDO->rollBack();
+
+            // Reset the event
+            $Event = $EventClone;
+
+            QUI\System\Log::writeException($Exception);
+            throw new QUI\Calendar\Exception\DatabaseException();
+        }
+        // Everything is fine, now commit the data to the database
+        $PDO->commit();
     }
 }

@@ -56,7 +56,7 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
             this.schedulerReady = false;
 
             if (!this.getAttribute('extensions')) {
-                this.setAttribute('extensions', ['agenda_view']);
+                this.setAttribute('extensions', ['agenda_view', 'recurring']);
             }
 
             if (options !== undefined) {
@@ -155,13 +155,14 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
 
                             calendarData.textColor = textColor;
 
-                            Calendars.getEventsAsJson(calID).then(function (result) {
-                                var events = JSON.parse(result);
+                            Calendars.getEventsForScheduler(calID).then(function (events) {
+                                // Set events colors
                                 events.forEach(function (event) {
                                     event.color = calendarColor;
                                     event.textColor = textColor;
                                 });
-                                self.parseEventsIntoScheduler(JSON.stringify(events)).then(function () {
+
+                                self.parseEventsIntoScheduler(events).then(function () {
                                     self.Loader.hide();
                                 });
                             }).catch(function () {

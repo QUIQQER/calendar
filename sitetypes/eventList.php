@@ -2,12 +2,13 @@
 
 use QUI\Calendar\Handler;
 
-$currDay   = new \DateTime('now');
-$startDate = new \DateTime(\date('d.m.Y', \strtotime("-2 days")));
-$endDate   = new \DateTime(\date('d.m.Y', \strtotime("7 days")));
+$CurrentDate = new \DateTime('now');
+$startDate   = new \DateTime(\date('d.m.Y', \strtotime("-2 days")));
+$endDate     = new \DateTime(\date('d.m.Y', \strtotime("7 days")));
+$Locale      = QUI::getLocale();
 
-$events      = [];
-$calendarIDs = $Site->getAttribute('calendar.settings.ids');
+$EventCollection = new \QUI\Calendar\Event\EventCollection();
+$calendarIDs     = $Site->getAttribute('calendar.settings.ids');
 
 if (!\is_array($calendarIDs)) {
     $calendarIDs = \explode(',', $calendarIDs);
@@ -15,65 +16,60 @@ if (!\is_array($calendarIDs)) {
 
 foreach ($calendarIDs as $calendarID) {
     try {
-        $eventsCurrent = Handler::getCalendar($calendarID)->getEventsBetweenDates($startDate, $endDate, true);
-        $events        = \array_merge($events, $eventsCurrent->toArray());
+        $eventsCurrent = Handler::getCalendar($calendarID)->getEventsBetweenDates($startDate, $endDate, true, 100);
+        $EventCollection->merge($eventsCurrent);
     } catch (QUI\Exception $Exception) {
-        QUI\System\Log::addDebug($Exception->getMessage());
+        QUI\System\Log::writeException($Exception);
     }
 }
 
-\usort($events, function ($a, $b) {
-    return \strtotime($a->start_date) - \strtotime($b->start_date);
-});
+$EventCollection->sortByStartDate();
 
-$counter          = 0;
-$incrementCounter = true;
-$todayEvent       = false;
+$todaysEventPosition     = 0;
+$isEventForTodayExisting = false;
 
-foreach ($events as $event) {
-    $eventDate = new \DateTime($event->start_date);
+foreach ($EventCollection as $index => $Event) {
+    /**
+     * @var \DateTime $EventStartDate
+     */
+    $EventStartDate = $Event->getStartDate();
 
-    // bad code...
-    if ($eventDate->format('Y-m-d') < $currDay->format('Y-m-d')) {
-        $event->eventTimeStatus = 'past';
-    } else {
-        if ($eventDate->format('Y-m-d') == $currDay->format('Y-m-d')) {
-            $event->eventTimeStatus = 'now';
-            $todayEvent             = true;
-            $incrementCounter       = false;
-        } else {
-            if (!$todayEvent) {
-                $incrementCounter = false;
-            }
-
-            $event->eventTimeStatus = 'future';
-        }
+    if ($EventStartDate->format('Y-m-d') == $CurrentDate->format('Y-m-d')) {
+        $Event->eventTimeStatus  = 'now';
+        $isEventForTodayExisting = true;
+        continue;
     }
 
-    if ($incrementCounter) {
-        $counter++;
+    if ($EventStartDate < $CurrentDate) {
+        $Event->eventTimeStatus = 'past';
+        ++$todaysEventPosition;
+        continue;
     }
+
+    $Event->eventTimeStatus = 'future';
 }
 
 // no event today?
-if ($counter) {
+if (!$isEventForTodayExisting) {
     $EmptyEvent = new QUI\Calendar\Event(
-        'Kein besonderer Tag heute',
-        'Heute gibt es nichts, was besonders ist.',
-        $currDay->format('Y-m-d'),
-        $currDay->format('Y-m-d')
+        $Locale->get('quiqqer/calendar', 'quiqqer.frontend.calendar.emptyEvent.title'),
+        $CurrentDate,
+        $CurrentDate
+    );
+
+    $EmptyEvent->setDescription(
+        $Locale->get('quiqqer/calendar', 'quiqqer.frontend.calendar.emptyEvent.desc')
     );
 
     $EmptyEvent->eventTimeStatus = 'now';
-    $toInsert                    = [$EmptyEvent];
 
-    array_splice($events, $counter, 0, $toInsert);
+    $EventCollection->insert($EmptyEvent, $todaysEventPosition);
 }
 
 
 $Engine->assign([
-    'events'  => $events,
-    'currDay' => $currDay
+    'events'  => $EventCollection,
+    'currDay' => $CurrentDate
 ]);
 
 switch ($Site->getAttribute('calendar.settings.template')) {

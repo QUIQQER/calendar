@@ -1,16 +1,116 @@
-.quiqqer-eventList {
+/* region Event List: List */
+.quiqqer-eventList-list {
+    margin: 0 auto;
+    max-width: 800px;
+}
+
+.quiqqer-eventList-list .quiqqer-eventList-entry {
+    align-items: center;
+    display: flex;
+    margin: 1rem 0;
+}
+
+.quiqqer-eventList-list .quiqqer-eventList-entry-date {
+    align-items: center;
+    align-self: flex-start;
+    display: flex;
+    flex-grow: 0;
+    flex-shrink: 0;
+    justify-content: center;
+    margin-top: 1rem;
+    padding: 1rem;
+    text-align: center;
+    width: 100px;
+}
+
+.quiqqer-eventList-list .quiqqer-eventList-entry:hover .quiqqer-eventList-list .quiqqer-eventList-entry-data {
+    box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
+}
+
+.quiqqer-eventList-list .quiqqer-eventList-entry-date time {
+    opacity: 0.75;
+}
+
+.quiqqer-eventList-list .quiqqer-eventList-entry-date-day {
+    display: block;
+    font-size: 2rem;
+    line-height: 2rem;
+    opacity: inherit;
+}
+
+.quiqqer-eventList-list .quiqqer-eventList-entry-date-month {
+    display: block;
+    font-size: 1rem;
+    letter-spacing: 2px;
+}
+
+.quiqqer-eventList-list .quiqqer-eventList-entry-data {
+    border: 1px solid #ddd;
+    border-left: 5px solid #d7c3f0;
+    border-radius: 5px;
+    flex-grow: 1;
+    margin: 1rem 1rem;
+    padding: 0.5rem 1.5rem;
+}
+
+.quiqqer-eventList-list .quiqqer-eventList-entry-data header {
+    font-size: 1.5rem;
+    font-weight: normal;
+}
+
+.quiqqer-eventList-list .quiqqer-eventList-entry-data-desc {
+    margin: 6px 0;
+}
+
+.quiqqer-eventList-list .quiqqer-eventList-entry-data-footer {
+    margin-top: 1rem;
+    font-size: 0.75rem;
+}
+
+.quiqqer-eventList-list .quiqqer-eventList-entry-data-footer-label {
+    opacity: 0.80;
+}
+
+.quiqqer-eventList-list .quiqqer-eventList-entry-data-footer-calendar {
+    font-weight: normal;
+}
+
+/* inactive */
+.quiqqer-eventList-list .quiqqer-eventList-entry.status-past {
+    opacity: 0.5;
+}
+
+.quiqqer-eventList-list .quiqqer-eventList-entry.status-past .quiqqer-eventList-list .quiqqer-eventList-entry-data {
+    /*background: #fafafa;*/
+}
+
+/* now / today */
+.quiqqer-eventList-list .quiqqer-eventList-entry.status-now .quiqqer-eventList-list .quiqqer-eventList-entry-date time {
+    opacity: 1;
+    font-weight: normal;
+}
+
+.quiqqer-eventList-list .quiqqer-eventList-entry.status-now .quiqqer-eventList-list .quiqqer-eventList-entry-data {
+    /*background: #f7f3fd;*/
+    border-left-color: #9880b7;
+}
+/* endregion */
+
+
+/* region Event List: Timeline */
+.quiqqer-eventList-timeline {
     margin: 0 auto;
     max-width: 800px;
     padding: 40px 0;
 }
 
-.quiqqer-eventList-entry {
+.quiqqer-eventList-timeline .quiqqer-eventList-entry {
     align-items: center;
     display: flex;
     position: relative;
 }
 
-.quiqqer-eventList-entry-date {
+.quiqqer-eventList-timeline .quiqqer-eventList-entry-date {
     align-items: center;
     align-self: flex-start;
     display: flex;
@@ -22,13 +122,13 @@
     text-align: center;
 }
 
-.quiqqer-eventList-entry-date time {
+.quiqqer-eventList-timeline .quiqqer-eventList-entry-date time {
     height: 60px;
     position: relative;
     width: 60px;
 }
 
-.quiqqer-eventList-entry-date time:before {
+.quiqqer-eventList-timeline .quiqqer-eventList-entry-date time:before {
     background: #9880b7;
     border-radius: 50%;
     content: '';
@@ -40,25 +140,25 @@
     z-index: 1;
 }
 
-.status-future .quiqqer-eventList-entry-date time:before,
-.status-past .quiqqer-eventList-entry-date time:before {
+.status-future .quiqqer-eventList-timeline .quiqqer-eventList-entry-date time:before,
+.status-past .quiqqer-eventList-timeline .quiqqer-eventList-entry-date time:before {
     background: #ddd;
 }
 
-.quiqqer-eventList-entry-date-day {
+.quiqqer-eventList-timeline .quiqqer-eventList-entry-date-day {
     display: block;
     font-size: 1.5rem;
     line-height: 1.5rem;
     opacity: inherit;
 }
 
-.quiqqer-eventList-entry-date-month {
+.quiqqer-eventList-timeline .quiqqer-eventList-entry-date-month {
     display: block;
     font-size: 0.8rem;
     letter-spacing: 2px;
 }
 
-.quiqqer-eventList-entry-data {
+.quiqqer-eventList-timeline .quiqqer-eventList-entry-data {
     border-left: 3px solid #ddd;
     margin-left: auto;
     padding: 1.5rem 1.5rem 1.5rem 3rem;
@@ -66,8 +166,8 @@
     width: calc(100% - 100px);
 }
 
-.status-now .quiqqer-eventList-entry-data:before,
-.status-now .quiqqer-eventList-entry-data:after {
+.status-now .quiqqer-eventList-timeline .quiqqer-eventList-entry-data:before,
+.status-now .quiqqer-eventList-timeline .quiqqer-eventList-entry-data:after {
     background: linear-gradient(45deg, #9880b7, transparent);
     content: '';
     height: 50px;
@@ -77,7 +177,7 @@
     width: 3px;
 }
 
-.status-now .quiqqer-eventList-entry-data:after {
+.status-now .quiqqer-eventList-timeline .quiqqer-eventList-entry-data:after {
     background: linear-gradient(45deg, transparent, #9880b7);
     bottom: -40px;
     height: 40px;
@@ -85,8 +185,8 @@
     z-index: 1;
 }
 
-.quiqqer-eventList-entry:first-child .quiqqer-eventList-entry-data:before,
-.quiqqer-eventList-entry:last-child .quiqqer-eventList-entry-data:before {
+.quiqqer-eventList-timeline .quiqqer-eventList-entry:first-child .quiqqer-eventList-timeline .quiqqer-eventList-entry-data:before,
+.quiqqer-eventList-timeline .quiqqer-eventList-entry:last-child .quiqqer-eventList-timeline .quiqqer-eventList-entry-data:before {
     background: linear-gradient(45deg, #ddd, transparent);
     content: '';
     height: 30px;
@@ -96,90 +196,99 @@
     width: 3px;
 }
 
-.quiqqer-eventList-entry:last-child .quiqqer-eventList-entry-data:before {
+.quiqqer-eventList-timeline .quiqqer-eventList-entry:last-child .quiqqer-eventList-timeline .quiqqer-eventList-entry-data:before {
     background: linear-gradient(45deg, transparent, #ddd);
     bottom: -30px;
     top: initial;
 }
 
-.quiqqer-eventList-entry-data header {
-    font-size: 1.5rem;
+.quiqqer-eventList-timeline .quiqqer-eventList-entry-data header {
+    font-size: 1.3rem;
     font-weight: normal;
 }
 
-.quiqqer-eventList-entry-data-desc {
+.quiqqer-eventList-timeline .quiqqer-eventList-entry-data-desc {
     margin: 6px 0;
 }
 
-.quiqqer-eventList-entry-data-footer {
+.quiqqer-eventList-timeline .quiqqer-eventList-entry-data-buttons {
     font-size: 0.75rem;
-    margin-top: 1rem;
+    margin: 1rem 0;
 }
 
-.quiqqer-eventList-entry-data-footer-label {
+.quiqqer-eventList-timeline .quiqqer-eventList-entry-data-footer {
+    font-size: 0.75rem;
+    margin-top: 1.25rem;
+}
+
+.quiqqer-eventList-timeline .quiqqer-eventList-entry-data-footer-label {
     opacity: 0.80;
 }
 
-.quiqqer-eventList-entry-data-footer-calendar {
+.quiqqer-eventList-timeline .quiqqer-eventList-entry-data-footer-calendar {
     font-weight: normal;
 }
 
 /* inactive */
-.quiqqer-eventList-entry.status-past {
+.quiqqer-eventList-timeline .quiqqer-eventList-entry.status-past {
     opacity: 0.7;
 }
 
 /* now / today */
-.quiqqer-eventList-entry.status-now .quiqqer-eventList-entry-date time {
+.quiqqer-eventList-timeline .quiqqer-eventList-entry.status-now {
+    background: #f9f8fb;
+}
+
+.quiqqer-eventList-timeline .quiqqer-eventList-entry.status-now .quiqqer-eventList-timeline .quiqqer-eventList-entry-date time {
     font-weight: normal;
     opacity: 1;
 }
 
-.quiqqer-eventList-entry.status-now .quiqqer-eventList-entry-data {
+.quiqqer-eventList-timeline .quiqqer-eventList-entry.status-now .quiqqer-eventList-timeline .quiqqer-eventList-entry-data {
     border-left-color: #9880b7;
 }
 
 @media screen and (max-width: 767px) {
-    .quiqqer-eventList-entry {
+    .quiqqer-eventList-timeline .quiqqer-eventList-entry {
         border-left: 3px solid #ddd;
         flex-wrap: wrap;
         margin-left: 1rem;
     }
 
-    .quiqqer-eventList-entry.status-now {
+    .quiqqer-eventList-timeline .quiqqer-eventList-entry.status-now {
         border-left-color: #9880b7;
     }
 
 
-    .quiqqer-eventList-entry-data {
+    .quiqqer-eventList-timeline .quiqqer-eventList-entry-data {
         border: none;
         padding: 1rem 0 1rem 2rem;
         width: 100%;
     }
 
-    .quiqqer-eventList-entry-date {
+    .quiqqer-eventList-timeline .quiqqer-eventList-entry-date {
         padding: 0 2rem;
         text-align: left;
     }
 
-    .status-now .quiqqer-eventList-entry-data:before,
-    .status-now .quiqqer-eventList-entry-data:after {
+    .status-now .quiqqer-eventList-timeline .quiqqer-eventList-entry-data:before,
+    .status-now .quiqqer-eventList-timeline .quiqqer-eventList-entry-data:after {
         display: none;
     }
 
-    .quiqqer-eventList-entry-date time {
+    .quiqqer-eventList-timeline .quiqqer-eventList-entry-date time {
         height: auto;
         width: 3rem;
     }
 
-    .quiqqer-eventList-entry-date time:before {
+    .quiqqer-eventList-timeline .quiqqer-eventList-entry-date time:before {
         left: calc(-2rem - 8px);
         top: 10px;
         width: 14px;
     }
 
-    .status-now.quiqqer-eventList-entry:before,
-    .status-now.quiqqer-eventList-entry:after {
+    .status-now.quiqqer-eventList-timeline .quiqqer-eventList-entry:before,
+    .status-now.quiqqer-eventList-timeline .quiqqer-eventList-entry:after {
         background: linear-gradient(45deg, #9880b7, transparent);
         content: '';
         height: 50px;
@@ -189,7 +298,7 @@
         width: 3px;
     }
 
-    .status-now.quiqqer-eventList-entry:after {
+    .status-now.quiqqer-eventList-timeline .quiqqer-eventList-entry:after {
         background: linear-gradient(45deg, transparent, #9880b7);
         bottom: -40px;
         height: 40px;
@@ -197,16 +306,16 @@
         z-index: 1;
     }
 
-    .quiqqer-eventList-entry-data header {
+    .quiqqer-eventList-timeline .quiqqer-eventList-entry-data header {
         font-size: 1.125rem;
     }
 
-    .quiqqer-eventList-entry:last-child .quiqqer-eventList-entry-data:before {
+    .quiqqer-eventList-timeline .quiqqer-eventList-entry:last-child .quiqqer-eventList-timeline .quiqqer-eventList-entry-data:before {
         display: none;
     }
 
-    .quiqqer-eventList-entry:first-child:before,
-    .quiqqer-eventList-entry:last-child:before {
+    .quiqqer-eventList-timeline .quiqqer-eventList-entry:first-child:before,
+    .quiqqer-eventList-timeline .quiqqer-eventList-entry:last-child:before {
         background: linear-gradient(45deg, #ddd, transparent);
         content: '';
         height: 30px;
@@ -216,10 +325,11 @@
         width: 3px;
     }
 
-    .quiqqer-eventList-entry:last-child:before {
+    .quiqqer-eventList-timeline .quiqqer-eventList-entry:last-child:before {
         background: linear-gradient(45deg, transparent, #ddd);
         bottom: -30px;
         top: initial;
     }
 
 }
+/* endregion */
