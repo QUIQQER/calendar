@@ -50,13 +50,13 @@ class InternalCalendar extends AbstractCalendar
         $this->checkPermission(self::PERMISSION_ADD_EVENT);
 
         try {
-            QUI::getDataBase()->insert(Handler::tableCalendarsEvents(), array(
+            QUI::getDataBase()->insert(Handler::tableCalendarsEvents(), [
                 'title'      => $title,
                 'desc'       => $desc,
                 'start'      => $start,
                 'end'        => $end,
                 'calendarid' => $this->getId()
-            ));
+            ]);
         } catch (QUI\Database\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
             throw new QUI\Calendar\Exception\Database();
@@ -81,23 +81,23 @@ class InternalCalendar extends AbstractCalendar
             return;
         }
 
-        $sql      = "INSERT INTO " . Handler::tableCalendarsEvents() . " (title, `desc`, start, `end`, calendarid) VALUES ";
+        $sql      = "INSERT INTO ".Handler::tableCalendarsEvents()." (title, `desc`, start, `end`, calendarid) VALUES ";
         $lastElem = last($events);
         foreach ($events as $Event) {
             $data = implode(',', [
-                "'" . $Event->text . "'",
-                "'" . $Event->description . "'",
+                "'".$Event->text."'",
+                "'".$Event->description."'",
                 $Event->start_date,
                 $Event->end_date,
                 $this->getId()
             ]);
-            $sql  = $sql . "($data)";
+            $sql  = $sql."($data)";
             if ($Event != $lastElem) {
-                $sql = $sql . ",";
+                $sql = $sql.",";
             }
         }
 
-        $sql = $sql . ";";
+        $sql = $sql.";";
 
         QUI::getDataBase()->getPDO()->prepare($sql)->execute();
     }
@@ -119,14 +119,14 @@ class InternalCalendar extends AbstractCalendar
         $this->checkPermission(self::PERMISSION_EDIT_EVENT);
 
         try {
-            QUI::getDataBase()->update(Handler::tableCalendarsEvents(), array(
+            QUI::getDataBase()->update(Handler::tableCalendarsEvents(), [
                 'title' => $title,
                 'desc'  => $desc,
                 'start' => $start,
                 'end'   => $end
-            ), array(
+            ], [
                 'eventid' => $eventID
-            ));
+            ]);
         } catch (QUI\Database\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
             throw new QUI\Calendar\Exception\Database();
@@ -146,9 +146,9 @@ class InternalCalendar extends AbstractCalendar
         $this->checkPermission(self::PERMISSION_REMOVE_EVENT);
 
         try {
-            QUI::getDataBase()->delete(Handler::tableCalendarsEvents(), array(
+            QUI::getDataBase()->delete(Handler::tableCalendarsEvents(), [
                 'eventid' => $eventID
-            ));
+            ]);
         } catch (QUI\Database\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
             throw new QUI\Calendar\Exception\Database();
@@ -206,11 +206,11 @@ class InternalCalendar extends AbstractCalendar
      *
      * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
      */
-    public function toJSON()
+    public function toJSON($options = [])
     {
         $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
 
-        $events = $this->getEvents();
+        $events = $this->getEvents($options);
 
         return json_encode($events);
     }
@@ -219,28 +219,38 @@ class InternalCalendar extends AbstractCalendar
     /**
      * Returns all events in a calendar as an array
      *
+     * @param array $options - filter options, optional
      * @return \QUI\Calendar\Event[] - array of events
      *
      * @throws QUI\Calendar\Exception\NoPermission - Current user isn't allowed to view the calendar
      * @throws QUI\Calendar\Exception\Database - Couldn't fetch events' data from the database
      */
-    public function getEvents()
+    public function getEvents($options = [])
     {
         $this->checkPermission(self::PERMISSION_VIEW_CALENDAR);
 
         try {
-            $eventsRaw = QUI::getDataBase()->fetch(array(
+            $query = [
                 'from'  => Handler::tableCalendarsEvents(),
-                'where' => array(
+                'where' => [
                     'calendarid' => (int)$this->getId()
-                )
-            ));
+                ]
+            ];
+
+            if (isset($options['showPastEvents']) && !$options['showPastEvents']) {
+                $query['where']['start'] = [
+                    'type'  => '>=',
+                    'value' => time()
+                ];
+            }
+
+            $eventsRaw = QUI::getDataBase()->fetch($query);
         } catch (QUI\Database\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
             throw new QUI\Calendar\Exception\Database();
         }
 
-        $events = array();
+        $events = [];
         foreach ($eventsRaw as $event) {
             $events[] = \QUI\Calendar\Event::fromDatabaseArray($event);
         }
@@ -286,10 +296,10 @@ class InternalCalendar extends AbstractCalendar
         }
 
         try {
-            $eventsRaw = QUI::getDataBase()->fetch(array(
+            $eventsRaw = QUI::getDataBase()->fetch([
                 'from'  => Handler::tableCalendarsEvents(),
                 'where' => $where
-            ));
+            ]);
         } catch (QUI\Database\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
             $eventsRaw = [];
@@ -325,7 +335,7 @@ class InternalCalendar extends AbstractCalendar
         }
 
         try {
-            $eventsRaw = QUI::getDataBase()->fetch(array(
+            $eventsRaw = QUI::getDataBase()->fetch([
                 'from'  => Handler::tableCalendarsEvents(),
                 'where' => [
                     'calendarid' => (int)$this->getId(),
@@ -338,7 +348,7 @@ class InternalCalendar extends AbstractCalendar
                         'value' => $timestampStartDate
                     ]
                 ]
-            ));
+            ]);
         } catch (QUI\Database\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
             $eventsRaw = [];
@@ -374,10 +384,10 @@ class InternalCalendar extends AbstractCalendar
             ORDER BY start ASC
         ";
 
-        $parameters = array(
+        $parameters = [
             ':calendarID' => (int)$this->getId(),
             ':startDate'  => time()
-        );
+        ];
 
         if (is_numeric($amount) && $amount > -1) {
             $limit = (int)$amount;
@@ -389,7 +399,7 @@ class InternalCalendar extends AbstractCalendar
 
         $eventsRaw = $Statement->fetchAll(\PDO::FETCH_ASSOC);
 
-        $events = array();
+        $events = [];
         foreach ($eventsRaw as $event) {
             $events[] = \QUI\Calendar\Event::fromDatabaseArray($event);
         }

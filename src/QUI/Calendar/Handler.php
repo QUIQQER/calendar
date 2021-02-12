@@ -32,12 +32,12 @@ class Handler
     public static function createCalendar($name, $User, $isPublic = false, $color = '#2F8FC6')
     {
         try {
-            QUI::getDataBase()->insert(self::tableCalendars(), array(
+            QUI::getDataBase()->insert(self::tableCalendars(), [
                 'name'     => $name,
                 'userid'   => $User->getId(),
                 'isPublic' => $isPublic ? 1 : 0,
                 'color'    => $color
-            ));
+            ]);
             $calendarID = QUI::getPDO()->lastInsertId();
         } catch (QUI\Database\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
@@ -63,11 +63,11 @@ class Handler
         $calendarTranslation = QUI::getLocale()->get('quiqqer/calendar', 'calendar');
 
         $IcalCalendar = new ICal($icalUrl);
-        $Calendar     = self::createCalendar($User->getName() . " " . $calendarTranslation, $User);
+        $Calendar     = self::createCalendar($User->getName()." ".$calendarTranslation, $User);
 
         $eventsFromIcal = $IcalCalendar->events();
 
-        $events = array();
+        $events = [];
         foreach ($eventsFromIcal as $IcalEvent) {
             $events[] = new Event(
                 $IcalEvent->summary,
@@ -123,14 +123,14 @@ class Handler
         }
 
         try {
-            QUI::getDataBase()->insert(self::tableCalendars(), array(
+            QUI::getDataBase()->insert(self::tableCalendars(), [
                 'name'        => $calendarName,
                 'userid'      => $User->getId(),
                 'isPublic'    => $isPublic,
                 'isExternal'  => 1,
                 'externalUrl' => $icalUrl,
                 'color'       => $color
-            ));
+            ]);
         } catch (QUI\Database\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
             throw new QUI\Calendar\Exception\Database();
@@ -208,13 +208,13 @@ class Handler
             $Calendar->checkPermission($Calendar::PERMISSION_DELETE_CALENDAR);
 
             try {
-                $Database->delete(self::tableCalendars(), array(
+                $Database->delete(self::tableCalendars(), [
                     'id' => $id
-                ));
+                ]);
 
-                $Database->delete(self::tableCalendarsEvents(), array(
+                $Database->delete(self::tableCalendarsEvents(), [
                     'calendarid' => $id
-                ));
+                ]);
             } catch (QUI\Database\Exception $Exception) {
                 QUI\System\Log::writeException($Exception);
                 throw new QUI\Calendar\Exception\Database();
@@ -232,9 +232,9 @@ class Handler
     public static function getCalendars()
     {
         try {
-            $calendars = QUI::getDataBase()->fetch(array(
+            $calendars = QUI::getDataBase()->fetch([
                 'from' => self::tableCalendars()
-            ));
+            ]);
         } catch (QUI\Database\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
             throw new QUI\Calendar\Exception\Database();
@@ -269,18 +269,18 @@ class Handler
     public static function getExternalCalendars()
     {
         try {
-            $calendarsRaw = QUI::getDataBase()->fetch(array(
+            $calendarsRaw = QUI::getDataBase()->fetch([
                 'from'  => self::tableCalendars(),
-                'where' => array(
+                'where' => [
                     'isExternal' => 1
-                )
-            ));
+                ]
+            ]);
         } catch (QUI\Database\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
             throw new QUI\Calendar\Exception\Database();
         }
 
-        $calendars = array();
+        $calendars = [];
         foreach ($calendarsRaw as $calendarData) {
             // Only return calendars the user can edit
             try {
@@ -311,23 +311,23 @@ class Handler
     public static function getCalendar($calendarID)
     {
         try {
-            $calendarRaw = QUI::getDataBase()->fetch(array(
+            $calendarRaw = QUI::getDataBase()->fetch([
                 'from'  => self::tableCalendars(),
-                'where' => array(
+                'where' => [
                     'id' => $calendarID
-                ),
+                ],
                 'limit' => 1
-            ));
+            ]);
         } catch (QUI\Database\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
             throw new QUI\Calendar\Exception\Database();
         }
 
         if (!isset($calendarRaw[0])) {
-            throw new QUI\Calendar\Exception(array(
+            throw new QUI\Calendar\Exception([
                 'quiqqer/calendar',
                 'exception.calendar.not_found'
-            ));
+            ]);
         }
 
         $calendarRaw = $calendarRaw[0];

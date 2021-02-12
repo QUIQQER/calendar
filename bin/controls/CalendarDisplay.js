@@ -45,6 +45,10 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
             'parseEventsIntoScheduler'
         ],
 
+        options: {
+            showPastEvents: true
+        },
+
         /**
          * Constructor of the class
          *
@@ -103,7 +107,7 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
          */
         initScheduler: function (Element) {
             var self = this;
-            var CH = new ColorHelper();
+            var CH   = new ColorHelper();
 
             return new Promise(function (resolve) {
                 // If scheduler already initiated return/resolve
@@ -151,14 +155,16 @@ define('package/quiqqer/calendar/bin/controls/CalendarDisplay', [
 
                         Calendars.getCalendar(calID).then(function (calendarData) {
                             var calendarColor = calendarData.color;
-                            var textColor = CH.getSchedulerTextColor(calendarColor);
+                            var textColor     = CH.getSchedulerTextColor(calendarColor);
 
                             calendarData.textColor = textColor;
 
-                            Calendars.getEventsAsJson(calID).then(function (result) {
+                            Calendars.getEventsAsJson(calID, {
+                                showPastEvents: self.getAttribute('showPastEvents')
+                            }).then(function (result) {
                                 var events = JSON.parse(result);
                                 events.forEach(function (event) {
-                                    event.color = calendarColor;
+                                    event.color     = calendarColor;
                                     event.textColor = textColor;
                                 });
                                 self.parseEventsIntoScheduler(JSON.stringify(events)).then(function () {
